@@ -93,12 +93,11 @@ resource "azurerm_user_assigned_identity" "github_actions" {
 resource "azurerm_federated_identity_credential" "github_environment" {
   for_each = local.environment_short
 
-  name                = "github-${each.key}"
-  resource_group_name = azurerm_resource_group.shared.name
-  parent_id           = azurerm_user_assigned_identity.github_actions.id
-  audience            = ["api://AzureADTokenExchange"]
-  issuer              = "https://token.actions.githubusercontent.com"
-  subject             = "repo:${var.github_repository}:environment:${each.key}"
+  name      = "github-${each.key}"
+  parent_id = azurerm_user_assigned_identity.github_actions.id
+  audience  = ["api://AzureADTokenExchange"]
+  issuer    = "https://token.actions.githubusercontent.com"
+  subject   = "repo:${var.github_repository}:environment:${each.key}"
 }
 
 resource "azurerm_role_assignment" "github_environment_contributor" {
