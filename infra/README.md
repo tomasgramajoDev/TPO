@@ -34,6 +34,8 @@ terraform/
 - Un repositorio GitHub definitivo.
 - Permiso para crear asignaciones de roles en Azure.
 
+Antes del primer `apply`, DevOps debe confirmar que estén registrados los resource providers `Microsoft.Storage`, `Microsoft.ManagedIdentity`, `Microsoft.ContainerRegistry`, `Microsoft.OperationalInsights` y `Microsoft.App`. Terraform no los registra silenciosamente durante el plan.
+
 ## 1. Configurar el bootstrap
 
 Copiar el ejemplo sin versionar datos reales:
