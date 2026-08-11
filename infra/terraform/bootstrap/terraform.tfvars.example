@@ -1,0 +1,8 @@
+project_name = "obras-publicas"
+location     = "brazilsouth"
+github_repository = "tomasgramajoDev/TPO"
+
+tags = {
+  course = "desarrollo-aplicaciones-ii"
+  module = "m3"
+}

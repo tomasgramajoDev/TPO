@@ -1,0 +1,34 @@
+# Terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfplan
+*.tfvars
+!*.tfvars.example
+backend.hcl
+!backend.hcl.example
+infra/terraform/bootstrap/backend.tf
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraformrc
+terraform.rc
+
+# Credenciales y configuración local
+.env
+.env.*
+!.env.example
+
+# Archivos del entorno Codex
+work/
+tmp/
+outputs/
+
+# Sistema operativo y editores
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

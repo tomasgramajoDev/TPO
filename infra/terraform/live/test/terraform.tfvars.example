@@ -1,0 +1,7 @@
+project_name = "obras-publicas"
+location     = "brazilsouth"
+
+tags = {
+  course = "desarrollo-aplicaciones-ii"
+  module = "m3"
+}

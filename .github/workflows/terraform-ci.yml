@@ -1,0 +1,65 @@
+name: Terraform CI
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/*.yml"
+      - "infra/terraform/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: terraform-ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  format:
+    name: Format
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: 1.15.8
+          terraform_wrapper: false
+
+      - name: Check formatting
+        run: terraform fmt -check -diff -recursive infra/terraform
+
+  validate:
+    name: Validate (${{ matrix.root }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        root:
+          - infra/terraform/bootstrap
+          - infra/terraform/live/development
+          - infra/terraform/live/test
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: 1.15.8
+          terraform_wrapper: false
+
+      - name: Initialize without backend
+        working-directory: ${{ matrix.root }}
+        run: terraform init -backend=false -input=false -lockfile=readonly
+
+      - name: Validate
+        working-directory: ${{ matrix.root }}
+        run: terraform validate -no-color
