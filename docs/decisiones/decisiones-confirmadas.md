@@ -24,7 +24,7 @@ Esta página contiene decisiones internas o acuerdos explícitos. Un evento incl
 ## Plataforma cloud y CI/CD
 
 - El proveedor elegido para el primer incremento es Microsoft Azure.
-- La región predeterminada es `Brazil South` por cercanía al equipo y disponibilidad de Azure Container Apps.
+- La región predeterminada es `Chile Central`: es la opción habilitada más cercana al equipo y dispone de Azure Container Apps. `Brazil South` fue descartada porque la política de la suscripción Azure for Students impidió desplegar recursos allí.
 - La plataforma de ejecución será Azure Container Apps en plan Consumption, con capacidad de escalar a cero.
 - El estado remoto de Terraform se almacenará en Azure Blob Storage con autenticación Microsoft Entra ID.
 - Los pipelines se implementarán con GitHub Actions y autenticación OIDC; no se usarán secretos de cliente persistentes.

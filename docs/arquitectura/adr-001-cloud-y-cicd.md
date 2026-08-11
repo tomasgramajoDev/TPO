@@ -11,7 +11,7 @@ La consigna permite elegir las tecnologías y exige frontend, backend, base de d
 ## Decisión
 
 - Cloud: Microsoft Azure.
-- Región inicial: `Brazil South`.
+- Región inicial: `Chile Central`.
 - Infraestructura como código: Terraform `1.15.8` con AzureRM `~> 4.81`.
 - Cómputo inicial: Azure Container Apps Consumption.
 - Observabilidad base: Log Analytics por ambiente.
@@ -23,7 +23,7 @@ La consigna permite elegir las tecnologías y exige frontend, backend, base de d
 
 ## Justificación
 
-Azure for Students ofrece crédito académico sin requerir tarjeta de crédito. Container Apps admite contenedores de cualquier stack, plan Consumption y escala a cero, por lo que permite empezar con bajo consumo sin decidir todavía el lenguaje del backend. `Brazil South` reduce distancia respecto del equipo en Argentina y soporta la plataforma elegida.
+Azure for Students ofrece crédito académico sin requerir tarjeta de crédito. Container Apps admite contenedores de cualquier stack, plan Consumption y escala a cero, por lo que permite empezar con bajo consumo sin decidir todavía el lenguaje del backend. La política `Allowed resource deployment regions` de la suscripción no permite `Brazil South`; `Chile Central` es la región habilitada más cercana al equipo en Argentina y soporta la plataforma elegida.
 
 Terraform permite versionar y revisar la infraestructura. OIDC evita guardar credenciales Azure de larga duración en GitHub.
 

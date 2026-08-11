@@ -59,3 +59,17 @@ No se eliminó el antecedente de los eventos genéricos; permanece documentado c
 - Se registraron como propuesta DevOps la revisión por pares, las pruebas, la documentación, los requisitos no funcionales y las release notes antes de promover una historia.
 - La referencia a producción con feature toggle desactivado quedó pendiente y no habilitó la creación de un ambiente productivo.
 - Nexus, SAFe y el modelo Spotify se conservaron como alternativas explicadas en clase, no como metodología elegida por el proyecto.
+
+## 2026-08-11 — Ajuste de región Azure
+
+- La política `Allowed resource deployment regions` de Azure for Students rechazó los recursos en `Brazil South`.
+- Se eligió `Chile Central`, la región permitida más cercana a Argentina que soporta Storage, Managed Identity, Container Registry, Log Analytics y Container Apps.
+- Los resource groups vacíos creados durante el intento inicial conservan su ubicación de metadatos en `Brazil South`; los recursos de servicio se despliegan en `Chile Central`.
+
+## 2026-08-11 — Bootstrap Azure y GitHub
+
+- Se desplegaron el estado remoto, el Container Registry Basic, la identidad administrada, las credenciales federadas y los permisos de `development` y `test`.
+- El estado del bootstrap se migró a Azure Blob Storage y un plan posterior confirmó que no existen cambios pendientes.
+- Se crearon los environments `development` y `test` con el usuario DevOps como revisor obligatorio.
+- Se cargaron las variables OIDC y del backend en ambos environments, sin `client secret`.
+- Se habilitaron los disparos automáticos: un cambio en `main` prepara `development` y una release publicada prepara `test`; los `apply` continúan sujetos a aprobación DevOps.

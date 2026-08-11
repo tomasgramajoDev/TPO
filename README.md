@@ -5,10 +5,11 @@ Repositorio de documentación, infraestructura como código y automatización De
 ## Estado actual
 
 - Documentación funcional e integraciones: organizada en [`docs/`](docs/README.md).
-- Decisión de cloud: Azure, región `Brazil South`.
+- Decisión de cloud: Azure, región `Chile Central` por restricción de la suscripción Azure for Students.
 - Infraestructura: Terraform con ambientes `development` y `test`.
 - CI/CD: GitHub Actions con autorización de DevOps y autenticación OIDC.
-- Recursos Azure desplegados: ninguno todavía.
+- Bootstrap Azure desplegado: estado remoto, Container Registry, identidad OIDC, permisos y resource groups.
+- Plataformas `development` y `test`: pendientes de aprobación y ejecución desde GitHub Actions.
 - Aplicaciones frontend/backend: sus repositorios y stack continúan pendientes.
 
 ## Accesos rápidos
@@ -23,10 +24,9 @@ Repositorio de documentación, infraestructura como código y automatización De
 
 ## Próxima activación
 
-1. Elegir el repositorio GitHub definitivo.
-2. Activar la suscripción Azure.
-3. Ejecutar el bootstrap siguiendo [`infra/README.md`](infra/README.md).
-4. Crear y proteger los environments de GitHub.
-5. Ejecutar manualmente el despliegue de `development`.
+1. Revisar y fusionar el pull request DevOps en `main`.
+2. Aprobar el plan de `development` desde el environment protegido de GitHub.
+3. Aprobar el `apply` del mismo plan.
+4. Conectar los repositorios o artefactos de frontend y backend cuando el equipo defina sus stacks.
 
-Hasta completar esos pasos, el código puede validarse pero no modifica servicios externos ni genera costos.
+El bootstrap ya genera el costo del Azure Container Registry Basic. Los ambientes no se crean hasta que DevOps apruebe sus despliegues.

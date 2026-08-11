@@ -10,9 +10,16 @@ variable "project_name" {
 }
 
 variable "location" {
-  description = "Región Azure para el estado remoto."
+  description = "Región Azure para los recursos del proyecto."
   type        = string
-  default     = "brazilsouth"
+  default     = "chilecentral"
+}
+
+variable "resource_group_location" {
+  description = "Región de metadatos de los resource groups. Si se omite, usa location."
+  type        = string
+  default     = null
+  nullable    = true
 }
 
 variable "github_repository" {

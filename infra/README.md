@@ -2,6 +2,8 @@
 
 La infraestructura del Módulo 3 se administra con Terraform sobre Microsoft Azure. Los despliegues normales se ejecutan desde GitHub Actions y deben ser autorizados por DevOps.
 
+La suscripción Azure for Students utilizada por el proyecto permite `Chile Central` pero rechaza `Brazil South`. Los servicios se despliegan en `Chile Central`.
+
 ## Alcance actual
 
 El código prepara:

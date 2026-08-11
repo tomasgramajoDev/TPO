@@ -7,7 +7,7 @@ variable "project_name" {
 variable "location" {
   description = "Región Azure."
   type        = string
-  default     = "brazilsouth"
+  default     = "chilecentral"
 }
 
 variable "tags" {

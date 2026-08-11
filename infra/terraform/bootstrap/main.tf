@@ -1,5 +1,6 @@
 locals {
-  storage_project = substr(replace(lower(var.project_name), "/[^a-z0-9]/", ""), 0, 12)
+  storage_project         = substr(replace(lower(var.project_name), "/[^a-z0-9]/", ""), 0, 12)
+  resource_group_location = coalesce(var.resource_group_location, var.location)
   environment_short = {
     development = "dev"
     test        = "tst"
@@ -20,7 +21,7 @@ resource "random_id" "storage_suffix" {
 
 resource "azurerm_resource_group" "terraform_state" {
   name     = "rg-${var.project_name}-tfstate"
-  location = var.location
+  location = local.resource_group_location
   tags = merge(local.common_tags, {
     purpose = "terraform-state"
   })
@@ -28,7 +29,7 @@ resource "azurerm_resource_group" "terraform_state" {
 
 resource "azurerm_resource_group" "shared" {
   name     = "rg-${var.project_name}-shared"
-  location = var.location
+  location = local.resource_group_location
   tags = merge(local.common_tags, {
     purpose = "shared-platform"
   })
@@ -38,7 +39,7 @@ resource "azurerm_resource_group" "environment" {
   for_each = local.environment_short
 
   name     = "rg-${var.project_name}-${each.value}"
-  location = var.location
+  location = local.resource_group_location
   tags = merge(local.common_tags, {
     environment = each.key
     purpose     = "application-platform"
@@ -48,7 +49,7 @@ resource "azurerm_resource_group" "environment" {
 resource "azurerm_storage_account" "terraform_state" {
   name                            = "st${local.storage_project}${random_id.storage_suffix.hex}"
   resource_group_name             = azurerm_resource_group.terraform_state.name
-  location                        = azurerm_resource_group.terraform_state.location
+  location                        = var.location
   account_tier                    = "Standard"
   account_replication_type        = "LRS"
   min_tls_version                 = "TLS1_2"
@@ -85,7 +86,7 @@ resource "azurerm_storage_container" "terraform_state" {
 
 resource "azurerm_user_assigned_identity" "github_actions" {
   name                = "id-${var.project_name}-github"
-  location            = azurerm_resource_group.shared.location
+  location            = var.location
   resource_group_name = azurerm_resource_group.shared.name
   tags                = local.common_tags
 }
@@ -93,11 +94,11 @@ resource "azurerm_user_assigned_identity" "github_actions" {
 resource "azurerm_federated_identity_credential" "github_environment" {
   for_each = local.environment_short
 
-  name      = "github-${each.key}"
-  parent_id = azurerm_user_assigned_identity.github_actions.id
-  audience  = ["api://AzureADTokenExchange"]
-  issuer    = "https://token.actions.githubusercontent.com"
-  subject   = "repo:${var.github_repository}:environment:${each.key}"
+  name                      = "github-${each.key}"
+  user_assigned_identity_id = azurerm_user_assigned_identity.github_actions.id
+  audience                  = ["api://AzureADTokenExchange"]
+  issuer                    = "https://token.actions.githubusercontent.com"
+  subject                   = "repo:${var.github_repository}:environment:${each.key}"
 }
 
 resource "azurerm_role_assignment" "github_environment_contributor" {
@@ -129,7 +130,7 @@ resource "azurerm_container_registry" "shared" {
     50
   )
   resource_group_name = azurerm_resource_group.shared.name
-  location            = azurerm_resource_group.shared.location
+  location            = var.location
   sku                 = "Basic"
   admin_enabled       = false
   tags                = local.common_tags

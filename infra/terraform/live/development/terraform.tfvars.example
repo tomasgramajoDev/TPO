@@ -1,5 +1,5 @@
 project_name = "obras-publicas"
-location     = "brazilsouth"
+location     = "chilecentral"
 
 tags = {
   course = "desarrollo-aplicaciones-ii"
