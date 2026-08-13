@@ -1,0 +1,7 @@
+project_name = "obras-publicas"
+location     = "chilecentral"
+
+tags = {
+  course = "desarrollo-aplicaciones-ii"
+  module = "m3"
+}

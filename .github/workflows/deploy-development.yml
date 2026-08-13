@@ -1,0 +1,153 @@
+name: Deploy development
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/deploy-development.yml"
+      - "infra/terraform/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: terraform-development
+  cancel-in-progress: false
+
+env:
+  ARM_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
+  ARM_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+  ARM_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+  ARM_USE_AZUREAD: true
+  ARM_USE_OIDC: true
+  TF_IN_AUTOMATION: true
+  TF_INPUT: false
+
+jobs:
+  plan:
+    name: Terraform plan
+    if: github.event_name == 'workflow_dispatch' || vars.ENABLE_AUTOMATIC_DEPLOYMENTS == 'true'
+    runs-on: ubuntu-latest
+    environment: development
+    timeout-minutes: 20
+
+    defaults:
+      run:
+        working-directory: infra/terraform/live/development
+
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: 1.15.8
+          terraform_wrapper: false
+
+      - name: Initialize remote state
+        run: >-
+          terraform init
+          -backend-config="resource_group_name=${{ vars.TF_STATE_RESOURCE_GROUP }}"
+          -backend-config="storage_account_name=${{ vars.TF_STATE_STORAGE_ACCOUNT }}"
+          -backend-config="container_name=${{ vars.TF_STATE_CONTAINER }}"
+          -backend-config="key=development.terraform.tfstate"
+          -backend-config="use_oidc=true"
+          -backend-config="use_azuread_auth=true"
+          -lock-timeout=5m
+
+      - name: Create plan
+        run: terraform plan -input=false -lock-timeout=5m -out=development.tfplan
+
+      - name: Render plan
+        run: terraform show -no-color development.tfplan > development-plan.txt
+
+      - name: Add plan to workflow summary
+        shell: bash
+        run: |
+          {
+            echo "## Terraform plan - development"
+            echo
+            echo '<details><summary>Ver plan</summary>'
+            echo
+            echo '```text'
+            sed -n '1,1000p' development-plan.txt
+            echo '```'
+            echo '</details>'
+            if [ "$(wc -l < development-plan.txt)" -gt 1000 ]; then
+              echo
+              echo "El resumen fue truncado. El plan completo está en el artefacto."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload plan
+        uses: actions/upload-artifact@v7
+        with:
+          name: terraform-development-plan
+          path: |
+            infra/terraform/live/development/development.tfplan
+            infra/terraform/live/development/development-plan.txt
+          retention-days: 7
+
+  apply:
+    name: Terraform apply
+    needs: plan
+    runs-on: ubuntu-latest
+    environment: development
+    timeout-minutes: 20
+
+    defaults:
+      run:
+        working-directory: infra/terraform/live/development
+
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: 1.15.8
+          terraform_wrapper: false
+
+      - name: Initialize remote state
+        run: >-
+          terraform init
+          -backend-config="resource_group_name=${{ vars.TF_STATE_RESOURCE_GROUP }}"
+          -backend-config="storage_account_name=${{ vars.TF_STATE_STORAGE_ACCOUNT }}"
+          -backend-config="container_name=${{ vars.TF_STATE_CONTAINER }}"
+          -backend-config="key=development.terraform.tfstate"
+          -backend-config="use_oidc=true"
+          -backend-config="use_azuread_auth=true"
+          -lock-timeout=5m
+
+      - name: Download approved plan
+        uses: actions/download-artifact@v8
+        with:
+          name: terraform-development-plan
+          path: infra/terraform/live/development
+
+      - name: Show approved plan
+        run: terraform show -no-color development.tfplan
+
+      - name: Apply approved plan
+        run: terraform apply -input=false -lock-timeout=5m -auto-approve development.tfplan
+
+      - name: Publish deployment result
+        run: |
+          {
+            echo "## Development desplegado"
+            echo
+            echo "Commit: \`${GITHUB_SHA}\`"
+            echo
+            terraform output -no-color
+          } >> "$GITHUB_STEP_SUMMARY"
