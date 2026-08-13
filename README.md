@@ -9,7 +9,8 @@ Repositorio de documentación, infraestructura como código y automatización De
 - Infraestructura: Terraform con ambientes `development` y `test`.
 - CI/CD: GitHub Actions con autorización de DevOps y autenticación OIDC.
 - Bootstrap Azure desplegado: estado remoto, Container Registry, identidad OIDC, permisos y resource groups.
-- Plataformas `development` y `test`: pendientes de aprobación y ejecución desde GitHub Actions.
+- Plataforma `development` desplegada: Log Analytics y Azure Container Apps Environment en `Chile Central`.
+- Plataforma `test`: pendiente de una release aprobada y de la autorización DevOps.
 - Aplicaciones frontend/backend: sus repositorios y stack continúan pendientes.
 
 ## Accesos rápidos
@@ -24,9 +25,8 @@ Repositorio de documentación, infraestructura como código y automatización De
 
 ## Próxima activación
 
-1. Revisar y fusionar el pull request DevOps en `main`.
-2. Aprobar el plan de `development` desde el environment protegido de GitHub.
-3. Aprobar el `apply` del mismo plan.
-4. Conectar los repositorios o artefactos de frontend y backend cuando el equipo defina sus stacks.
+1. Conectar los repositorios o artefactos de frontend y backend cuando el equipo defina sus stacks.
+2. Incorporar al pipeline la construcción y publicación de imágenes en Azure Container Registry.
+3. Crear una release aprobada cuando exista una versión candidata para desplegar en `test`.
 
-El bootstrap ya genera el costo del Azure Container Registry Basic. Los ambientes no se crean hasta que DevOps apruebe sus despliegues.
+El bootstrap y la plataforma de `development` ya están activos. `test` no se crea hasta que DevOps apruebe su plan y su despliegue.

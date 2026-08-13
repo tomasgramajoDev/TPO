@@ -73,3 +73,12 @@ No se eliminó el antecedente de los eventos genéricos; permanece documentado c
 - Se crearon los environments `development` y `test` con el usuario DevOps como revisor obligatorio.
 - Se cargaron las variables OIDC y del backend en ambos environments, sin `client secret`.
 - Se habilitaron los disparos automáticos: un cambio en `main` prepara `development` y una release publicada prepara `test`; los `apply` continúan sujetos a aprobación DevOps.
+
+## 2026-08-13 — Primer despliegue de development
+
+- Se fusionó el PR de infraestructura en `main`; el archivo Java anterior dejó de formar parte del repositorio vigente.
+- El merge inició el workflow `Deploy development` mediante el disparador automático configurado.
+- DevOps autorizó por separado la generación del plan y la aplicación del artefacto aprobado.
+- El plan revisado creó `cae-obras-publicas-dev` y `log-obras-publicas-dev` en `Chile Central`: 2 altas, 0 cambios y 0 eliminaciones.
+- La ejecución de GitHub Actions finalizó correctamente y guardó el estado en `development.terraform.tfstate`.
+- El ambiente aún no contiene frontend, backend, base de datos ni mensajería; esos componentes continúan pendientes de definición e implementación.

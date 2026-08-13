@@ -9,6 +9,12 @@
 
 Publicar un release significa que la aprobación funcional ya ocurrió. La aprobación del ambiente por DevOps es un control operativo adicional.
 
+Estado operativo al 2026-08-13:
+
+- `development` está desplegado en `Chile Central` con Log Analytics y Azure Container Apps Environment;
+- `test` continúa pendiente de una release aprobada;
+- todavía no hay aplicaciones frontend/backend ejecutándose en los ambientes.
+
 ## Recursos del primer incremento
 
 Cada ambiente contiene:
@@ -39,7 +45,7 @@ Crear los ambientes `development` y `test`, agregar al DevOps como revisor oblig
 | `TF_STATE_CONTAINER` | Contenedor devuelto por el bootstrap; valor predeterminado `tfstate`. |
 | `AZURE_CONTAINER_REGISTRY` | Login server del registro compartido, reservado para el pipeline de aplicaciones. |
 
-`ENABLE_AUTOMATIC_DEPLOYMENTS` queda deshabilitada por ausencia. Mientras no tenga el valor `true`, los despliegues solo pueden iniciarse manualmente mediante `workflow_dispatch`, conservando la autoridad operativa de DevOps incluso si el plan de GitHub no ofrece revisores obligatorios.
+`ENABLE_AUTOMATIC_DEPLOYMENTS` está configurada en `true`. Un merge a `main` o una release publicada pueden iniciar el flujo, pero los jobs de plan y `apply` permanecen bloqueados por la aprobación del environment y conservan la autoridad operativa de DevOps.
 
 Estos identificadores no son contraseñas. No se debe crear `AZURE_CLIENT_SECRET`.
 
@@ -61,8 +67,9 @@ La identidad recibe `Contributor` solamente en los resource groups de ambos ambi
 3. Definir `github_repository` y ejecutar una vez `infra/terraform/bootstrap` con una sesión Azure administrativa.
 4. Migrar el estado local del bootstrap al backend Azure creado.
 5. Configurar variables y revisores de los ambientes GitHub con los outputs del bootstrap.
-6. Ejecutar manualmente los workflows de desarrollo y prueba para verificar acceso.
-7. A partir de allí, usar merge a `main` y releases publicados como disparadores normales.
+6. Ejecutar el workflow de desarrollo para verificar acceso y desplegar la plataforma inicial. Completado el 2026-08-13.
+7. Ejecutar el workflow de prueba cuando exista una release aprobada.
+8. A partir de allí, usar merge a `main` y releases publicados como disparadores normales.
 
 ## Reglas operativas
 
