@@ -16,11 +16,11 @@ El código prepara:
 - resource groups separados por ambiente;
 - Log Analytics y Azure Container Apps Environment por ambiente.
 
-El cambio de PostgreSQL prepara Azure Database for PostgreSQL Flexible Server en `development` con PostgreSQL 16, SKU burstable `B_Standard_B1ms`, 32 GiB, backup de 7 días y sin alta disponibilidad. La contraseña se genera en Terraform y permanece como dato sensible en el estado remoto; no se guarda en Git ni se publica como output.
+Azure Database for PostgreSQL Flexible Server está desplegado en `development` con PostgreSQL 16, zona 3, SKU burstable `B_Standard_B1ms`, 32 GiB, backup de 7 días y sin alta disponibilidad. La contraseña se genera en Terraform y permanece como dato sensible en el estado remoto; no se guarda en Git ni se publica como output.
 
 La regla `postgresql_allow_azure_services = true` permite conectar desde direcciones Azure porque Container Apps Consumption no garantiza un único IP saliente. Esta regla no elimina la autenticación ni TLS, pero amplía el origen de red a otros servicios Azure; deberá reemplazarse por red privada antes de producción.
 
-Todavía no crea las aplicaciones frontend/backend ni la mensajería. El servidor PostgreSQL no debe aplicarse hasta revisar el plan y autorizar el costo.
+El despliegue vigente creó el servidor `psql-obras-publicas-dev-dfc86d` y la base `obras_publicas`. Todavía no crea las aplicaciones frontend/backend ni la mensajería. Todo cambio posterior debe pasar por plan y autorización de DevOps.
 
 ## Estructura
 

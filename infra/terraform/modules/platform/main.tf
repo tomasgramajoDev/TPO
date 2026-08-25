@@ -58,6 +58,7 @@ resource "azurerm_postgresql_flexible_server" "this" {
   name                          = "psql-${local.resource_prefix}-${random_id.postgresql_suffix[0].hex}"
   resource_group_name           = var.resource_group_name
   location                      = var.location
+  zone                          = var.postgresql_zone
   version                       = var.postgresql_version
   administrator_login           = "obrasadmin"
   administrator_password        = random_password.postgresql_admin[0].result

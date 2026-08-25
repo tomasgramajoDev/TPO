@@ -51,6 +51,17 @@ variable "postgresql_version" {
   }
 }
 
+variable "postgresql_zone" {
+  description = "Zona de disponibilidad asignada al servidor PostgreSQL."
+  type        = string
+  default     = null
+
+  validation {
+    condition     = var.postgresql_zone == null || contains(["1", "2", "3"], var.postgresql_zone)
+    error_message = "postgresql_zone debe ser null, 1, 2 o 3."
+  }
+}
+
 variable "postgresql_sku_name" {
   description = "SKU de Azure Database for PostgreSQL Flexible Server."
   type        = string

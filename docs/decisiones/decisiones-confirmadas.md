@@ -32,7 +32,7 @@ Esta página contiene decisiones internas o acuerdos explícitos. Un evento incl
 - El estado remoto de Terraform se almacenará en Azure Blob Storage con autenticación Microsoft Entra ID.
 - Los pipelines se implementarán con GitHub Actions y autenticación OIDC; no se usarán secretos de cliente persistentes.
 - Se crearán ambientes separados `development` y `test`. Producción queda fuera del primer incremento.
-- PostgreSQL es el motor de base de datos elegido para el módulo. Esta decisión no define todavía el servicio administrado de Azure, el tamaño, la red, los backups ni la estrategia de migraciones.
+- PostgreSQL es el motor de base de datos elegido para el módulo. En `development` se usa Azure Database for PostgreSQL Flexible Server 16, SKU `B_Standard_B1ms`, 32 GiB, zona 3, backup de 7 días, sin alta disponibilidad ni backup georredundante. La estrategia de migraciones y la red privada para producción continúan pendientes.
 
 ## Procedencia de información
 

@@ -125,4 +125,6 @@ No se eliminó el antecedente de los eventos genéricos; permanece documentado c
 - Se documentó el riesgo temporal de permitir direcciones Azure mediante la regla `0.0.0.0`; deberá reemplazarse por red privada antes de producción.
 - `terraform fmt` y `terraform validate` finalizaron correctamente para `development` y `test`.
 - El plan real contra el estado remoto quedó en 5 altas, 0 cambios y 0 bajas. Se corrigió antes una deriva del perfil Container Apps para evitar modificar el entorno existente.
-- El plan todavía no fue aplicado; continúa sujeto a revisión y autorización DevOps.
+- DevOps revisó y autorizó por separado el plan y el `apply` del workflow `Deploy development` 32851888220.
+- La ejecución finalizó correctamente y creó `psql-obras-publicas-dev-dfc86d`, la base `obras_publicas` y la regla temporal `allow-azure-services`; el servidor quedó `Ready`.
+- La verificación posterior detectó que Azure había asignado la zona 3. Se incorporó esa zona a Terraform para eliminar la deriva sin modificar el recurso desplegado.
