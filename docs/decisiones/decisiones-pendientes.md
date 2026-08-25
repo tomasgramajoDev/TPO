@@ -2,19 +2,18 @@
 
 ## DevOps y cloud
 
-1. Registrar la suscripción Azure for Students o equivalente que utilizará el proyecto y verificar sus cuotas.
-2. Confirmar los identificadores de la organización y del repositorio GitHub para crear las credenciales federadas OIDC.
-3. Confirmar los repositorios, versiones y comandos reales del frontend y backend antes de crear sus recursos de ejecución y pipelines de build. Una tarjeta recibida menciona React y Spring Boot, pero no reemplaza la verificación de los repositorios.
-4. PostgreSQL ya está desplegado en `development`. Definir la estrategia de migraciones, la red privada y el dimensionamiento para `test`/producción. Elegir también el servicio de mensajería cuando se cierren los contratos de eventos.
-5. Definir IAM de aplicación, secretos, certificados, copias de seguridad y recuperación.
-6. Configurar en GitHub al usuario DevOps como revisor obligatorio de los ambientes `development` y `test`.
-7. Confirmar si existirá ambiente de producción y, en ese caso, su flujo de promoción y aprobación.
-8. Definir construcción y versionado de artefactos, estrategia de rollback y tratamiento de migraciones.
-9. Establecer el presupuesto mensual y los umbrales de alertas cuando se conozca la suscripción.
-10. Adoptar formalmente una Definition of Done del equipo y decidir qué controles serán bloqueantes en CI/CD.
-11. Decidir si el futuro ambiente de producción utilizará feature flags y si una historia puede considerarse terminada estando desplegada pero desactivada.
-12. Definir cómo se generan, revisan y publican las release notes.
-13. Confirmar la herramienta y dinámica de coordinación entre equipos; Nexus, SAFe y el modelo Spotify aparecen como material docente, no como elección del proyecto.
+1. Definir la estrategia de migraciones, la red privada y el dimensionamiento de PostgreSQL para `test`/producción.
+2. Elegir el servicio de mensajería cuando se cierren los contratos de eventos.
+3. Definir IAM de usuarios de aplicación, certificados, copias de seguridad y recuperación. Los secretos técnicos de `development` ya se entregan mediante Container Apps y Terraform.
+4. Confirmar si existirá ambiente de producción y, en ese caso, su flujo de promoción y aprobación.
+5. Definir estrategia de rollback funcional y tratamiento de migraciones. El versionado actual de imágenes por SHA ya es inmutable.
+6. Establecer el presupuesto mensual y los umbrales de alertas.
+7. Adoptar formalmente una Definition of Done del equipo y decidir qué controles serán bloqueantes en CI/CD.
+8. Decidir si el futuro ambiente de producción utilizará feature flags y si una historia puede considerarse terminada estando desplegada pero desactivada.
+9. Definir cómo se generan, revisan y publican las release notes.
+10. Confirmar la herramienta y dinámica de coordinación entre equipos; Nexus, SAFe y el modelo Spotify aparecen como material docente, no como elección del proyecto.
+11. Conseguir que el repositorio propietario acepte `NadineLewit/DesarrolloAppsII_Front#1`; hasta entonces `development` publica el frontend desde el fork.
+12. Implementar el esquema, las migraciones y los endpoints funcionales del backend. El health check y la conectividad PostgreSQL ya están desplegados, pero no equivalen a la aplicación de dominio terminada.
 
 ## Core Municipal
 

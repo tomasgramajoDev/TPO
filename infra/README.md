@@ -20,7 +20,17 @@ Azure Database for PostgreSQL Flexible Server está desplegado en `development` 
 
 La regla `postgresql_allow_azure_services = true` permite conectar desde direcciones Azure porque Container Apps Consumption no garantiza un único IP saliente. Esta regla no elimina la autenticación ni TLS, pero amplía el origen de red a otros servicios Azure; deberá reemplazarse por red privada antes de producción.
 
-El despliegue vigente creó el servidor `psql-obras-publicas-dev-dfc86d` y la base `obras_publicas`. Todavía no crea las aplicaciones frontend/backend ni la mensajería. Todo cambio posterior debe pasar por plan y autorización de DevOps.
+El despliegue vigente creó el servidor `psql-obras-publicas-dev-dfc86d`, la base `obras_publicas` y dos Azure Container Apps públicos en `development`:
+
+- backend: `ca-obras-publicas-dev-backend`, con health check `/api/health` y conexión PostgreSQL por TLS;
+- frontend: `ca-obras-publicas-dev-frontend`, con health check `/health` y proxy `/api/*` hacia el backend.
+
+Las imágenes se almacenan en Azure Container Registry con el SHA del commit como etiqueta inmutable. Container Apps usa la identidad administrada del proyecto para descargarlas; la contraseña de PostgreSQL se entrega al backend como secreto de Container Apps y no se guarda en Git. La mensajería todavía no está provisionada. Todo cambio posterior debe pasar por plan y autorización de DevOps.
+
+URLs vigentes de desarrollo:
+
+- frontend: <https://ca-obras-publicas-dev-frontend.victoriousground-b333790d.chilecentral.azurecontainerapps.io>;
+- backend: <https://ca-obras-publicas-dev-backend.victoriousground-b333790d.chilecentral.azurecontainerapps.io>.
 
 ## Estructura
 
@@ -125,6 +135,10 @@ De forma predeterminada, DevOps inicia manualmente `deploy-development.yml` desp
 3. El plan queda visible en el resumen y como artefacto por siete días.
 4. DevOps revisa y autoriza el job `apply`.
 5. Se aplica exactamente el plan aprobado sobre el mismo commit.
+
+`publish-development-images.yml` obtiene el backend y el frontend desde sus ramas `develop`, ejecuta sus validaciones, construye las imágenes y las publica en ACR con sus SHA. Después se actualizan en Terraform los identificadores inmutables que se desplegarán. El frontend publicado actualmente proviene del fork `tomasgramajoDev/DesarrolloAppsII_Front` hasta que el repositorio propietario acepte su pull request.
+
+Después de cada despliegue DevOps debe verificar, como mínimo, `/health` en el frontend, `/api/health` directamente en el backend y `/api/health` a través del proxy del frontend. La última comprobación confirma simultáneamente el enrutamiento frontend-backend y la consulta `SELECT 1` sobre PostgreSQL.
 
 ### Test
 

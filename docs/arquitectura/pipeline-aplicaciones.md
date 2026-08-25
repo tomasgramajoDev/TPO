@@ -2,34 +2,26 @@
 
 ## Estado
 
-Repositorios y comandos base verificados el 2026-08-25. La validación CI puede prepararse, pero el despliegue integral continúa bloqueado por la falta de una API ejecutable en el backend, la integración con PostgreSQL y los permisos/configuración Azure de los repositorios.
+Frontend, backend y PostgreSQL están desplegados y verificados en Azure `development` desde el 2026-08-25. El backend expone `/api/health`, consulta PostgreSQL con `SELECT 1` y recibe sus credenciales mediante un secreto de Container Apps. El frontend expone `/health` y enruta `/api/*` al backend por HTTPS.
 
-El pipeline Terraform crea la plataforma. El pipeline de aplicación deberá construir y desplegar frontend y backend cuando cada repositorio entregue los siguientes datos:
-
-- URL y visibilidad del repositorio;
-- lenguaje y versión;
-- comando de instalación;
-- comando de pruebas;
-- comando de build;
-- ruta del `Dockerfile` y contexto Docker;
-- puerto interno;
-- endpoint de health check;
-- variables públicas y secretos requeridos.
+Este estado valida la plataforma, el pipeline y la conectividad técnica. No implica que estén implementados el esquema, las migraciones ni los endpoints funcionales del dominio de Obras Públicas.
 
 ## Repositorios y comandos verificados
 
 | Componente | Repositorio y rama predeterminada | Stack | Validación local verificada |
 | --- | --- | --- | --- |
-| Frontend | `NadineLewit/DesarrolloAppsII_Front`, `main` | React 19, TypeScript 6, Vite 8, Node 24, Nginx 1.29 | `npm ci`, `npm run lint`, `npm test` y `npm run build`: 2 archivos y 4 pruebas aprobadas; imagen Docker disponible. |
-| Backend | `ignacionogue/DesarrolloDeAplicacionesIIBack`, `master` | Spring Boot 4.1.0, Java 17, Maven Wrapper | `./mvnw test`: 1 prueba aprobada y build correcto. No contiene todavía API web, persistencia PostgreSQL, health check ni Dockerfile en la versión recibida. |
+| Frontend | `tomasgramajoDev/DesarrolloAppsII_Front`, `develop` para el despliegue; PR abierto hacia `NadineLewit/DesarrolloAppsII_Front` | React 19, TypeScript 6, Vite 8, Node 24, Nginx 1.29 | `npm ci`, lint, 4 pruebas, build e imagen Docker aprobados. `/health` y proxy HTTPS `/api/*` verificados. |
+| Backend | `ignacionogue/DesarrolloDeAplicacionesIIBack`, `develop` | Spring Boot 4.1.0, Java 17, Maven Wrapper, Spring JDBC y PostgreSQL | 2 pruebas, empaquetado e imagen Docker aprobados. `/api/health` y conexión PostgreSQL verificados. |
 
 El usuario autenticado en GitHub tiene permiso `WRITE` sobre el backend y solo `READ` sobre el frontend. El CI del frontend deberá ingresar mediante un pull request desde un fork o después de que el propietario otorgue permisos de escritura.
 
-## Implementación preparada
+## Implementación desplegada
 
-- Backend: pull request `ignacionogue/DesarrolloDeAplicacionesIIBack#1`, con Maven `clean verify`, construcción de imagen Docker y ejecución no privilegiada. GitHub Actions completó correctamente pruebas, empaquetado y build del contenedor.
-- Frontend: pull request `NadineLewit/DesarrolloAppsII_Front#1`, con `npm ci`, lint, pruebas, build y construcción de imagen. La ejecución equivalente en el fork completó correctamente todas las etapas; el repositorio propietario todavía debe aceptar el pull request.
-- Ningún workflow publica imágenes ni despliega todavía; esta separación evita consumir Azure o exponer credenciales antes de configurar OIDC, environments y recursos de aplicación.
+- Backend: el pull request `ignacionogue/DesarrolloDeAplicacionesIIBack#1` fue fusionado en `develop`. La imagen desplegada es `obras-publicas-backend:662ad1efc318377e93d73399ff94099153941a31`.
+- Frontend: la imagen desplegada es `obras-publicas-frontend:c5161311424f8029c126310ebd54e0038f771624`. El pull request `NadineLewit/DesarrolloAppsII_Front#1` sigue pendiente; mientras tanto, el pipeline usa la rama `develop` del fork autorizado.
+- Publicación: `publish-development-images.yml` valida ambos repositorios, publica imágenes con etiquetas SHA en ACR y conserva su digest.
+- Despliegue: Terraform administra ambos Container Apps, ingress, probes, identidad para ACR, variables y secretos. DevOps aprueba por separado el plan y el `apply`.
+- Verificación: frontend HTTP `200`, `/health` correcto, backend `/api/health` con `database: up` tanto directo como a través del proxy del frontend.
 
 ## Flujo acordado — GitFlow simplificado
 
@@ -92,10 +84,9 @@ Cuando exista producción, un incidente crítico se corregirá en `hotfix/*` cre
 
 ## Decisiones pendientes
 
-- Crear y proteger las ramas `develop` y `release/*`; actualmente los repositorios solo publican `main` en frontend y `master` en backend.
-- Revisar y aceptar el pull request para incorporar el workflow del frontend.
-- Implementar en el backend una API web, health check y configuración PostgreSQL antes de desplegarlo con ingress.
-- Servicio PostgreSQL de Azure y estrategia de migraciones.
+- Definir y proteger las ramas `release/*` y acordar la protección definitiva de `develop` en ambos repositorios.
+- Revisar y aceptar el pull request del frontend en el repositorio propietario para dejar de depender del fork.
+- Implementar el esquema, las migraciones y los endpoints funcionales del backend.
+- Definir la estrategia de migraciones PostgreSQL y reemplazar la regla temporal de acceso desde servicios Azure por red privada antes de producción.
 - Servicio de mensajería.
-- Gestión de secretos de las aplicaciones.
-- Health checks y criterios de rollback.
+- Criterios funcionales de smoke test y rollback, además de los health checks técnicos ya implementados.
