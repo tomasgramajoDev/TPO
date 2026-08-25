@@ -142,3 +142,10 @@ resource "azurerm_role_assignment" "github_acr_push" {
   principal_id                     = azurerm_user_assigned_identity.github_actions.principal_id
   skip_service_principal_aad_check = true
 }
+
+resource "azurerm_role_assignment" "github_identity_operator" {
+  scope                            = azurerm_user_assigned_identity.github_actions.id
+  role_definition_name             = "Managed Identity Operator"
+  principal_id                     = azurerm_user_assigned_identity.github_actions.principal_id
+  skip_service_principal_aad_check = true
+}
