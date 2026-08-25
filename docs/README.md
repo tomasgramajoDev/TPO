@@ -17,7 +17,11 @@ Este repositorio conserva el alcance funcional, las reglas, los ciclos de vida, 
 - [Decisión de cloud y CI/CD](arquitectura/adr-001-cloud-y-cicd.md): elección de Azure, Terraform y GitHub Actions.
 - [Operación DevOps](arquitectura/operacion-devops.md): ambientes, despliegues y configuración requerida.
 - [Pipeline de aplicaciones](arquitectura/pipeline-aplicaciones.md): contrato que deberán cumplir frontend y backend para construir, promover y desplegar imágenes.
+- [Guía DevOps de GitFlow](arquitectura/guia-devops-gitflow.md): ramas, ambientes, cierre de sprint, autorizaciones y releases.
 - [Clase 2](fuentes/clase-2.md): contenidos de la clase clasificados como contexto, recomendaciones o decisiones pendientes.
+- [Clase 4 — Integración de aplicaciones](fuentes/clase-4-integracion-aplicaciones.md): tipos, criterios, riesgos y resolución de los cinco escenarios.
+- [Backlog, ciclos y prototipos del 2026-08-25](fuentes/backlog-y-ciclos-2026-08-25.md): nueva evidencia recibida y diferencias contractuales detectadas.
+- [Diagramas](diagramas/README.md): secuencia propuesta y casos de uso del módulo.
 
 ## Dónde guardar información nueva
 
@@ -48,6 +52,8 @@ Los contratos usan los estados normalizados `PROPOSED`, `RECEIVED`, `AGREED`, `C
 - Matriz `Integraciones con Módulos`: enviada por el PO y recibida como fuente transversal de contratos; sus diferencias con comunicaciones directas permanecen pendientes de resolución.
 - Clase 1 y cronograma de la asignatura: contexto académico y fechas de evaluación; no sustituyen las autorizaciones explícitas del usuario.
 - Clase 2: eventos y sistemas asíncronos, metodologías ágiles, Definition of Done, Git y escalado ágil; se conserva como material docente y no como mandato automático del TPO.
+- Clase 4 / Unidad IV: criterios y tipos de integración; se conserva como material docente y sustento de la actividad de MediConecta.
+- Backlog, ciclos y prototipos recibidos el 2026-08-25: contexto funcional adicional en estado `RECEIVED`; sus contradicciones no sustituyen el catálogo vigente.
 - Instrucciones del usuario de esta sesión: autoridad vigente para la fase de desarrollo DevOps, convenciones y clasificación de certeza.
 
 Cuando dos fuentes difieren, prevalece una sustitución explícita y más reciente solo para el contenido reemplazado; la diferencia queda registrada en el historial o como decisión pendiente.

@@ -49,7 +49,7 @@ El usuario autorizó el inicio de la fase de desarrollo DevOps el 2026-08-11. Es
 
 - Implementación del frontend y backend.
 - Diseño definitivo de APIs o topics/colas.
-- Base de datos, mensajería y autenticación hasta definir el stack de aplicación y los contratos correspondientes.
+- Aprovisionamiento y configuración de la base de datos, mensajería y autenticación. PostgreSQL ya está elegido como motor, pero todavía deben definirse el servicio de Azure, la operación y las migraciones.
 - Ambiente de producción hasta acordar su flujo de promoción.
 - Aplicación móvil independiente.
 - Acceso directo del ciudadano a Obras Públicas.

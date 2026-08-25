@@ -33,3 +33,65 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "enable_postgresql" {
+  description = "Crea Azure Database for PostgreSQL Flexible Server en el ambiente."
+  type        = bool
+  default     = false
+}
+
+variable "postgresql_version" {
+  description = "Versión mayor de PostgreSQL."
+  type        = string
+  default     = "16"
+
+  validation {
+    condition     = contains(["14", "15", "16", "17", "18"], var.postgresql_version)
+    error_message = "postgresql_version debe ser una versión soportada entre 14 y 18."
+  }
+}
+
+variable "postgresql_sku_name" {
+  description = "SKU de Azure Database for PostgreSQL Flexible Server."
+  type        = string
+  default     = "B_Standard_B1ms"
+}
+
+variable "postgresql_storage_mb" {
+  description = "Almacenamiento máximo de PostgreSQL en MiB. Azure no permite reducirlo."
+  type        = number
+  default     = 32768
+
+  validation {
+    condition     = contains([32768, 65536, 131072, 262144, 524288, 1048576], var.postgresql_storage_mb)
+    error_message = "postgresql_storage_mb debe usar un tamaño soportado de al menos 32768 MiB."
+  }
+}
+
+variable "postgresql_backup_retention_days" {
+  description = "Días de retención de backups de PostgreSQL."
+  type        = number
+  default     = 7
+
+  validation {
+    condition     = var.postgresql_backup_retention_days >= 7 && var.postgresql_backup_retention_days <= 35
+    error_message = "postgresql_backup_retention_days debe estar entre 7 y 35."
+  }
+}
+
+variable "postgresql_database_name" {
+  description = "Nombre de la base de datos propia del módulo."
+  type        = string
+  default     = "obras_publicas"
+
+  validation {
+    condition     = can(regex("^[a-z][a-z0-9_]{2,62}$", var.postgresql_database_name))
+    error_message = "postgresql_database_name debe ser un identificador PostgreSQL en minúsculas."
+  }
+}
+
+variable "postgresql_allow_azure_services" {
+  description = "Permite conexiones desde direcciones de servicios Azure. Solo se habilita de forma explícita."
+  type        = bool
+  default     = false
+}
