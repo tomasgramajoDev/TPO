@@ -21,3 +21,11 @@ output "postgresql_database_name" {
 output "postgresql_administrator_login" {
   value = module.platform.postgresql_administrator_login
 }
+
+output "backend_fqdn" {
+  value = module.platform.backend_fqdn
+}
+
+output "frontend_fqdn" {
+  value = module.platform.frontend_fqdn
+}

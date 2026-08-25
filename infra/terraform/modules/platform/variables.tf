@@ -106,3 +106,33 @@ variable "postgresql_allow_azure_services" {
   type        = bool
   default     = false
 }
+
+variable "enable_applications" {
+  description = "Crea las Container Apps de frontend y backend."
+  type        = bool
+  default     = false
+}
+
+variable "container_registry_server" {
+  description = "Servidor del Azure Container Registry que contiene las imágenes."
+  type        = string
+  default     = null
+}
+
+variable "container_registry_identity_id" {
+  description = "Resource ID de la identidad administrada con permiso AcrPull."
+  type        = string
+  default     = null
+}
+
+variable "backend_image" {
+  description = "Referencia inmutable de la imagen del backend."
+  type        = string
+  default     = null
+}
+
+variable "frontend_image" {
+  description = "Referencia inmutable de la imagen del frontend."
+  type        = string
+  default     = null
+}

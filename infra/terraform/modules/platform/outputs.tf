@@ -27,3 +27,13 @@ output "postgresql_administrator_login" {
   description = "Usuario administrador de PostgreSQL o null cuando está deshabilitado."
   value       = var.enable_postgresql ? "obrasadmin" : null
 }
+
+output "backend_fqdn" {
+  description = "FQDN público del backend o null cuando está deshabilitado."
+  value       = try(azurerm_container_app.backend[0].ingress[0].fqdn, null)
+}
+
+output "frontend_fqdn" {
+  description = "FQDN público del frontend o null cuando está deshabilitado."
+  value       = try(azurerm_container_app.frontend[0].ingress[0].fqdn, null)
+}
