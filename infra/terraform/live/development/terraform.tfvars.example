@@ -13,3 +13,8 @@ postgresql_storage_mb            = 32768
 postgresql_backup_retention_days = 7
 postgresql_database_name         = "obras_publicas"
 postgresql_allow_azure_services  = true
+
+container_registry_server      = "acrobraspublica302ceba6.azurecr.io"
+container_registry_identity_id = "/subscriptions/<subscription-id>/resourceGroups/rg-obras-publicas-shared/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-obras-publicas-github"
+backend_image                  = "acrobraspublica302ceba6.azurecr.io/obras-publicas-backend:<commit-sha>"
+frontend_image                 = "acrobraspublica302ceba6.azurecr.io/obras-publicas-frontend:<commit-sha>"
