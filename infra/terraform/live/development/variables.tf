@@ -22,6 +22,12 @@ variable "postgresql_version" {
   default     = "16"
 }
 
+variable "postgresql_zone" {
+  description = "Zona de disponibilidad de PostgreSQL en development."
+  type        = string
+  default     = "3"
+}
+
 variable "postgresql_sku_name" {
   description = "SKU de PostgreSQL para development."
   type        = string

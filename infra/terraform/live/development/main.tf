@@ -9,6 +9,7 @@ module "platform" {
 
   enable_postgresql                = true
   postgresql_version               = var.postgresql_version
+  postgresql_zone                  = var.postgresql_zone
   postgresql_sku_name              = var.postgresql_sku_name
   postgresql_storage_mb            = var.postgresql_storage_mb
   postgresql_backup_retention_days = var.postgresql_backup_retention_days

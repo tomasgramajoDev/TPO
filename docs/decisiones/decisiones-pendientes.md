@@ -5,7 +5,7 @@
 1. Registrar la suscripción Azure for Students o equivalente que utilizará el proyecto y verificar sus cuotas.
 2. Confirmar los identificadores de la organización y del repositorio GitHub para crear las credenciales federadas OIDC.
 3. Confirmar los repositorios, versiones y comandos reales del frontend y backend antes de crear sus recursos de ejecución y pipelines de build. Una tarjeta recibida menciona React y Spring Boot, pero no reemplaza la verificación de los repositorios.
-4. PostgreSQL ya está elegido como motor. Definir el servicio administrado exacto en Azure, versión, tamaño, red, alta disponibilidad, backups, credenciales, migraciones y costo. Elegir también el servicio de mensajería cuando se cierren los contratos de eventos.
+4. PostgreSQL ya está desplegado en `development`. Definir la estrategia de migraciones, la red privada y el dimensionamiento para `test`/producción. Elegir también el servicio de mensajería cuando se cierren los contratos de eventos.
 5. Definir IAM de aplicación, secretos, certificados, copias de seguridad y recuperación.
 6. Configurar en GitHub al usuario DevOps como revisor obligatorio de los ambientes `development` y `test`.
 7. Confirmar si existirá ambiente de producción y, en ese caso, su flujo de promoción y aprobación.
