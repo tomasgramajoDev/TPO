@@ -128,3 +128,16 @@ No se eliminó el antecedente de los eventos genéricos; permanece documentado c
 - DevOps revisó y autorizó por separado el plan y el `apply` del workflow `Deploy development` 32851888220.
 - La ejecución finalizó correctamente y creó `psql-obras-publicas-dev-dfc86d`, la base `obras_publicas` y la regla temporal `allow-azure-services`; el servidor quedó `Ready`.
 - La verificación posterior detectó que Azure había asignado la zona 3. Se incorporó esa zona a Terraform para eliminar la deriva sin modificar el recurso desplegado.
+
+## 2026-08-25 — Frontend y backend desplegados en development
+
+- Se fusionó `ignacionogue/DesarrolloDeAplicacionesIIBack#1` en `develop`. El backend incorporó API web, Spring JDBC, configuración PostgreSQL, `/api/health`, pruebas y una imagen Docker no privilegiada.
+- Se publicó la imagen backend `662ad1efc318377e93d73399ff94099153941a31` y la imagen frontend `c5161311424f8029c126310ebd54e0038f771624` en Azure Container Registry, ambas identificadas por SHA inmutable.
+- El frontend incorporó un proxy Nginx `/api/*` hacia el backend. Una primera prueba detectó un `502` por falta de TLS SNI; se agregó `proxy_ssl_server_name` y la corrección quedó incluida en la imagen vigente.
+- Terraform creó `ca-obras-publicas-dev-backend` y `ca-obras-publicas-dev-frontend` con ingress HTTPS, escalado Consumption de 0 a 1 réplica, probes y protección `prevent_destroy`.
+- La identidad OIDC no podía asignar la identidad administrada a Container Apps. Se agregó `Managed Identity Operator` limitado a la identidad del proyecto mediante bootstrap Terraform; no se ampliaron permisos a toda la suscripción.
+- DevOps autorizó el plan y el `apply` inicial del workflow 32856242288 y luego la actualización del frontend del workflow 32859326234. Este último aplicó 0 altas, 1 cambio y 0 bajas.
+- Se verificaron el frontend público con HTTP 200, `/health`, el backend directo `/api/health` y el mismo endpoint mediante el proxy. En ambos accesos al backend se obtuvo `status: ok` y `database: up`, confirmando la consulta real a PostgreSQL.
+- El plan Terraform posterior informó `No changes`; la infraestructura real coincide con el código.
+- El pull request `NadineLewit/DesarrolloAppsII_Front#1` permanece pendiente porque DevOps tiene permiso de lectura en el repositorio propietario. Hasta su aceptación, la imagen se construye desde la rama `develop` del fork `tomasgramajoDev/DesarrolloAppsII_Front`.
+- Este despliegue completa la base técnica de `development`; no implica que ya existan el esquema, las migraciones o los endpoints funcionales del dominio.
