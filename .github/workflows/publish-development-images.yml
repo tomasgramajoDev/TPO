@@ -1,0 +1,104 @@
+name: Publish development images
+
+on:
+  workflow_dispatch:
+    inputs:
+      backend_ref:
+        description: Backend ref to publish
+        required: true
+        default: develop
+      frontend_ref:
+        description: Frontend ref to publish from the temporary fork
+        required: true
+        default: main
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: application-images-development
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Build and publish application images
+    runs-on: ubuntu-latest
+    environment: development
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout infrastructure repository
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Checkout backend
+        uses: actions/checkout@v6
+        with:
+          repository: ignacionogue/DesarrolloDeAplicacionesIIBack
+          ref: ${{ inputs.backend_ref }}
+          path: applications/backend
+          persist-credentials: false
+
+      - name: Checkout frontend fork
+        uses: actions/checkout@v6
+        with:
+          repository: tomasgramajoDev/DesarrolloAppsII_Front
+          ref: ${{ inputs.frontend_ref }}
+          path: applications/frontend
+          persist-credentials: false
+
+      - name: Login to Azure with OIDC
+        uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Login to Azure Container Registry
+        run: az acr login --name "${AZURE_CONTAINER_REGISTRY%%.*}"
+        env:
+          AZURE_CONTAINER_REGISTRY: ${{ vars.AZURE_CONTAINER_REGISTRY }}
+
+      - name: Resolve immutable tags
+        id: versions
+        shell: bash
+        run: |
+          backend_sha="$(git -C applications/backend rev-parse HEAD)"
+          frontend_sha="$(git -C applications/frontend rev-parse HEAD)"
+          echo "backend_sha=${backend_sha}" >> "$GITHUB_OUTPUT"
+          echo "frontend_sha=${frontend_sha}" >> "$GITHUB_OUTPUT"
+
+      - name: Build and push backend
+        env:
+          REGISTRY: ${{ vars.AZURE_CONTAINER_REGISTRY }}
+          IMAGE_SHA: ${{ steps.versions.outputs.backend_sha }}
+        run: |
+          docker build --tag "${REGISTRY}/obras-publicas-backend:${IMAGE_SHA}" applications/backend
+          docker push "${REGISTRY}/obras-publicas-backend:${IMAGE_SHA}"
+
+      - name: Build and push frontend
+        env:
+          REGISTRY: ${{ vars.AZURE_CONTAINER_REGISTRY }}
+          IMAGE_SHA: ${{ steps.versions.outputs.frontend_sha }}
+        run: |
+          docker build \
+            --build-arg VITE_API_BASE_URL=/api \
+            --build-arg VITE_APP_ENV=development \
+            --tag "${REGISTRY}/obras-publicas-frontend:${IMAGE_SHA}" \
+            applications/frontend
+          docker push "${REGISTRY}/obras-publicas-frontend:${IMAGE_SHA}"
+
+      - name: Publish immutable image references
+        env:
+          REGISTRY: ${{ vars.AZURE_CONTAINER_REGISTRY }}
+          BACKEND_SHA: ${{ steps.versions.outputs.backend_sha }}
+          FRONTEND_SHA: ${{ steps.versions.outputs.frontend_sha }}
+        run: |
+          {
+            echo "## Application images published"
+            echo
+            echo "Backend: \`${REGISTRY}/obras-publicas-backend:${BACKEND_SHA}\`"
+            echo "Frontend: \`${REGISTRY}/obras-publicas-frontend:${FRONTEND_SHA}\`"
+          } >> "$GITHUB_STEP_SUMMARY"
