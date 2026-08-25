@@ -4,18 +4,17 @@
 
 1. Registrar la suscripción Azure for Students o equivalente que utilizará el proyecto y verificar sus cuotas.
 2. Confirmar los identificadores de la organización y del repositorio GitHub para crear las credenciales federadas OIDC.
-3. Definir el stack del frontend y backend antes de crear sus recursos de ejecución y pipelines de build.
-4. Elegir la base de datos y el servicio de mensajería cuando se cierren los requisitos técnicos y contratos de eventos.
+3. Confirmar los repositorios, versiones y comandos reales del frontend y backend antes de crear sus recursos de ejecución y pipelines de build. Una tarjeta recibida menciona React y Spring Boot, pero no reemplaza la verificación de los repositorios.
+4. PostgreSQL ya está elegido como motor. Definir el servicio administrado exacto en Azure, versión, tamaño, red, alta disponibilidad, backups, credenciales, migraciones y costo. Elegir también el servicio de mensajería cuando se cierren los contratos de eventos.
 5. Definir IAM de aplicación, secretos, certificados, copias de seguridad y recuperación.
 6. Configurar en GitHub al usuario DevOps como revisor obligatorio de los ambientes `development` y `test`.
-7. Definir quién aprueba funcionalmente un release antes de publicarlo.
-8. Confirmar si existirá ambiente de producción y, en ese caso, su flujo de promoción y aprobación.
-9. Definir construcción y versionado de artefactos, estrategia de rollback y tratamiento de migraciones.
-10. Establecer el presupuesto mensual y los umbrales de alertas cuando se conozca la suscripción.
-11. Adoptar formalmente una Definition of Done del equipo y decidir qué controles serán bloqueantes en CI/CD.
-12. Decidir si el futuro ambiente de producción utilizará feature flags y si una historia puede considerarse terminada estando desplegada pero desactivada.
-13. Definir cómo se generan, revisan y publican las release notes.
-14. Confirmar la herramienta y dinámica de coordinación entre equipos; Nexus, SAFe y el modelo Spotify aparecen como material docente, no como elección del proyecto.
+7. Confirmar si existirá ambiente de producción y, en ese caso, su flujo de promoción y aprobación.
+8. Definir construcción y versionado de artefactos, estrategia de rollback y tratamiento de migraciones.
+9. Establecer el presupuesto mensual y los umbrales de alertas cuando se conozca la suscripción.
+10. Adoptar formalmente una Definition of Done del equipo y decidir qué controles serán bloqueantes en CI/CD.
+11. Decidir si el futuro ambiente de producción utilizará feature flags y si una historia puede considerarse terminada estando desplegada pero desactivada.
+12. Definir cómo se generan, revisan y publican las release notes.
+13. Confirmar la herramienta y dinámica de coordinación entre equipos; Nexus, SAFe y el modelo Spotify aparecen como material docente, no como elección del proyecto.
 
 ## Core Municipal
 
@@ -86,3 +85,9 @@
 | Eventos de ampliación hacia M1 | La matriz del PO incluye los tres `publicWorksExtension*`; la lista anterior para Expedientes no los incluía. | Mantenerlos `RECEIVED` para esa ruta y confirmar con M1. |
 | Payload de progreso | La documentación anterior expresaba `stageId` o `milestoneId`; la matriz del PO lista ambos. | Confirmar cardinalidad y obligatoriedad con M1/Core. |
 | Convenciones Core | La matriz del PO menciona UUID, ISO 8601, versión y JSON Schema; las convenciones exactas seguían pendientes de Core. | Registrar como `RECEIVED`, sin fijarlas como definitivas hasta confirmación de M9. |
+| Evento al crear borrador | El backlog recibido indica que no se publica un evento al crear el borrador; la matriz del PO y el catálogo `RECEIVED` incluyen `publicWorksProjectCreated`. | No publicar ni retirar el evento por inferencia; confirmar con PO, M1 y Core. |
+| Ingreso desde M2 | Un ciclo usa `ticketCreated`; el catálogo vigente usa `complaintRouted`. | Mantener `complaintRouted` como nombre documentado y pedir a M2 el contrato definitivo. |
+| Respuesta de corte de calle | Un ciclo usa `streetClosureApproved`; el catálogo vigente usa `streetClosureAuthorized`. | Mantener ambas variantes registradas y confirmar con M7/Core. |
+| Actualización de reclamo | El ciclo de órdenes invoca `updateTicketStatus`, pero ese identificador no figura en el catálogo vigente. | Tratarlo como operación ilustrativa, no como contrato implementable, hasta definir API o evento con M2. |
+| Finalización e inspección de orden | El backlog ubica el `workOrderCompleted` definitivo después de la inspección; el ciclo y catálogo separan finalización operativa, `workOrderValidated` y `workOrderReopened`. | No unificar los hechos. Confirmar quién emite cada evento y cuál cierra el proceso externo. |
+| Aplicación móvil | El backlog menciona “App Móvil”; el alcance confirmado excluye una aplicación móvil independiente y define portal web responsive. | Mantener portal responsive como alcance vigente; pedir autorización explícita si se requiere una app independiente. |

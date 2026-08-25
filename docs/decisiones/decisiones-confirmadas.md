@@ -17,8 +17,11 @@ Esta página contiene decisiones internas o acuerdos explícitos. Un evento incl
 - La infraestructura se aprovisionará y administrará como código mediante Terraform.
 - DevOps es responsable de preparar y administrar los pipelines.
 - El despliegue deberá ser lanzado o autorizado por DevOps.
-- Un pull request fusionado en `main` habilita el despliegue al ambiente `development`.
-- Un release publicado después de su aprobación habilita el despliegue al ambiente `test`.
+- Las aplicaciones seguirán un GitFlow simplificado: `feature/*` nace desde `develop`, los pull requests se fusionan en `develop`, la estabilización del sprint usa `release/vX.Y.Z` y las versiones aprobadas se fusionan en `main`.
+- Un pull request de aplicación fusionado en `develop` habilita el despliegue al ambiente `development`.
+- Una rama `release/vX.Y.Z` creada al cerrar el sprint habilita la promoción de la versión candidata al ambiente `test`.
+- El Product Owner realiza la aprobación funcional en `test`; DevOps mantiene una autorización operativa independiente para el despliegue.
+- `main` conserva versiones aprobadas y no despliega a producción mientras ese ambiente siga fuera del alcance.
 - Los ambientes de GitHub deben exigir revisión de DevOps antes de ejecutar el despliegue.
 
 ## Plataforma cloud y CI/CD
@@ -29,6 +32,7 @@ Esta página contiene decisiones internas o acuerdos explícitos. Un evento incl
 - El estado remoto de Terraform se almacenará en Azure Blob Storage con autenticación Microsoft Entra ID.
 - Los pipelines se implementarán con GitHub Actions y autenticación OIDC; no se usarán secretos de cliente persistentes.
 - Se crearán ambientes separados `development` y `test`. Producción queda fuera del primer incremento.
+- PostgreSQL es el motor de base de datos elegido para el módulo. Esta decisión no define todavía el servicio administrado de Azure, el tamaño, la red, los backups ni la estrategia de migraciones.
 
 ## Procedencia de información
 

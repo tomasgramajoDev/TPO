@@ -2,12 +2,20 @@
 
 ## Ambientes
 
-| Ambiente | Disparador | Control de DevOps | Estado Terraform |
-| --- | --- | --- | --- |
-| `development` | Pull request fusionado en `main` o ejecución manual | Aprobación para generar el plan y nueva aprobación antes de aplicarlo | `development.terraform.tfstate` |
-| `test` | Release publicado o ejecución manual | Aprobación para generar el plan y nueva aprobación antes de aplicarlo | `test.terraform.tfstate` |
+El flujo GitFlow siguiente corresponde a los futuros pipelines de frontend y backend. Los workflows existentes en este repositorio administran la plataforma Terraform y conservan sus disparadores actuales hasta que se diseñe una estrategia de ramas específica para infraestructura.
 
-Publicar un release significa que la aprobación funcional ya ocurrió. La aprobación del ambiente por DevOps es un control operativo adicional.
+| Ambiente | Disparador de aplicación acordado | Control de DevOps | Estado Terraform |
+| --- | --- | --- | --- |
+| `development` | Pull request de aplicación fusionado en `develop` | Autorización del despliegue y revisión de smoke tests | `development.terraform.tfstate` |
+| `test` | Rama `release/vX.Y.Z` creada o actualizada al cerrar el sprint | Autorización del despliegue y revisión de smoke tests | `test.terraform.tfstate` |
+
+La versión candidata se prueba en `test`; luego el Product Owner la aprueba funcionalmente. Esa aprobación no reemplaza el control operativo de DevOps. Al finalizar, la rama de release se fusiona en `main` y se etiqueta. `main` representa una versión aprobada, pero no despliega a producción mientras ese ambiente no exista.
+
+Estado operativo al 2026-08-13:
+
+- `development` está desplegado en `Chile Central` con Log Analytics y Azure Container Apps Environment;
+- `test` continúa pendiente de una release aprobada;
+- todavía no hay aplicaciones frontend/backend ejecutándose en los ambientes.
 
 ## Recursos del primer incremento
 
@@ -39,7 +47,7 @@ Crear los ambientes `development` y `test`, agregar al DevOps como revisor oblig
 | `TF_STATE_CONTAINER` | Contenedor devuelto por el bootstrap; valor predeterminado `tfstate`. |
 | `AZURE_CONTAINER_REGISTRY` | Login server del registro compartido, reservado para el pipeline de aplicaciones. |
 
-`ENABLE_AUTOMATIC_DEPLOYMENTS` queda deshabilitada por ausencia. Mientras no tenga el valor `true`, los despliegues solo pueden iniciarse manualmente mediante `workflow_dispatch`, conservando la autoridad operativa de DevOps incluso si el plan de GitHub no ofrece revisores obligatorios.
+`ENABLE_AUTOMATIC_DEPLOYMENTS` está configurada en `true` para los workflows Terraform actuales. Un merge a `main` o una release publicada pueden iniciar el flujo de plataforma, pero los jobs de plan y `apply` permanecen bloqueados por la aprobación del environment y conservan la autoridad operativa de DevOps. Esto no define los disparadores de las aplicaciones: al recibir frontend y backend se implementarán con `develop` para `development` y `release/*` para `test`.
 
 Estos identificadores no son contraseñas. No se debe crear `AZURE_CLIENT_SECRET`.
 
@@ -61,8 +69,9 @@ La identidad recibe `Contributor` solamente en los resource groups de ambos ambi
 3. Definir `github_repository` y ejecutar una vez `infra/terraform/bootstrap` con una sesión Azure administrativa.
 4. Migrar el estado local del bootstrap al backend Azure creado.
 5. Configurar variables y revisores de los ambientes GitHub con los outputs del bootstrap.
-6. Ejecutar manualmente los workflows de desarrollo y prueba para verificar acceso.
-7. A partir de allí, usar merge a `main` y releases publicados como disparadores normales.
+6. Ejecutar el workflow de desarrollo para verificar acceso y desplegar la plataforma inicial. Completado el 2026-08-13.
+7. Ejecutar el workflow de prueba cuando exista una release aprobada.
+8. Mantener los disparadores actuales para Terraform y crear por separado los pipelines de aplicación con el GitFlow acordado.
 
 ## Reglas operativas
 

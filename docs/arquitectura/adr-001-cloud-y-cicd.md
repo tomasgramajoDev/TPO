@@ -37,7 +37,7 @@ Terraform permite versionar y revisar la infraestructura. OIDC evita guardar cre
 - El equipo necesita una suscripción Azure activa y un repositorio GitHub antes del primer despliegue real.
 - La identidad OIDC y los ambientes protegidos se configuran una sola vez.
 - El primer incremento crea la plataforma de ejecución y observabilidad, no la aplicación.
-- Base de datos, mensajería, autenticación, registro de contenedores y producción se decidirán cuando el stack y los contratos estén listos.
+- PostgreSQL fue elegido como motor de base de datos; su servicio administrado, topología y operación se decidirán cuando estén listos el stack y los requisitos. Mensajería, autenticación y producción continúan pendientes.
 
 ## Referencias
 
