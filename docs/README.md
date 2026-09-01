@@ -18,6 +18,7 @@ Este repositorio conserva el alcance funcional, las reglas, los ciclos de vida, 
 - [Operación DevOps](arquitectura/operacion-devops.md): ambientes, despliegues y configuración requerida.
 - [Pipeline de aplicaciones](arquitectura/pipeline-aplicaciones.md): contrato que deberán cumplir frontend y backend para construir, promover y desplegar imágenes.
 - [Guía DevOps de GitFlow](arquitectura/guia-devops-gitflow.md): ramas, ambientes, cierre de sprint, autorizaciones y releases.
+- [Guía DevOps desde cero](../output/pdf/Guia_DevOps_Obras_Publicas_Desde_Cero.pdf): explicación visual del cloud, los recursos desplegados, Terraform, pipelines, GitFlow, operación y pendientes reales.
 - [Clase 2](fuentes/clase-2.md): contenidos de la clase clasificados como contexto, recomendaciones o decisiones pendientes.
 - [Clase 4 — Integración de aplicaciones](fuentes/clase-4-integracion-aplicaciones.md): tipos, criterios, riesgos y resolución de los cinco escenarios.
 - [Backlog, ciclos y prototipos del 2026-08-25](fuentes/backlog-y-ciclos-2026-08-25.md): nueva evidencia recibida y diferencias contractuales detectadas.

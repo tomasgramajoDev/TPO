@@ -149,3 +149,4 @@ No se eliminó el antecedente de los eventos genéricos; permanece documentado c
 - El endpoint y la clave de publicación se entregan al backend como configuración y secreto de Container Apps; no se publican como output sensible ni se almacenan en Git.
 - No se crearon suscripciones ni contratos técnicos por inferencia. Los consumidores, filtros y endpoints se agregarán cuando Core y los módulos involucrados los confirmen.
 - Event Grid deberá reevaluarse frente a Service Bus antes de `test` o producción si los contratos futuros exigen semántica transaccional, orden estricto o detección de duplicados.
+- Se incorporó una guía DevOps visual y autocontenida en PDF que explica desde cero la infraestructura, los pipelines, GitFlow, la operación y los pendientes, basada en la verificación posterior al despliegue.
