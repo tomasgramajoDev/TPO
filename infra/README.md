@@ -25,7 +25,9 @@ El despliegue vigente creó el servidor `psql-obras-publicas-dev-dfc86d`, la bas
 - backend: `ca-obras-publicas-dev-backend`, con health check `/api/health` y conexión PostgreSQL por TLS;
 - frontend: `ca-obras-publicas-dev-frontend`, con health check `/health` y proxy `/api/*` hacia el backend.
 
-Las imágenes se almacenan en Azure Container Registry con el SHA del commit como etiqueta inmutable. Container Apps usa la identidad administrada del proyecto para descargarlas; la contraseña de PostgreSQL se entrega al backend como secreto de Container Apps y no se guarda en Git. La mensajería todavía no está provisionada. Todo cambio posterior debe pasar por plan y autorización de DevOps.
+Las imágenes se almacenan en Azure Container Registry con el SHA del commit como etiqueta inmutable. Container Apps usa la identidad administrada del proyecto para descargarlas; la contraseña de PostgreSQL se entrega al backend como secreto de Container Apps y no se guarda en Git.
+
+La mensajería de `development` utiliza un tópico personalizado de Azure Event Grid con esquema CloudEvents 1.0. El endpoint y la clave de publicación se entregan al backend mediante `EVENT_GRID_TOPIC_ENDPOINT` y el secreto `EVENT_GRID_ACCESS_KEY`; la clave permanece en el estado remoto y como secreto de Container Apps, nunca en Git. No se crean suscripciones hasta que los módulos consumidores y Core confirmen los contratos y endpoints. Todo cambio posterior debe pasar por plan y autorización de DevOps.
 
 URLs vigentes de desarrollo:
 
@@ -50,7 +52,7 @@ terraform/
 - Un repositorio GitHub definitivo.
 - Permiso para crear asignaciones de roles en Azure.
 
-Antes del primer `apply`, DevOps debe confirmar que estén registrados los resource providers `Microsoft.Storage`, `Microsoft.ManagedIdentity`, `Microsoft.ContainerRegistry`, `Microsoft.OperationalInsights` y `Microsoft.App`. Terraform no los registra silenciosamente durante el plan.
+Antes del primer `apply`, DevOps debe confirmar que estén registrados los resource providers `Microsoft.Storage`, `Microsoft.ManagedIdentity`, `Microsoft.ContainerRegistry`, `Microsoft.OperationalInsights`, `Microsoft.App`, `Microsoft.DBforPostgreSQL` y `Microsoft.EventGrid`. Terraform no los registra silenciosamente durante el plan.
 
 ## 1. Configurar el bootstrap
 

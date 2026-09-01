@@ -3,7 +3,7 @@
 ## DevOps y cloud
 
 1. Definir la estrategia de migraciones, la red privada y el dimensionamiento de PostgreSQL para `test`/producción.
-2. Elegir el servicio de mensajería cuando se cierren los contratos de eventos.
+2. Event Grid queda elegido para distribuir eventos discretos en `development`. Reevaluar Service Bus para `test`/producción si los contratos confirmados requieren orden estricto, transacciones o detección de duplicados.
 3. Definir IAM de usuarios de aplicación, certificados, copias de seguridad y recuperación. Los secretos técnicos de `development` ya se entregan mediante Container Apps y Terraform.
 4. Confirmar si existirá ambiente de producción y, en ese caso, su flujo de promoción y aprobación.
 5. Definir estrategia de rollback funcional y tratamiento de migraciones. El versionado actual de imágenes por SHA ya es inmutable.
