@@ -16,6 +16,8 @@ module "platform" {
   postgresql_database_name         = var.postgresql_database_name
   postgresql_allow_azure_services  = var.postgresql_allow_azure_services
 
+  enable_event_grid = true
+
   enable_applications            = true
   container_registry_server      = var.container_registry_server
   container_registry_identity_id = var.container_registry_identity_id

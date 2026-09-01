@@ -141,3 +141,11 @@ No se eliminó el antecedente de los eventos genéricos; permanece documentado c
 - El plan Terraform posterior informó `No changes`; la infraestructura real coincide con el código.
 - El pull request `NadineLewit/DesarrolloAppsII_Front#1` permanece pendiente porque DevOps tiene permiso de lectura en el repositorio propietario. Hasta su aceptación, la imagen se construye desde la rama `develop` del fork `tomasgramajoDev/DesarrolloAppsII_Front`.
 - Este despliegue completa la base técnica de `development`; no implica que ya existan el esquema, las migraciones o los endpoints funcionales del dominio.
+
+## 2026-09-01 — Mensajería Event Grid preparada para development
+
+- Se eligió Azure Event Grid para la distribución de eventos discretos del ambiente académico de desarrollo. La elección evita incorporar la capacidad base de Service Bus Standard mientras no existen requisitos confirmados de orden, transacciones o detección de duplicados.
+- Terraform crea el tópico `egt-obras-publicas-dev-events` con esquema CloudEvents 1.0 y protección `prevent_destroy`.
+- El endpoint y la clave de publicación se entregan al backend como configuración y secreto de Container Apps; no se publican como output sensible ni se almacenan en Git.
+- No se crearon suscripciones ni contratos técnicos por inferencia. Los consumidores, filtros y endpoints se agregarán cuando Core y los módulos involucrados los confirmen.
+- Event Grid deberá reevaluarse frente a Service Bus antes de `test` o producción si los contratos futuros exigen semántica transaccional, orden estricto o detección de duplicados.

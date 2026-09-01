@@ -102,6 +102,22 @@ resource "azurerm_postgresql_flexible_server_firewall_rule" "azure_services" {
   end_ip_address   = "0.0.0.0"
 }
 
+resource "azurerm_eventgrid_topic" "events" {
+  count = var.enable_event_grid ? 1 : 0
+
+  name                          = "egt-${local.resource_prefix}-events"
+  location                      = var.location
+  resource_group_name           = var.resource_group_name
+  input_schema                  = "CloudEventSchemaV1_0"
+  public_network_access_enabled = true
+  local_auth_enabled            = true
+  tags                          = local.common_tags
+
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+
 resource "azurerm_container_app" "backend" {
   count = var.enable_applications ? 1 : 0
 
@@ -125,6 +141,15 @@ resource "azurerm_container_app" "backend" {
   secret {
     name  = "db-password"
     value = random_password.postgresql_admin[0].result
+  }
+
+  dynamic "secret" {
+    for_each = var.enable_event_grid ? [1] : []
+
+    content {
+      name  = "event-grid-access-key"
+      value = azurerm_eventgrid_topic.events[0].primary_access_key
+    }
   }
 
   ingress {
@@ -161,6 +186,24 @@ resource "azurerm_container_app" "backend" {
       env {
         name        = "DB_PASSWORD"
         secret_name = "db-password"
+      }
+
+      dynamic "env" {
+        for_each = var.enable_event_grid ? [1] : []
+
+        content {
+          name  = "EVENT_GRID_TOPIC_ENDPOINT"
+          value = azurerm_eventgrid_topic.events[0].endpoint
+        }
+      }
+
+      dynamic "env" {
+        for_each = var.enable_event_grid ? [1] : []
+
+        content {
+          name        = "EVENT_GRID_ACCESS_KEY"
+          secret_name = "event-grid-access-key"
+        }
       }
 
       liveness_probe {

@@ -22,6 +22,14 @@ output "postgresql_administrator_login" {
   value = module.platform.postgresql_administrator_login
 }
 
+output "event_grid_topic_name" {
+  value = module.platform.event_grid_topic_name
+}
+
+output "event_grid_topic_endpoint" {
+  value = module.platform.event_grid_topic_endpoint
+}
+
 output "backend_fqdn" {
   value = module.platform.backend_fqdn
 }

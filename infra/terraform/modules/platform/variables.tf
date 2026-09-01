@@ -107,6 +107,12 @@ variable "postgresql_allow_azure_services" {
   default     = false
 }
 
+variable "enable_event_grid" {
+  description = "Crea un tópico de Azure Event Grid para los eventos del módulo."
+  type        = bool
+  default     = false
+}
+
 variable "enable_applications" {
   description = "Crea las Container Apps de frontend y backend."
   type        = bool

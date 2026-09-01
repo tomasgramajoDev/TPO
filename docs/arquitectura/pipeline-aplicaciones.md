@@ -88,5 +88,5 @@ Cuando exista producción, un incidente crítico se corregirá en `hotfix/*` cre
 - Revisar y aceptar el pull request del frontend en el repositorio propietario para dejar de depender del fork.
 - Implementar el esquema, las migraciones y los endpoints funcionales del backend.
 - Definir la estrategia de migraciones PostgreSQL y reemplazar la regla temporal de acceso desde servicios Azure por red privada antes de producción.
-- Servicio de mensajería.
+- Confirmar si Event Grid continúa siendo suficiente para `test`/producción cuando se cierren los contratos; si aparecen requisitos de orden estricto, transacciones o detección de duplicados, reevaluar Azure Service Bus.
 - Criterios funcionales de smoke test y rollback, además de los health checks técnicos ya implementados.

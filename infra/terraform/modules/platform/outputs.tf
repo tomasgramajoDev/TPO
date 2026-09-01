@@ -28,6 +28,16 @@ output "postgresql_administrator_login" {
   value       = var.enable_postgresql ? "obrasadmin" : null
 }
 
+output "event_grid_topic_name" {
+  description = "Nombre del tópico Event Grid o null cuando está deshabilitado."
+  value       = try(azurerm_eventgrid_topic.events[0].name, null)
+}
+
+output "event_grid_topic_endpoint" {
+  description = "Endpoint del tópico Event Grid o null cuando está deshabilitado."
+  value       = try(azurerm_eventgrid_topic.events[0].endpoint, null)
+}
+
 output "backend_fqdn" {
   description = "FQDN público del backend o null cuando está deshabilitado."
   value       = try(azurerm_container_app.backend[0].ingress[0].fqdn, null)
