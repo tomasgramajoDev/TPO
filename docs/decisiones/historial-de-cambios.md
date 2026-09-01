@@ -150,3 +150,4 @@ No se eliminó el antecedente de los eventos genéricos; permanece documentado c
 - No se crearon suscripciones ni contratos técnicos por inferencia. Los consumidores, filtros y endpoints se agregarán cuando Core y los módulos involucrados los confirmen.
 - Event Grid deberá reevaluarse frente a Service Bus antes de `test` o producción si los contratos futuros exigen semántica transaccional, orden estricto o detección de duplicados.
 - Se incorporó una guía DevOps visual y autocontenida en PDF que explica desde cero la infraestructura, los pipelines, GitFlow, la operación y los pendientes, basada en la verificación posterior al despliegue.
+- La guía DevOps se reescribió por completo para priorizar explicaciones causales, analogías y ejemplos del trabajo diario. La versión de 19 páginas conecta el cambio de código, CI, Docker, ACR, Terraform, autorizaciones, smoke tests, ambientes y ahorro de crédito sin asumir experiencia previa en infraestructura.
