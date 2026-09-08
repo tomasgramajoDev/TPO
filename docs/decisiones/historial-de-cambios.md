@@ -151,3 +151,10 @@ No se eliminó el antecedente de los eventos genéricos; permanece documentado c
 - Event Grid deberá reevaluarse frente a Service Bus antes de `test` o producción si los contratos futuros exigen semántica transaccional, orden estricto o detección de duplicados.
 - Se incorporó una guía DevOps visual y autocontenida en PDF que explica desde cero la infraestructura, los pipelines, GitFlow, la operación y los pendientes, basada en la verificación posterior al despliegue.
 - La guía DevOps se reescribió por completo para priorizar explicaciones causales, analogías y ejemplos del trabajo diario. La versión de 19 páginas conecta el cambio de código, CI, Docker, ACR, Terraform, autorizaciones, smoke tests, ambientes y ahorro de crédito sin asumir experiencia previa en infraestructura.
+
+## 2026-09-08 — GitHub y bitácora incorporados a la guía DevOps
+
+- La guía se amplió a 23 páginas con una explicación desde cero de repositorios, commits, ramas, Pull Requests, checks, merge y la diferencia entre GitHub y Azure.
+- Se documentó el recorrido real de `feature/config-api-relativa` hacia `develop` y se verificó que Front ya publicó `develop`, mantiene abierto el PR #2 y fusionó el PR #3 de integración.
+- Se verificó que Back mantiene abierto el PR #3 de API y migraciones PostgreSQL contra `develop`, con CI exitoso al 2026-09-08.
+- Se incorporó una bitácora cronológica desde la elección de Azure hasta la coordinación actual con Front y Back, distinguiendo infraestructura comprobada, avances de desarrollo y pendientes.
