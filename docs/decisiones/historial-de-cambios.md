@@ -164,3 +164,10 @@ No se eliminó el antecedente de los eventos genéricos; permanece documentado c
 - Se volvió a verificar el estado de desarrollo: Front PR #2 y Back PR #3 continúan abiertos; Front PR #3 continúa fusionado.
 - No se registró un nuevo despliegue ni una primera release hacia `test`.
 - Se ajustó la segunda página de la bitácora del PDF para evitar recortes del encabezado en algunos visores y se actualizó su fecha de verificación.
+
+## 2026-09-14 — Guía DevOps para memorizar
+
+- Se conservó el PDF aportado por el usuario y se generó una versión nueva orientada a una exposición oral de cinco minutos.
+- Se redujo el guion, se separó el contenido para memorizar del material de consulta y se eliminaron las indicaciones dirigidas a la diseñadora.
+- Se completaron los diagramas para mostrar `Terraform plan`, la autorización de DevOps y la promoción de `develop` a `test` mediante `release/vX.Y.Z`.
+- Se verificó el estado de Front PR #2, Front PR #3 y Back PR #3 al 2026-09-14, manteniendo explícitos los pendientes de aplicación, eventos y primera release.
