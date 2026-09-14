@@ -158,3 +158,9 @@ No se eliminó el antecedente de los eventos genéricos; permanece documentado c
 - Se documentó el recorrido real de `feature/config-api-relativa` hacia `develop` y se verificó que Front ya publicó `develop`, mantiene abierto el PR #2 y fusionó el PR #3 de integración.
 - Se verificó que Back mantiene abierto el PR #3 de API y migraciones PostgreSQL contra `develop`, con CI exitoso al 2026-09-08.
 - Se incorporó una bitácora cronológica desde la elección de Azure hasta la coordinación actual con Front y Back, distinguiendo infraestructura comprobada, avances de desarrollo y pendientes.
+
+## 2026-09-14 — Seguimiento de la bitácora DevOps
+
+- Se volvió a verificar el estado de desarrollo: Front PR #2 y Back PR #3 continúan abiertos; Front PR #3 continúa fusionado.
+- No se registró un nuevo despliegue ni una primera release hacia `test`.
+- Se ajustó la segunda página de la bitácora del PDF para evitar recortes del encabezado en algunos visores y se actualizó su fecha de verificación.
