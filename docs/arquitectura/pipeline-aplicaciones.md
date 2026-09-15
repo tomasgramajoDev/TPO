@@ -22,7 +22,7 @@ La propietaria del frontend otorgó permiso y DevOps pudo integrar los PR `#4`, 
 - Publicación: `publish-development-images.yml` valida ambos repositorios, publica imágenes con etiquetas SHA en ACR y conserva su digest.
 - Despliegue: Terraform administra ambos ambientes, Container Apps, PostgreSQL 16, Event Grid, ingress, probes, identidad para ACR, variables y secretos. DevOps aprobó por separado cada plan y cada `apply`.
 - Verificación: en `development` y `test` se obtuvo HTTP `200` en frontend, `/health`, backend `/api/health`, proxy `/api/health`, proyectos, órdenes, cuadrillas, recursos, cortes y tablero. El health informó `database: up`.
-- Release: la infraestructura se etiquetó como `v0.1.0`; el workflow `Deploy test` promovió las mismas imágenes inmutables ya probadas en `development`.
+- Release: frontend, backend e infraestructura publicaron la versión `v0.1.0`; el workflow `Deploy test` promovió las mismas imágenes inmutables ya probadas en `development`.
 
 ## Flujo acordado — GitFlow simplificado
 
