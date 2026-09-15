@@ -83,7 +83,7 @@ Antes de autorizar, DevOps verifica:
 
 ## Diferencia con los workflows Terraform actuales
 
-Los workflows presentes en este repositorio despliegan la plataforma Azure y actualmente usan `main` o una release publicada como disparadores. No construyen frontend ni backend. El GitFlow de esta guía se aplicará a los pipelines de aplicación cuando se reciban los repositorios, stacks, comandos, Dockerfiles, puertos y health checks.
+Los workflows presentes en este repositorio despliegan la plataforma Azure y usan `main` o una release publicada como disparadores. La publicación de imágenes se realiza por separado con `publish-development-images.yml`; Terraform promueve luego las referencias inmutables aprobadas. Los repositorios, stacks, Dockerfiles, puertos y health checks ya fueron recibidos y verificados.
 
 No se deben cambiar los disparadores de Terraform para simular el pipeline de aplicación: son responsabilidades distintas.
 
@@ -95,21 +95,21 @@ No se deben cambiar los disparadores de Terraform para simular el pipeline de ap
 - Hotfix futuro: `hotfix/v1.0.1`
 - Tags: `v0.1.0`, `v0.2.0`, `v1.0.0`
 
-## Checklist del cierre de sprint
+## Checklist de la release `v0.1.0` al 2026-09-15
 
-- [ ] Todas las historias incluidas están fusionadas en `develop`.
-- [ ] CI, build y Docker están aprobados.
-- [ ] La versión integrada funciona en `development`.
-- [ ] Se eligió el número de versión.
-- [ ] Se creó `release/vX.Y.Z` desde el commit correcto.
-- [ ] Se identificó el digest que se promoverá.
-- [ ] DevOps autorizó el despliegue a `test`.
-- [ ] Los smoke tests de `test` fueron exitosos.
+- [x] Todas las historias incluidas están fusionadas en `develop`.
+- [x] CI, build y Docker están aprobados.
+- [x] La versión integrada funciona en `development`.
+- [x] Se eligió el número de versión.
+- [x] Se creó `release/v0.1.0` desde el commit correcto.
+- [x] Se identificaron y promovieron las imágenes inmutables.
+- [x] DevOps autorizó el despliegue a `test`.
+- [x] Los smoke tests técnicos de `test` fueron exitosos.
 - [ ] El Product Owner aprobó funcionalmente el sprint.
-- [ ] La release se fusionó en `main` y `develop`.
-- [ ] Se creó el tag y se guardaron las notas de versión.
-- [ ] El rollback quedó documentado.
+- [x] La release se fusionó en `main`; `develop` conserva los commits que originaron la release.
+- [x] Se creó el tag y se guardaron las notas de versión.
+- [x] El rollback técnico consiste en volver a fijar en Terraform el SHA anterior y repetir plan, aprobación y `apply`.
 
-## Primer trabajo pendiente
+## Próximo control pendiente
 
-Cuando frontend y backend entreguen sus repositorios, DevOps deberá implementar dos pipelines de aplicación independientes con este mismo modelo. Hasta entonces, esta guía define el proceso acordado, pero no implica que ya exista despliegue de aplicaciones.
+El Product Owner debe validar `v0.1.0` en `test` con datos representativos. Los eventos todavía no tienen suscripciones porque los consumidores y contratos externos no fueron confirmados; no deben crearse por suposición.

@@ -11,11 +11,14 @@ El flujo GitFlow siguiente corresponde a los futuros pipelines de frontend y bac
 
 La versión candidata se prueba en `test`; luego el Product Owner la aprueba funcionalmente. Esa aprobación no reemplaza el control operativo de DevOps. Al finalizar, la rama de release se fusiona en `main` y se etiqueta. `main` representa una versión aprobada, pero no despliega a producción mientras ese ambiente no exista.
 
-Estado operativo al 2026-08-13:
+Estado operativo al 2026-09-15:
 
-- `development` está desplegado en `Chile Central` con Log Analytics y Azure Container Apps Environment;
-- `test` continúa pendiente de una release aprobada;
-- todavía no hay aplicaciones frontend/backend ejecutándose en los ambientes.
+- `development` ejecuta frontend, backend, PostgreSQL 16 y Event Grid en `Chile Central`;
+- `test` ejecuta la release `v0.1.0` con las mismas imágenes inmutables verificadas en `development`;
+- ambos ambientes tienen health checks y proxy `/api` verificados;
+- los endpoints de consulta responden HTTP `200` con la base inicialmente vacía;
+- después de las pruebas, PostgreSQL quedó intencionalmente `Stopped` en ambos ambientes para ahorrar crédito; debe iniciarse antes del próximo uso;
+- la aceptación funcional del Product Owner y las suscripciones de eventos continúan pendientes.
 
 ## Recursos del primer incremento
 
@@ -70,8 +73,9 @@ La identidad recibe `Contributor` solamente en los resource groups de ambos ambi
 4. Migrar el estado local del bootstrap al backend Azure creado.
 5. Configurar variables y revisores de los ambientes GitHub con los outputs del bootstrap.
 6. Ejecutar el workflow de desarrollo para verificar acceso y desplegar la plataforma inicial. Completado el 2026-08-13.
-7. Ejecutar el workflow de prueba cuando exista una release aprobada.
-8. Mantener los disparadores actuales para Terraform y crear por separado los pipelines de aplicación con el GitFlow acordado.
+7. Publicar las imágenes inmutables de las aplicaciones y desplegarlas en `development`. Completado el 2026-09-15.
+8. Crear `release/v0.1.0`, integrar la versión en `main`, publicar la release de infraestructura y ejecutar el workflow de `test`. Completado el 2026-09-15.
+9. Obtener la aceptación funcional del Product Owner antes de considerar cerrada la release.
 
 ## Reglas operativas
 
@@ -80,6 +84,7 @@ La identidad recibe `Contributor` solamente en los resource groups de ambos ambi
 - No guardar `.tfstate`, `.tfvars` reales, tokens ni contraseñas en Git.
 - Los cambios manuales de emergencia deben documentarse y reconciliarse de inmediato en Terraform.
 - Destruir recursos es una acción excepcional y requiere revisar el plan y el ambiente objetivo.
+- Al terminar una sesión de pruebas, detener PostgreSQL en `development` y `test`; Container Apps mantiene mínimo de cero réplicas. Volver a iniciar las bases antes del próximo uso. Azure inicia automáticamente cada Flexible Server después de siete días detenido, por lo que DevOps debe volver a apagarlo si aún no se usa.
 
 ## Definition of Done DevOps propuesta
 

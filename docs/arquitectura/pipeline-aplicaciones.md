@@ -2,26 +2,27 @@
 
 ## Estado
 
-Frontend, backend y PostgreSQL están desplegados y verificados en Azure `development` desde el 2026-08-25. El backend expone `/api/health`, consulta PostgreSQL con `SELECT 1` y recibe sus credenciales mediante un secreto de Container Apps. El frontend expone `/health` y enruta `/api/*` al backend por HTTPS.
+La release `v0.1.0` quedó desplegada y verificada en Azure `development` y `test` el 2026-09-15. El backend expone `/api/health`, consulta PostgreSQL y recibe sus credenciales mediante un secreto de Container Apps. El frontend expone `/health` y enruta `/api/*` al backend por HTTPS.
 
-Este estado valida la plataforma, el pipeline y la conectividad técnica. No implica que estén implementados el esquema, las migraciones ni los endpoints funcionales del dominio de Obras Públicas.
+Este estado valida la plataforma, los pipelines, Flyway, la conectividad y los endpoints de consulta con una base vacía. La aceptación funcional del Product Owner y los flujos con escritura de datos continúan pendientes.
 
 ## Repositorios y comandos verificados
 
 | Componente | Repositorio y rama predeterminada | Stack | Validación local verificada |
 | --- | --- | --- | --- |
-| Frontend | `tomasgramajoDev/DesarrolloAppsII_Front`, `develop` para el despliegue; PR abierto hacia `NadineLewit/DesarrolloAppsII_Front` | React 19, TypeScript 6, Vite 8, Node 24, Nginx 1.29 | `npm ci`, lint, 4 pruebas, build e imagen Docker aprobados. `/health` y proxy HTTPS `/api/*` verificados. |
-| Backend | `ignacionogue/DesarrolloDeAplicacionesIIBack`, `develop` | Spring Boot 4.1.0, Java 17, Maven Wrapper, Spring JDBC y PostgreSQL | 2 pruebas, empaquetado e imagen Docker aprobados. `/api/health` y conexión PostgreSQL verificados. |
+| Frontend | `NadineLewit/DesarrolloAppsII_Front`; trabajo en `develop`, release `v0.1.0` integrada en `main` | React 19, TypeScript 6, Vite 8, Node 24, Nginx 1.29 | `npm ci`, lint, 4 pruebas, build e imagen Docker aprobados. `/health` y proxy HTTPS `/api/*` verificados en ambos ambientes. |
+| Backend | `ignacionogue/DesarrolloDeAplicacionesIIBack`; trabajo en `develop`, release `v0.1.0` integrada en `main` | Spring Boot 4.1.0, Java 17, Maven Wrapper, JPA, Flyway y PostgreSQL | 13 pruebas, empaquetado e imagen Docker aprobados. `/api/health`, Flyway y endpoints de consulta verificados. |
 
-El usuario autenticado en GitHub tiene permiso `WRITE` sobre el backend y solo `READ` sobre el frontend. El CI del frontend deberá ingresar mediante un pull request desde un fork o después de que el propietario otorgue permisos de escritura.
+La propietaria del frontend otorgó permiso y DevOps pudo integrar los PR `#4`, `#5` y `#6` mediante revisión. Se mantiene la regla de no trabajar ni hacer push directo sobre `develop` o `main`.
 
 ## Implementación desplegada
 
-- Backend: el pull request `ignacionogue/DesarrolloDeAplicacionesIIBack#1` fue fusionado en `develop`. La imagen desplegada es `obras-publicas-backend:662ad1efc318377e93d73399ff94099153941a31`.
-- Frontend: la imagen desplegada es `obras-publicas-frontend:c5161311424f8029c126310ebd54e0038f771624`. El pull request `NadineLewit/DesarrolloAppsII_Front#1` sigue pendiente; mientras tanto, el pipeline usa la rama `develop` del fork autorizado.
+- Backend: el PR `#3` fue fusionado en `develop` y el PR de release `#4` fue fusionado en `main`. La imagen promovida es `obras-publicas-backend:b70379b077881a4b03ff4a4e5244d2f8195cf9a2`.
+- Frontend: los PR `#4` y `#5` fueron fusionados en `develop`; el PR de release `#6` fue fusionado en `main`. La imagen promovida es `obras-publicas-frontend:9175534aa57e003caaebb7df2479f6e076c8e066`.
 - Publicación: `publish-development-images.yml` valida ambos repositorios, publica imágenes con etiquetas SHA en ACR y conserva su digest.
-- Despliegue: Terraform administra ambos Container Apps, ingress, probes, identidad para ACR, variables y secretos. DevOps aprueba por separado el plan y el `apply`.
-- Verificación: frontend HTTP `200`, `/health` correcto, backend `/api/health` con `database: up` tanto directo como a través del proxy del frontend.
+- Despliegue: Terraform administra ambos ambientes, Container Apps, PostgreSQL 16, Event Grid, ingress, probes, identidad para ACR, variables y secretos. DevOps aprobó por separado cada plan y cada `apply`.
+- Verificación: en `development` y `test` se obtuvo HTTP `200` en frontend, `/health`, backend `/api/health`, proxy `/api/health`, proyectos, órdenes, cuadrillas, recursos, cortes y tablero. El health informó `database: up`.
+- Release: la infraestructura se etiquetó como `v0.1.0`; el workflow `Deploy test` promovió las mismas imágenes inmutables ya probadas en `development`.
 
 ## Flujo acordado — GitFlow simplificado
 
@@ -84,9 +85,8 @@ Cuando exista producción, un incidente crítico se corregirá en `hotfix/*` cre
 
 ## Decisiones pendientes
 
-- Definir y proteger las ramas `release/*` y acordar la protección definitiva de `develop` en ambos repositorios.
-- Revisar y aceptar el pull request del frontend en el repositorio propietario para dejar de depender del fork.
-- Implementar el esquema, las migraciones y los endpoints funcionales del backend.
+- Definir y proteger las ramas `release/*`, `develop` y `main` en ambos repositorios.
 - Definir la estrategia de migraciones PostgreSQL y reemplazar la regla temporal de acceso desde servicios Azure por red privada antes de producción.
-- Confirmar si Event Grid continúa siendo suficiente para `test`/producción cuando se cierren los contratos; si aparecen requisitos de orden estricto, transacciones o detección de duplicados, reevaluar Azure Service Bus.
-- Criterios funcionales de smoke test y rollback, además de los health checks técnicos ya implementados.
+- Confirmar contratos y consumidores antes de crear suscripciones de Event Grid; no hay suscripciones configuradas por inferencia.
+- Confirmar si Event Grid continúa siendo suficiente para producción cuando se cierren los contratos; si aparecen requisitos de orden estricto, transacciones o detección de duplicados, reevaluar Azure Service Bus.
+- Ejecutar con el Product Owner la aceptación funcional de `v0.1.0` usando datos representativos y validar también los flujos de escritura.

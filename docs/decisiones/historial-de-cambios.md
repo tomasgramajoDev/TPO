@@ -171,3 +171,17 @@ No se eliminó el antecedente de los eventos genéricos; permanece documentado c
 - Se redujo el guion, se separó el contenido para memorizar del material de consulta y se eliminaron las indicaciones dirigidas a la diseñadora.
 - Se completaron los diagramas para mostrar `Terraform plan`, la autorización de DevOps y la promoción de `develop` a `test` mediante `release/vX.Y.Z`.
 - Se verificó el estado de Front PR #2, Front PR #3 y Back PR #3 al 2026-09-14, manteniendo explícitos los pendientes de aplicación, eventos y primera release.
+
+## 2026-09-15 — Primera release desplegada en test
+
+- Se fusionó Back PR `#3` en `develop`; el backend quedó en la imagen inmutable `b70379b077881a4b03ff4a4e5244d2f8195cf9a2`.
+- Nadine otorgó permiso sobre Front. Se fusionaron los PR `#4` y `#5` en `develop`; la corrección `#5` agregó el proxy Nginx de `/api/*` hacia Azure. El frontend quedó en la imagen inmutable `9175534aa57e003caaebb7df2479f6e076c8e066`.
+- Terraform CI validó formato, bootstrap, `development` y `test`. Los PR de infraestructura `#16` y `#17` fueron fusionados en `main`.
+- DevOps revisó y autorizó el plan de actualización de `development`: primero 0 altas, 2 cambios y 0 bajas; luego 0 altas, 1 cambio y 0 bajas para corregir el proxy.
+- Se verificaron en `development` frontend, backend, PostgreSQL, proxy `/api`, proyectos, órdenes, cuadrillas, recursos, cortes y tablero. Todos los endpoints consultados respondieron HTTP `200`.
+- Se crearon `release/v0.1.0` en frontend y backend. Front PR `#6` y Back PR `#4` fueron fusionados en `main`; Back superó 13 pruebas y la construcción del contenedor.
+- Se publicó la release de infraestructura `v0.1.0`. DevOps aprobó el plan de `test`, compuesto por 10 altas, 0 cambios y 0 bajas, y autorizó su aplicación.
+- Azure `test` quedó con PostgreSQL 16, Event Grid, backend y frontend. El health directo y por proxy informó `database: up`, y los seis endpoints de consulta respondieron HTTP `200`.
+- La validación es técnica y usa una base inicialmente vacía. La aceptación funcional del Product Owner y los flujos de escritura continúan pendientes.
+- No se crearon suscripciones de Event Grid: faltan consumidores y contratos externos confirmados.
+- Al finalizar las verificaciones, se detuvieron `psql-obras-publicas-dev-dfc86d` y `psql-obras-publicas-tst-3d2388`; ambos quedaron en estado `Stopped`. Azure puede reiniciarlos automáticamente después de siete días.
