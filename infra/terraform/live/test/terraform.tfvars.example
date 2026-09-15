@@ -5,3 +5,16 @@ tags = {
   course = "desarrollo-aplicaciones-ii"
   module = "m3"
 }
+
+postgresql_version               = "16"
+postgresql_zone                  = "3"
+postgresql_sku_name              = "B_Standard_B1ms"
+postgresql_storage_mb            = 32768
+postgresql_backup_retention_days = 7
+postgresql_database_name         = "obras_publicas"
+postgresql_allow_azure_services  = true
+
+container_registry_server      = "<registry>.azurecr.io"
+container_registry_identity_id = "/subscriptions/<subscription-id>/resourceGroups/<resource-group>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/<identity-name>"
+backend_image                  = "<registry>.azurecr.io/obras-publicas-backend:<commit-sha>"
+frontend_image                 = "<registry>.azurecr.io/obras-publicas-frontend:<commit-sha>"
