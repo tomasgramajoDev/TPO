@@ -185,3 +185,13 @@ No se eliminó el antecedente de los eventos genéricos; permanece documentado c
 - La validación es técnica y usa una base inicialmente vacía. La aceptación funcional del Product Owner y los flujos de escritura continúan pendientes.
 - No se crearon suscripciones de Event Grid: faltan consumidores y contratos externos confirmados.
 - Al finalizar las verificaciones, se detuvieron `psql-obras-publicas-dev-dfc86d` y `psql-obras-publicas-tst-3d2388`; ambos quedaron en estado `Stopped`. Azure puede reiniciarlos automáticamente después de siete días.
+
+## 2026-09-15 — Criterios de defensa y flujo de órdenes de trabajo
+
+- Se recibió el diagrama “Órdenes de Trabajo” con cinco posibles ingresos: proyecto, eventos de M6, eventos de M7, carga manual y corte de calle.
+- Se registraron como criterios académicos recibidos la defensa individual, la demostración de un caso de uso, el uso explícito de un patrón de diseño en Back, la separación arquitectónica y MVC.
+- La auditoría de la release `v0.1.0` confirmó capas Controller, Service, Repository, Mapper y Model en Back; esto acredita MVC y separación de responsabilidades, pero no demuestra una arquitectura de microservicios.
+- Se verificó que la carga manual y la asociación de cortes con órdenes existen. El vínculo de una orden con un proyecto y los consumidores de eventos M6/M7 todavía no están implementados.
+- Los nombres de eventos externos permanecen en estado `RECEIVED`, no `CONFIRMED`; no se generaron consumidores ni contratos ficticios.
+- Se agregó un guion de defensa por rol y una demo repetible del ciclo manual de una orden en `development`.
+- La demo se ejecutó contra Azure mediante el proxy del frontend: health confirmó PostgreSQL disponible y la orden de evidencia `id=1` llegó correctamente a `VALIDADA`.
