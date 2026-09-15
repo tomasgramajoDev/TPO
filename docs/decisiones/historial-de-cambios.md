@@ -179,7 +179,7 @@ No se eliminó el antecedente de los eventos genéricos; permanece documentado c
 - Terraform CI validó formato, bootstrap, `development` y `test`. Los PR de infraestructura `#16` y `#17` fueron fusionados en `main`.
 - DevOps revisó y autorizó el plan de actualización de `development`: primero 0 altas, 2 cambios y 0 bajas; luego 0 altas, 1 cambio y 0 bajas para corregir el proxy.
 - Se verificaron en `development` frontend, backend, PostgreSQL, proxy `/api`, proyectos, órdenes, cuadrillas, recursos, cortes y tablero. Todos los endpoints consultados respondieron HTTP `200`.
-- Se crearon `release/v0.1.0` en frontend y backend. Front PR `#6` y Back PR `#4` fueron fusionados en `main`; Back superó 13 pruebas y la construcción del contenedor.
+- Se crearon `release/v0.1.0` en frontend y backend. Front PR `#6` y Back PR `#4` fueron fusionados en `main`; ambos repositorios publicaron el tag y la release `v0.1.0`. Back superó 13 pruebas y la construcción del contenedor.
 - Se publicó la release de infraestructura `v0.1.0`. DevOps aprobó el plan de `test`, compuesto por 10 altas, 0 cambios y 0 bajas, y autorizó su aplicación.
 - Azure `test` quedó con PostgreSQL 16, Event Grid, backend y frontend. El health directo y por proxy informó `database: up`, y los seis endpoints de consulta respondieron HTTP `200`.
 - La validación es técnica y usa una base inicialmente vacía. La aceptación funcional del Product Owner y los flujos de escritura continúan pendientes.
