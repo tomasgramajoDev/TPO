@@ -12,8 +12,8 @@
 8. Decidir si el futuro ambiente de producción utilizará feature flags y si una historia puede considerarse terminada estando desplegada pero desactivada.
 9. Definir cómo se generan, revisan y publican las release notes.
 10. Confirmar la herramienta y dinámica de coordinación entre equipos; Nexus, SAFe y el modelo Spotify aparecen como material docente, no como elección del proyecto.
-11. Conseguir que el repositorio propietario acepte `NadineLewit/DesarrolloAppsII_Front#1`; hasta entonces `development` publica el frontend desde el fork.
-12. Implementar el esquema, las migraciones y los endpoints funcionales del backend. El health check y la conectividad PostgreSQL ya están desplegados, pero no equivalen a la aplicación de dominio terminada.
+11. Mantener sincronizados Front, Back e infraestructura después de la incorporación de los PR de la primera release; ya no se depende del fork para publicar Front.
+12. Completar los casos funcionales aún ausentes del backend: vínculo proyecto–orden, creación por eventos externos confirmados y cobertura integral de reglas del backlog.
 
 ## Core Municipal
 
@@ -67,6 +67,8 @@
 1. Completar la matriz exhaustiva de transiciones de `WorkOrder`, especialmente `PAUSED`, `DELAYED`, `REOPENED` y reprogramaciones.
 2. Definir si `sourceRequestId` es un campo universal o si se requieren identificadores de origen tipados por integración.
 3. Confirmar consumidores de `publicWorksExtensionRequested`, `publicWorksExtensionApproved` y `publicWorksExtensionRejected`.
+4. Aclarar con la cátedra si “no aplicación monolítica” exige microservicios desplegables de manera independiente o si se acepta un monolito modular con separación MVC. El backend actual cumple separación por capas, pero se despliega como un único servicio Spring Boot.
+5. Definir y acordar el vínculo entre `WorkOrder` y `PublicWorksProject`: cardinalidad, obligatoriedad de `projectId`, comportamiento de órdenes independientes y migración de datos.
 
 ## Contradicciones y diferencias detectadas
 

@@ -24,6 +24,7 @@ Este repositorio conserva el alcance funcional, las reglas, los ciclos de vida, 
 - [Clase 4 — Integración de aplicaciones](fuentes/clase-4-integracion-aplicaciones.md): tipos, criterios, riesgos y resolución de los cinco escenarios.
 - [Backlog, ciclos y prototipos del 2026-08-25](fuentes/backlog-y-ciclos-2026-08-25.md): nueva evidencia recibida y diferencias contractuales detectadas.
 - [Diagramas](diagramas/README.md): secuencia propuesta y casos de uso del módulo.
+- [Defensa, demo y arquitectura de órdenes](entrega/defensa-demo-arquitectura.md): estado real frente a los criterios de la entrega, guion por rol, demo ejecutable y trabajo pendiente de Front y Back.
 
 ## Dónde guardar información nueva
 
