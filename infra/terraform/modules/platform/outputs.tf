@@ -47,3 +47,14 @@ output "frontend_fqdn" {
   description = "FQDN público del frontend o null cuando está deshabilitado."
   value       = try(azurerm_container_app.frontend[0].ingress[0].fqdn, null)
 }
+
+output "application_auth_username" {
+  description = "Usuario de demostración de la aplicación."
+  value       = var.enable_applications ? var.application_auth_username : null
+}
+
+output "application_auth_password" {
+  description = "Contraseña generada para el usuario de demostración."
+  value       = try(random_password.application_auth[0].result, null)
+  sensitive   = true
+}

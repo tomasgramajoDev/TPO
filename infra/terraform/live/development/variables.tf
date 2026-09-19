@@ -73,11 +73,23 @@ variable "container_registry_identity_id" {
 variable "backend_image" {
   description = "Imagen inmutable del backend para development."
   type        = string
-  default     = "acrobraspublica302ceba6.azurecr.io/obras-publicas-backend:b70379b077881a4b03ff4a4e5244d2f8195cf9a2"
+  default     = "acrobraspublica302ceba6.azurecr.io/obras-publicas-backend:574a147ad81b2663462b05011ce56f65fab29104"
 }
 
 variable "frontend_image" {
   description = "Imagen inmutable del frontend para development."
   type        = string
-  default     = "acrobraspublica302ceba6.azurecr.io/obras-publicas-frontend:9175534aa57e003caaebb7df2479f6e076c8e066"
+  default     = "acrobraspublica302ceba6.azurecr.io/obras-publicas-frontend:4c6ff95ca9a14609c2b595cc4bb86f77c58dcc6c"
+}
+
+variable "application_auth_username" {
+  description = "Usuario del ambiente development."
+  type        = string
+  default     = "devops.obras"
+}
+
+variable "application_auth_role" {
+  description = "Rol funcional del usuario de development."
+  type        = string
+  default     = "RESPONSABLE_AUTORIZADO"
 }
