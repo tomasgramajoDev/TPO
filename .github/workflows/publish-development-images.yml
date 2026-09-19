@@ -8,9 +8,9 @@ on:
         required: true
         default: develop
       frontend_ref:
-        description: Frontend ref to publish from the temporary fork
+        description: Frontend ref to publish from the official repository
         required: true
-        default: main
+        default: develop
 
 permissions:
   contents: read
@@ -41,10 +41,10 @@ jobs:
           path: applications/backend
           persist-credentials: false
 
-      - name: Checkout frontend fork
+      - name: Checkout frontend
         uses: actions/checkout@v6
         with:
-          repository: tomasgramajoDev/DesarrolloAppsII_Front
+          repository: NadineLewit/DesarrolloAppsII_Front
           ref: ${{ inputs.frontend_ref }}
           path: applications/frontend
           persist-credentials: false
