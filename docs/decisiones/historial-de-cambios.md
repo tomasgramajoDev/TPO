@@ -195,3 +195,14 @@ No se eliminó el antecedente de los eventos genéricos; permanece documentado c
 - Los nombres de eventos externos permanecen en estado `RECEIVED`, no `CONFIRMED`; no se generaron consumidores ni contratos ficticios.
 - Se agregó un guion de defensa por rol y una demo repetible del ciclo manual de una orden en `development`.
 - La demo se ejecutó contra Azure mediante el proxy del frontend: health confirmó PostgreSQL disponible y la orden de evidencia `id=1` llegó correctamente a `VALIDADA`.
+
+## 2026-09-19 — Formularios, aprobación y JWT desplegados en development
+
+- Se revisaron y fusionaron Front PR `#7` y Back PR `#5` contra `develop` como una única entrega compatible.
+- Front superó lint, 8 pruebas y build; Back superó tests, Flyway V1/V2 y empaquetado.
+- El pipeline de imágenes pasó a consumir el repositorio oficial de Front y publicó los SHA inmutables `4c6ff95ca9a14609c2b595cc4bb86f77c58dcc6c` y `574a147ad81b2663462b05011ce56f65fab29104`.
+- Terraform incorporó una contraseña aleatoria de aplicación y un secreto JWT. Ambos permanecen fuera de Git y se inyectan como secretos de Container Apps.
+- DevOps revisó y autorizó el plan de `development`: 2 altas, 2 cambios y 0 bajas.
+- El workflow `35475940801` aplicó correctamente el plan. PostgreSQL quedó `Ready`, y Front y Back quedaron `Running` con las imágenes nuevas.
+- La prueba posterior confirmó frontend y `/health` HTTP `200`, `/api/health` con `database: up`, acceso anónimo protegido HTTP `401`, login JWT correcto y seis endpoints autenticados HTTP `200`.
+- `test` no fue modificado: conserva la release `v0.1.0` hasta la siguiente promoción formal.
