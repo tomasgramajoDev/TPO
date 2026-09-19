@@ -2,7 +2,7 @@
 
 ## Estado
 
-La release `v0.1.0` quedó desplegada y verificada en Azure `development` y `test` el 2026-09-15. El backend expone `/api/health`, consulta PostgreSQL y recibe sus credenciales mediante un secreto de Container Apps. El frontend expone `/health` y enruta `/api/*` al backend por HTTPS.
+La release `v0.1.0` quedó desplegada y verificada en Azure `development` y `test` el 2026-09-15. Desde el 2026-09-19, `development` también contiene la integración posterior de formularios, aprobación de proyectos y autenticación JWT; `test` continúa en `v0.1.0` hasta la próxima release. El backend expone `/api/health`, consulta PostgreSQL y recibe sus credenciales mediante secretos de Container Apps. El frontend expone `/health` y enruta `/api/*` al backend por HTTPS.
 
 Este estado valida la plataforma, los pipelines, Flyway, la conectividad y los endpoints de consulta con una base vacía. La aceptación funcional del Product Owner y los flujos con escritura de datos continúan pendientes.
 
@@ -10,8 +10,8 @@ Este estado valida la plataforma, los pipelines, Flyway, la conectividad y los e
 
 | Componente | Repositorio y rama predeterminada | Stack | Validación local verificada |
 | --- | --- | --- | --- |
-| Frontend | `NadineLewit/DesarrolloAppsII_Front`; trabajo en `develop`, release `v0.1.0` integrada en `main` | React 19, TypeScript 6, Vite 8, Node 24, Nginx 1.29 | `npm ci`, lint, 4 pruebas, build e imagen Docker aprobados. `/health` y proxy HTTPS `/api/*` verificados en ambos ambientes. |
-| Backend | `ignacionogue/DesarrolloDeAplicacionesIIBack`; trabajo en `develop`, release `v0.1.0` integrada en `main` | Spring Boot 4.1.0, Java 17, Maven Wrapper, JPA, Flyway y PostgreSQL | 13 pruebas, empaquetado e imagen Docker aprobados. `/api/health`, Flyway y endpoints de consulta verificados. |
+| Frontend | `NadineLewit/DesarrolloAppsII_Front`; trabajo en `develop`, release `v0.1.0` integrada en `main` | React 19, TypeScript 6, Vite 8, Node 24, Nginx 1.29 | `npm ci`, lint, 8 pruebas, build e imagen Docker aprobados para la integración actual. `/health` y proxy HTTPS `/api/*` verificados. |
+| Backend | `ignacionogue/DesarrolloDeAplicacionesIIBack`; trabajo en `develop`, release `v0.1.0` integrada en `main` | Spring Boot 4.1.0, Java 17, Maven Wrapper, JPA, Flyway y PostgreSQL | Tests, Flyway V1/V2, empaquetado e imagen Docker aprobados. `/api/health`, login JWT y endpoints protegidos verificados en `development`. |
 
 La propietaria del frontend otorgó permiso y DevOps pudo integrar los PR `#4`, `#5` y `#6` mediante revisión. Se mantiene la regla de no trabajar ni hacer push directo sobre `develop` o `main`.
 
@@ -23,6 +23,15 @@ La propietaria del frontend otorgó permiso y DevOps pudo integrar los PR `#4`, 
 - Despliegue: Terraform administra ambos ambientes, Container Apps, PostgreSQL 16, Event Grid, ingress, probes, identidad para ACR, variables y secretos. DevOps aprobó por separado cada plan y cada `apply`.
 - Verificación: en `development` y `test` se obtuvo HTTP `200` en frontend, `/health`, backend `/api/health`, proxy `/api/health`, proyectos, órdenes, cuadrillas, recursos, cortes y tablero. El health informó `database: up`.
 - Release: frontend, backend e infraestructura publicaron la versión `v0.1.0`; el workflow `Deploy test` promovió las mismas imágenes inmutables ya probadas en `development`.
+
+## Estado posterior en development — 2026-09-19
+
+- Front PR `#7` y Back PR `#5` fueron revisados y fusionados en `develop`.
+- El pipeline dejó de depender del fork temporal y publica Front desde el repositorio oficial.
+- Imágenes desplegadas: Front `4c6ff95ca9a14609c2b595cc4bb86f77c58dcc6c` y Back `574a147ad81b2663462b05011ce56f65fab29104`.
+- Terraform genera una contraseña de aplicación y un secreto JWT, los conserva como valores sensibles en el estado remoto y los entrega a Back mediante secretos de Container Apps.
+- El plan aprobado tuvo 2 altas, 2 cambios y 0 bajas.
+- El smoke test confirmó frontend y health HTTP `200`, base `up`, rechazo anónimo HTTP `401`, login JWT correcto y seis endpoints autenticados HTTP `200`.
 
 ## Flujo acordado — GitFlow simplificado
 
