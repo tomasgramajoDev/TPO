@@ -37,3 +37,12 @@ output "backend_fqdn" {
 output "frontend_fqdn" {
   value = module.platform.frontend_fqdn
 }
+
+output "application_auth_username" {
+  value = module.platform.application_auth_username
+}
+
+output "application_auth_password" {
+  value     = module.platform.application_auth_password
+  sensitive = true
+}

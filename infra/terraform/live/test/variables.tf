@@ -81,3 +81,15 @@ variable "frontend_image" {
   type        = string
   default     = "acrobraspublica302ceba6.azurecr.io/obras-publicas-frontend:9175534aa57e003caaebb7df2479f6e076c8e066"
 }
+
+variable "application_auth_username" {
+  description = "Usuario del ambiente test."
+  type        = string
+  default     = "devops.obras"
+}
+
+variable "application_auth_role" {
+  description = "Rol funcional del usuario de test."
+  type        = string
+  default     = "RESPONSABLE_AUTORIZADO"
+}

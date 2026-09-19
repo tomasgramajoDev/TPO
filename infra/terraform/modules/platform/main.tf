@@ -52,6 +52,23 @@ resource "random_password" "postgresql_admin" {
   override_special = "!#$%&*()-_=+[]{}:?"
 }
 
+resource "random_password" "application_auth" {
+  count            = var.enable_applications ? 1 : 0
+  length           = 24
+  special          = true
+  min_lower        = 2
+  min_numeric      = 2
+  min_special      = 2
+  min_upper        = 2
+  override_special = "!#$%&*()-_=+[]{}:?"
+}
+
+resource "random_password" "jwt_secret" {
+  count   = var.enable_applications ? 1 : 0
+  length  = 48
+  special = false
+}
+
 resource "azurerm_postgresql_flexible_server" "this" {
   count = var.enable_postgresql ? 1 : 0
 
@@ -143,6 +160,16 @@ resource "azurerm_container_app" "backend" {
     value = random_password.postgresql_admin[0].result
   }
 
+  secret {
+    name  = "auth-password"
+    value = random_password.application_auth[0].result
+  }
+
+  secret {
+    name  = "jwt-secret"
+    value = random_password.jwt_secret[0].result
+  }
+
   dynamic "secret" {
     for_each = var.enable_event_grid ? [1] : []
 
@@ -186,6 +213,26 @@ resource "azurerm_container_app" "backend" {
       env {
         name        = "DB_PASSWORD"
         secret_name = "db-password"
+      }
+
+      env {
+        name  = "AUTH_USERNAME"
+        value = var.application_auth_username
+      }
+
+      env {
+        name        = "AUTH_PASSWORD"
+        secret_name = "auth-password"
+      }
+
+      env {
+        name  = "AUTH_ROLE"
+        value = var.application_auth_role
+      }
+
+      env {
+        name        = "JWT_SECRET"
+        secret_name = "jwt-secret"
       }
 
       dynamic "env" {

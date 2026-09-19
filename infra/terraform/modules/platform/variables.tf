@@ -142,3 +142,15 @@ variable "frontend_image" {
   type        = string
   default     = null
 }
+
+variable "application_auth_username" {
+  description = "Usuario de demostración entregado al backend mediante configuración."
+  type        = string
+  default     = "devops.obras"
+}
+
+variable "application_auth_role" {
+  description = "Rol funcional del usuario de demostración."
+  type        = string
+  default     = "RESPONSABLE_AUTORIZADO"
+}
