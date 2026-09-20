@@ -76,7 +76,8 @@ jobs:
         shell: bash
         run: |
           resource_group="$(terraform output -raw resource_group_name)"
-          server_name="$(terraform output -raw postgresql_server_name)"
+          server_fqdn="$(terraform output -raw postgresql_fqdn)"
+          server_name="${server_fqdn%%.*}"
           server_state="$(az postgres flexible-server show --resource-group "$resource_group" --name "$server_name" --query state --output tsv)"
           if [ "$server_state" = "Stopped" ]; then
             az postgres flexible-server start --resource-group "$resource_group" --name "$server_name"
@@ -161,7 +162,8 @@ jobs:
         shell: bash
         run: |
           resource_group="$(terraform output -raw resource_group_name)"
-          server_name="$(terraform output -raw postgresql_server_name)"
+          server_fqdn="$(terraform output -raw postgresql_fqdn)"
+          server_name="${server_fqdn%%.*}"
           server_state="$(az postgres flexible-server show --resource-group "$resource_group" --name "$server_name" --query state --output tsv)"
           if [ "$server_state" = "Stopped" ]; then
             az postgres flexible-server start --resource-group "$resource_group" --name "$server_name"
