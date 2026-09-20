@@ -93,3 +93,11 @@ variable "application_auth_role" {
   type        = string
   default     = "RESPONSABLE_AUTORIZADO"
 }
+
+variable "application_demo_password" {
+  description = "Contraseña secreta compartida por las cuentas de prueba de Test."
+  type        = string
+  default     = null
+  nullable    = true
+  sensitive   = true
+}
