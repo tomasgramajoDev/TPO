@@ -154,3 +154,11 @@ variable "application_auth_role" {
   type        = string
   default     = "RESPONSABLE_AUTORIZADO"
 }
+
+variable "application_demo_password" {
+  description = "Contraseña opcional para las cuentas de prueba por rol. Si se omite, Terraform genera una."
+  type        = string
+  default     = null
+  nullable    = true
+  sensitive   = true
+}

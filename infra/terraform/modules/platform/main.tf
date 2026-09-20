@@ -10,6 +10,8 @@ locals {
     managedBy   = "terraform"
     project     = var.project_name
   })
+
+  application_demo_password = coalesce(var.application_demo_password, try(random_password.application_demo[0].result, null))
 }
 
 resource "azurerm_log_analytics_workspace" "this" {
@@ -179,11 +181,11 @@ resource "azurerm_container_app" "backend" {
   secret {
     name = "auth-bootstrap-users"
     value = jsonencode([
-      { username = "personal.obras", password = random_password.application_demo[0].result, role = "PERSONAL_OBRAS" },
-      { username = "responsable", password = random_password.application_demo[0].result, role = "RESPONSABLE_AUTORIZADO" },
-      { username = "jefe.cuadrilla", password = random_password.application_demo[0].result, role = "JEFE_CUADRILLA" },
-      { username = "operario", password = random_password.application_demo[0].result, role = "OPERARIO_CONTRATISTA" },
-      { username = "inspector", password = random_password.application_demo[0].result, role = "INSPECTOR_OBRA" }
+      { username = "personal.obras", password = local.application_demo_password, role = "PERSONAL_OBRAS" },
+      { username = "responsable", password = local.application_demo_password, role = "RESPONSABLE_AUTORIZADO" },
+      { username = "jefe.cuadrilla", password = local.application_demo_password, role = "JEFE_CUADRILLA" },
+      { username = "operario", password = local.application_demo_password, role = "OPERARIO_CONTRATISTA" },
+      { username = "inspector", password = local.application_demo_password, role = "INSPECTOR_OBRA" }
     ])
   }
 

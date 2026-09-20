@@ -27,6 +27,7 @@ env:
   ARM_USE_OIDC: true
   TF_IN_AUTOMATION: true
   TF_INPUT: false
+  TF_VAR_application_demo_password: ${{ secrets.TEST_DEMO_PASSWORD }}
 
 jobs:
   plan:

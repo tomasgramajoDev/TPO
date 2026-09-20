@@ -25,4 +25,5 @@ module "platform" {
   frontend_image                 = var.frontend_image
   application_auth_username      = var.application_auth_username
   application_auth_role          = var.application_auth_role
+  application_demo_password      = var.application_demo_password
 }

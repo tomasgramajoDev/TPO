@@ -66,7 +66,7 @@ output "application_auth_password" {
 
 output "application_demo_password" {
   description = "Contraseña común generada para las cinco cuentas de prueba por rol."
-  value       = try(random_password.application_demo[0].result, null)
+  value       = local.application_demo_password
   sensitive   = true
 }
 
