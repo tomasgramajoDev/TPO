@@ -18,6 +18,11 @@ output "postgresql_fqdn" {
   value       = try(azurerm_postgresql_flexible_server.this[0].fqdn, null)
 }
 
+output "postgresql_server_name" {
+  description = "Nombre del servidor PostgreSQL o null cuando está deshabilitado."
+  value       = try(azurerm_postgresql_flexible_server.this[0].name, null)
+}
+
 output "postgresql_database_name" {
   description = "Nombre de la base PostgreSQL o null cuando está deshabilitada."
   value       = try(azurerm_postgresql_flexible_server_database.this[0].name, null)

@@ -14,6 +14,10 @@ output "postgresql_fqdn" {
   value = module.platform.postgresql_fqdn
 }
 
+output "postgresql_server_name" {
+  value = module.platform.postgresql_server_name
+}
+
 output "postgresql_database_name" {
   value = module.platform.postgresql_database_name
 }
