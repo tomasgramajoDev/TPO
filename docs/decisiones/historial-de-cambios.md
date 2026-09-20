@@ -206,3 +206,15 @@ No se eliminó el antecedente de los eventos genéricos; permanece documentado c
 - El workflow `35475940801` aplicó correctamente el plan. PostgreSQL quedó `Ready`, y Front y Back quedaron `Running` con las imágenes nuevas.
 - La prueba posterior confirmó frontend y `/health` HTTP `200`, `/api/health` con `database: up`, acceso anónimo protegido HTTP `401`, login JWT correcto y seis endpoints autenticados HTTP `200`.
 - `test` no fue modificado: conserva la release `v0.1.0` hasta la siguiente promoción formal.
+
+## 2026-09-20 — Release de aplicación v0.2.0 desplegada en Test
+
+- Se fusionaron Front PR `#8` y Back PR `#6` en `develop`. Front superó lint, 10 pruebas y build; Back informó 60 pruebas H2, 60 PostgreSQL y 164 controles HTTP, y sus workflows de release volvieron a superar tests, empaquetado y construcción del contenedor.
+- Se publicaron las imágenes inmutables de Front `5b4892b5668626aebbdef0c91900c69b7f78bdf5` y Back `91f30e4c7b5e03d0fd33fb831a30c63fae09ada3`. Desarrollo respondió HTTP 200 por Front, proxy `/api/health` y Back directo, con `database: up`.
+- Se crearon `release/v0.2.0`, PR `#9` de Front y PR `#7` de Back; ambos se fusionaron a `main` y publicaron la release de aplicación `v0.2.0`.
+- Terraform incorporó `AUTH_BOOTSTRAP_USERS` como secreto y cinco cuentas de prueba por rol. La contraseña se generó fuera de Git, se guardó como secreto protegido `TEST_DEMO_PASSWORD` del ambiente GitHub Test y se copió al portapapeles local para compartirla por un canal privado.
+- Los intentos de infraestructura `v0.2.0` y `v0.2.1` se detuvieron antes del plan porque PostgreSQL estaba apagado y luego porque el output nuevo aún no existía en el estado anterior. No aplicaron cambios. El pipeline se corrigió para iniciar PostgreSQL antes del plan y derivar el nombre desde el FQDN persistido.
+- La release operativa de infraestructura `v0.2.2` promovió las mismas aplicaciones `v0.2.0`. DevOps revisó un plan de 3 altas, 2 cambios y 0 bajas y autorizó el apply del workflow `35516745301`.
+- Azure Test quedó disponible en `https://ca-obras-publicas-tst-frontend.purpleisland-1134bab8.chilecentral.azurecontainerapps.io`; Front y `/api/health` respondieron HTTP 200 y PostgreSQL informó `up`.
+- Se probaron las cinco cuentas y sus roles mediante login y `/api/auth/me`. La prueba integrada creó proyecto `1`, comprobó denegación HTTP 403 con rol incorrecto, aprobó el proyecto, creó cuadrilla `1`, rechazó una orden PROYECTO sin `projectId` con HTTP 400 y recorrió la orden `1` por `ASIGNADA`, `EN_EJECUCION`, `PAUSADA`, `EN_EJECUCION`, `COMPLETADA` y `VALIDADA`.
+- Se agregó un plan de Testing basado en el TPO y un guion separado de un minuto para la demostración. Las integraciones externas M2/M6/M7 y las brechas funcionales declaradas continúan pendientes; no se presentaron como implementadas.
