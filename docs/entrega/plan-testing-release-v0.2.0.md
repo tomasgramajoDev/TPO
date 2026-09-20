@@ -9,7 +9,7 @@ No se considera aprobada una prueba solo porque la pantalla cargue: debe comprob
 ## Ambiente y acceso
 
 - Ambiente: `test`.
-- Frontend: usar únicamente el enlace público entregado por DevOps.
+- Frontend: `https://ca-obras-publicas-tst-frontend.purpleisland-1134bab8.chilecentral.azurecontainerapps.io`.
 - API: el navegador accede por rutas relativas `/api/...`; Testing no debe reemplazarlas por URLs de Azure ni por `localhost`.
 - Base: PostgreSQL administrado en Azure; no se comparte su contraseña con Testing.
 - Credenciales: DevOps entrega por un canal privado una contraseña temporal común para cinco cuentas. No debe copiarse en Git, capturas, Trello ni este documento.
@@ -26,7 +26,7 @@ Usar nombres que comiencen con `QA-` y anotar todos los identificadores creados.
 
 ## Preparación
 
-1. DevOps confirma que Front, Back y PostgreSQL están encendidos y que `/api/health` responde correctamente.
+1. DevOps confirma que Front, Back y PostgreSQL están encendidos y que `/api/health` responde correctamente. Verificación inicial del 2026-09-20: HTTP 200 y `database: up`.
 2. Abrir el frontend en una ventana privada para evitar sesiones viejas.
 3. Disponer de las cinco cuentas y la contraseña recibida en privado.
 4. Crear una carpeta de evidencias con fecha. Para cada caso guardar captura inicial, captura final, usuario utilizado y resultado.
