@@ -46,3 +46,12 @@ output "application_auth_password" {
   value     = module.platform.application_auth_password
   sensitive = true
 }
+
+output "application_demo_password" {
+  value     = module.platform.application_demo_password
+  sensitive = true
+}
+
+output "application_demo_usernames" {
+  value = module.platform.application_demo_usernames
+}

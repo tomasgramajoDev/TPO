@@ -73,13 +73,13 @@ variable "container_registry_identity_id" {
 variable "backend_image" {
   description = "Imagen inmutable del backend promovida a test."
   type        = string
-  default     = "acrobraspublica302ceba6.azurecr.io/obras-publicas-backend:b70379b077881a4b03ff4a4e5244d2f8195cf9a2"
+  default     = "acrobraspublica302ceba6.azurecr.io/obras-publicas-backend:91f30e4c7b5e03d0fd33fb831a30c63fae09ada3"
 }
 
 variable "frontend_image" {
   description = "Imagen inmutable del frontend promovida a test."
   type        = string
-  default     = "acrobraspublica302ceba6.azurecr.io/obras-publicas-frontend:9175534aa57e003caaebb7df2479f6e076c8e066"
+  default     = "acrobraspublica302ceba6.azurecr.io/obras-publicas-frontend:5b4892b5668626aebbdef0c91900c69b7f78bdf5"
 }
 
 variable "application_auth_username" {

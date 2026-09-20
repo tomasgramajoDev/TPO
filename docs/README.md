@@ -25,6 +25,8 @@ Este repositorio conserva el alcance funcional, las reglas, los ciclos de vida, 
 - [Backlog, ciclos y prototipos del 2026-08-25](fuentes/backlog-y-ciclos-2026-08-25.md): nueva evidencia recibida y diferencias contractuales detectadas.
 - [Diagramas](diagramas/README.md): secuencia propuesta y casos de uso del módulo.
 - [Defensa, demo y arquitectura de órdenes](entrega/defensa-demo-arquitectura.md): estado real frente a los criterios de la entrega, guion por rol, demo ejecutable y trabajo pendiente de Front y Back.
+- [Plan de testing de la release v0.2.0](entrega/plan-testing-release-v0.2.0.md): casos por rol, resultados esperados, brechas conocidas y formato de evidencia para el equipo de Testing.
+- [Guion de video de un minuto](entrega/guion-video-demo-1-minuto.md): recorrido cronometrado para mostrar el caso de uso a los profesores.
 
 ## Dónde guardar información nueva
 

@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-Este documento convierte los criterios recibidos el 2026-09-15 en tareas comprobables. Distingue lo que ya está implementado en la release `v0.1.0`, lo que puede demostrarse y lo que todavía requiere desarrollo o confirmación externa.
+Este documento convierte los criterios recibidos el 2026-09-15 en tareas comprobables. Fue actualizado para la release `v0.2.0` y distingue lo implementado de aquello que todavía requiere desarrollo o confirmación externa.
 
 ## Estado real frente a los criterios
 
@@ -10,11 +10,11 @@ Este documento convierte los criterios recibidos el 2026-09-15 en tareas comprob
 | --- | --- | --- |
 | Cada integrante defiende lo que hizo y su criterio | Preparado | Se define abajo un bloque de defensa por rol. Cada persona debe explicar decisiones propias y mostrar evidencia. |
 | Demo de un caso de uso | Verificado | La demo de creación manual y ciclo completo se ejecutó correctamente con `scripts/demo-orden-trabajo.ps1` en `development`. |
-| Patrón de diseño aplicado en Back | Parcial | Existen Repository y el puerto `ProjectEventPublisher`; para una defensa inequívoca se propone implementar Strategy en la creación de órdenes. Debe hacerlo y defenderlo Back. |
+| Patrón de diseño aplicado en Back | Cumplido | La creación de órdenes aplica `WorkOrderCreationStrategy` y resuelve las variantes manual y por proyecto. Back debe mostrar las clases y explicar el criterio. |
 | MVC | Cumplido en Back | Hay Controller, Service, Repository, Mapper, DTO y Model. La petición entra por Controller, la regla se ejecuta en Service y la persistencia se delega al Repository. |
 | Aplicación bien separada | Parcial | Back está separado por capas. Front concentra demasiado código en `App.tsx` y debe dividir vistas, componentes, hooks y servicios. |
 | “No aplicación monolítica” | Pendiente de aclaración | Back se despliega como un único servicio Spring Boot: es un monolito modular, no microservicios. La cátedra debe confirmar cuál de las dos interpretaciones exige. |
-| Enganchar órdenes de trabajo | Parcial | Manual y corte de calle existen; falta el vínculo con proyecto y faltan consumidores M6/M7. |
+| Enganchar órdenes de trabajo | Parcial | Manual, proyecto y corte de calle están cubiertos. Los consumidores M6/M7 siguen pendientes de contratos confirmados. |
 
 ## Qué muestra el diagrama recibido
 
@@ -30,7 +30,7 @@ El diagrama plantea cinco entradas hacia una orden pendiente:
 
 | Entrada | Release `v0.1.0` | Próximo trabajo |
 | --- | --- | --- |
-| Proyecto | No implementada | Agregar `projectId`, relación persistente, migración Flyway, contrato API, pruebas y selección en Front. |
+| Proyecto | Implementada en `v0.2.0` | `origin=PROYECTO` exige un `projectId` válido; Back persiste la relación y Front permite seleccionarla. |
 | M6 | No implementada | Esperar contratos confirmados; luego implementar consumidor idempotente y estrategia de origen. |
 | M7 | No implementada | Esperar contratos confirmados; luego implementar consumidor idempotente y estrategia de origen. |
 | Manual | Implementada | Usarla como demo estable. |
@@ -38,7 +38,7 @@ El diagrama plantea cinco entradas hacia una orden pendiente:
 
 Los nombres `infrastructureRepairRequested`, `containerDamaged`, `treeRiskDetected` y `trafficIncidentRegistered` son información recibida. Mientras no exista confirmación bilateral, no deben presentarse como contratos definitivos ni codificarse como si lo fueran.
 
-## Patrón recomendado para Back: Strategy
+## Patrón aplicado en Back: Strategy
 
 La creación de una orden cambia según el origen. Strategy permite encapsular cada variante sin llenar un único servicio de condicionales.
 
@@ -59,23 +59,21 @@ WorkOrderCreationStrategyResolver
 
 El Controller continúa recibiendo HTTP; el Service coordina; la Strategy decide cómo validar y construir la orden; el Repository persiste. Esto mantiene MVC y permite agregar orígenes sin modificar todas las variantes existentes.
 
-### Tarea exacta para Back
+### Evidencia que debe defender Back
 
-1. Crear `WorkOrderCreationStrategy` y un resolvedor por origen.
-2. Extraer la creación manual actual a `ManualWorkOrderCreationStrategy`.
-3. Crear `ProjectWorkOrderCreationStrategy` con validación del proyecto.
-4. Incorporar `projectId` al request y response, relación JPA y migración Flyway versionada; no usar `ddl-auto=update`.
-5. Mantener compatibles las órdenes sin proyecto.
-6. Agregar pruebas unitarias por estrategia y pruebas de integración del endpoint.
-7. Actualizar OpenAPI y explicar en la defensa por qué Strategy reduce acoplamiento.
+1. Mostrar la interfaz `WorkOrderCreationStrategy` y el resolvedor por origen.
+2. Comparar `ManualWorkOrderCreationStrategy` con `ProjectWorkOrderCreationStrategy`.
+3. Explicar cómo `projectId` se valida y persiste sin romper órdenes manuales anteriores.
+4. Mostrar Flyway V3/V4 y las pruebas por estrategia y endpoint.
+5. Explicar por qué agregar otro origen no obliga a llenar el Service de condicionales.
 
 No corresponde crear todavía las estrategias M6/M7 con payloads inventados. Pueden definirse los puntos de extensión, pero los adaptadores concretos dependen de contratos confirmados.
 
-## Tarea exacta para Front
+## Evidencia que debe defender Front
 
-1. En la creación desde un proyecto, permitir seleccionar el proyecto y enviar `projectId` por `/api/...`.
+1. Mostrar la selección de proyecto y el envío de `projectId` por `/api/...`.
 2. Mostrar el proyecto relacionado en el detalle de la orden.
-3. Dividir `App.tsx` en páginas, componentes, hooks y un cliente de API; no duplicar reglas de negocio del backend.
+3. Explicar la separación existente y reconocer como mejora pendiente la división adicional de `App.tsx`; no duplicar reglas de negocio del backend.
 4. Mantener rutas relativas `/api/...`; Azure resuelve el destino mediante el proxy del frontend.
 5. Agregar pruebas del flujo de creación y de los estados de carga y error.
 
@@ -142,9 +140,9 @@ Verificación del 2026-09-15: `/api/health` informó aplicación disponible y Po
 ## Criterio de aceptación antes de presentar
 
 - La cátedra aclaró si exige microservicios o acepta monolito modular.
-- Back implementó y puede explicar Strategy con pruebas.
-- La orden puede asociarse a un proyecto de punta a punta.
-- Front separó el archivo principal y puede demostrar el flujo.
-- PostgreSQL de `development` está encendido solo durante la demo.
+- Back puede explicar Strategy con pruebas.
+- La orden se asocia a un proyecto de punta a punta.
+- Front puede demostrar el flujo y explicar su separación actual sin ocultar pendientes.
+- PostgreSQL de `test` está encendido solo durante la ventana acordada de pruebas y demo.
 - Health informa aplicación y base disponibles.
 - Cada integrante ensayó su parte y puede explicar una decisión, no solo enumerar herramientas.

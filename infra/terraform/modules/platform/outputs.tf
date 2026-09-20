@@ -58,3 +58,20 @@ output "application_auth_password" {
   value       = try(random_password.application_auth[0].result, null)
   sensitive   = true
 }
+
+output "application_demo_password" {
+  description = "Contraseña común generada para las cinco cuentas de prueba por rol."
+  value       = try(random_password.application_demo[0].result, null)
+  sensitive   = true
+}
+
+output "application_demo_usernames" {
+  description = "Cuentas de prueba creadas por el bootstrap del backend."
+  value = var.enable_applications ? [
+    "personal.obras",
+    "responsable",
+    "jefe.cuadrilla",
+    "operario",
+    "inspector"
+  ] : []
+}
