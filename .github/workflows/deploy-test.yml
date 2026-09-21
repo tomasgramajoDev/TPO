@@ -187,20 +187,42 @@ jobs:
         run: |
           resource_group="$(terraform output -raw resource_group_name)"
           backend_name="ca-obras-publicas-tst-backend"
-          revision=""
-          for attempt in {1..24}; do
-            revision="$(az containerapp show --resource-group "$resource_group" --name "$backend_name" --query properties.latestReadyRevisionName --output tsv)"
-            if [[ -n "$revision" && "$revision" != "None" ]]; then
+          revision="$(az containerapp revision list --resource-group "$resource_group" --name "$backend_name" --query '[?properties.active].name | [0]' --output tsv)"
+          if [[ -z "$revision" || "$revision" == "None" ]]; then
+            az containerapp revision list --resource-group "$resource_group" --name "$backend_name" --query '[].{name:name,active:properties.active,provisioningState:properties.provisioningState}' --output table
+            echo "No hay revision activa del backend para reiniciar" >&2
+            exit 1
+          fi
+          az containerapp revision restart --resource-group "$resource_group" --name "$backend_name" --revision "$revision"
+
+      - name: Verify six demo logins through frontend proxy
+        shell: bash
+        env:
+          EXISTING_DEMO_PASSWORD: ${{ secrets.TEST_DEMO_PASSWORD }}
+        run: |
+          frontend="https://$(terraform output -raw frontend_fqdn)"
+          for attempt in {1..18}; do
+            if curl --silent --show-error --fail --max-time 15 "$frontend/api/health" >/dev/null; then
               break
             fi
             sleep 5
           done
-          if [[ -z "$revision" || "$revision" == "None" ]]; then
-            az containerapp revision list --resource-group "$resource_group" --name "$backend_name" --query '[].{name:name,active:properties.active,provisioningState:properties.provisioningState}' --output table
-            echo "No hay revision lista del backend para reiniciar" >&2
+          for username in personal.obras responsable jefe.cuadrilla operario inspector; do
+            payload="$(jq -nc --arg username "$username" --arg password "$EXISTING_DEMO_PASSWORD" '{username:$username,password:$password}')"
+            code="$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' --max-time 20 --header 'Content-Type: application/json' --data "$payload" "$frontend/api/auth/login")"
+            if [[ "$code" != "200" ]]; then
+              echo "Login anterior no valido para $username (HTTP $code)" >&2
+              exit 1
+            fi
+          done
+          new_payload="$(jq -c '.[] | select(.username == "ingeniero.arquitecto") | {username,password}' <<< "$TF_VAR_application_bootstrap_users_json")"
+          test -n "$new_payload"
+          code="$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' --max-time 20 --header 'Content-Type: application/json' --data "$new_payload" "$frontend/api/auth/login")"
+          if [[ "$code" != "200" ]]; then
+            echo "Login de la sexta cuenta no valido (HTTP $code)" >&2
             exit 1
           fi
-          az containerapp revision restart --resource-group "$resource_group" --name "$backend_name" --revision "$revision"
+          echo "Seis logins correctos a traves del frontend: cinco existentes y uno nuevo."
 
       - name: Publish deployment result
         run: |
