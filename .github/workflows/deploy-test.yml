@@ -195,6 +195,35 @@ jobs:
           fi
           az containerapp revision restart --resource-group "$resource_group" --name "$backend_name" --revision "$revision"
 
+      - name: Verify six demo logins through frontend proxy
+        shell: bash
+        env:
+          EXISTING_DEMO_PASSWORD: ${{ secrets.TEST_DEMO_PASSWORD }}
+        run: |
+          frontend="https://$(terraform output -raw frontend_fqdn)"
+          for attempt in {1..18}; do
+            if curl --silent --show-error --fail --max-time 15 "$frontend/api/health" >/dev/null; then
+              break
+            fi
+            sleep 5
+          done
+          for username in personal.obras responsable jefe.cuadrilla operario inspector; do
+            payload="$(jq -nc --arg username "$username" --arg password "$EXISTING_DEMO_PASSWORD" '{username:$username,password:$password}')"
+            code="$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' --max-time 20 --header 'Content-Type: application/json' --data "$payload" "$frontend/api/auth/login")"
+            if [[ "$code" != "200" ]]; then
+              echo "Login anterior no valido para $username (HTTP $code)" >&2
+              exit 1
+            fi
+          done
+          new_payload="$(jq -c '.[] | select(.username == "ingeniero.arquitecto") | {username,password}' <<< "$TF_VAR_application_bootstrap_users_json")"
+          test -n "$new_payload"
+          code="$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' --max-time 20 --header 'Content-Type: application/json' --data "$new_payload" "$frontend/api/auth/login")"
+          if [[ "$code" != "200" ]]; then
+            echo "Login de la sexta cuenta no valido (HTTP $code)" >&2
+            exit 1
+          fi
+          echo "Seis logins correctos a traves del frontend: cinco existentes y uno nuevo."
+
       - name: Publish deployment result
         run: |
           {
