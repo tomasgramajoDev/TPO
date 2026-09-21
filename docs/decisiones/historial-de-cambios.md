@@ -230,3 +230,9 @@ No se eliminó el antecedente de los eventos genéricos; permanece documentado c
 
 - Se ejecutó el acceso real al Front de Test, registrado en `docs/entrega/ejecucion-testing-manual-2026-09-21.md`. La validación local de campos obligatorios pasó, pero el login con una cuenta válida devolvió HTTP 403 desde el navegador.
 - La misma petición fue HTTP 200 sin `Origin` y HTTP 403 con el origen público del Front. Se registró una incidencia CORS bloqueante; los casos funcionales posteriores quedan pendientes hasta su corrección y nueva verificación desde la interfaz. Los smoke tests previos de API no se reinterpretan como pruebas de UI exitosas.
+
+## 2026-09-21 — Corrección CORS y reprueba visual en Test
+
+- PR `#35` agregó `CORS_ALLOWED_ORIGINS` en Terraform para el Front público de Test y reforzó los seis logins del pipeline con el encabezado `Origin`; las validaciones de Terraform pasaron.
+- Release de infraestructura `v0.2.7`, workflow `35640984823`: plan 0 altas, 2 cambios in-place, 0 bajas; aplicación y smoke test finalizados correctamente.
+- Desde navegador, `ingeniero.arquitecto` ingresó, navegó, consultó proyecto y orden existentes, filtró órdenes, recargó sesión y cerró sesión. Se registraron una carga inicial que requiere reintento, menú móvil solapado y etiqueta `development` en Test. El recorrido de los cinco roles operativos continúa pendiente; detalles en el informe de ejecución.
