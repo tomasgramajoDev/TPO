@@ -253,3 +253,9 @@ No se eliminó el antecedente de los eventos genéricos; permanece documentado c
 - La reprueba agregó controles HTTP negativos en Test: 401 sin token, 403 para escritura de Operario, 400 para presupuesto negativo y 404 para proyecto inexistente; los recuentos no cambiaron. Tras recarga persistieron la OT #3 validada y el corte QA pendiente. El detalle queda en el informe de testing.
 - Back PR `#8` sincronizó la rama por defecto `master` con `main`/release `v0.2.0` después de que CI superó pruebas, paquete Maven y construcción del contenedor (`35648259561`). Ambas ramas tienen el mismo árbol de archivos. Esta sincronización de Git no cambió la imagen de Back activa en Azure, que sigue siendo `91f30e4c7b5e03d0fd33fb831a30c63fae09ada3`.
 - Se cerró la matriz QA-01 a QA-14 del alcance implementado. Siete rutas principales devolvieron 401 sin sesión; se comprobaron 403, 400 y 404 sin mutación. En móvil a 390 px se recorrieron las seis pantallas y el tráfico observado usó el proxy `/api` del Front. La aceptación de esta demo no implica que estén implementadas las integraciones externas ni las brechas funcionales pendientes del TPO.
+
+## 2026-09-21 — Auditoría de cobertura y requisitos integrales
+
+- Se cotejó la release de Test con las páginas 2–4 y 9–10 del TPO. El informe `docs/entrega/auditoria-tpo-final-2026-09-21.md` separa el caso de uso demostrado de las funciones e integraciones ausentes; no se cambió el estado contractual de ningún evento externo.
+- Front PR `#12` añadió pruebas de API y flujos de interfaz, con 58 pruebas aprobadas y gate CI de 85% para líneas y sentencias sobre todo `src`. El PR pasó CI en Linux y se fusionó en `develop`. La imagen activa en Azure no se modificó por este cambio de pruebas.
+- Back PR `#9` propuso el control JaCoCo de 85% de líneas en `mvn verify`. Localmente pasaron las 60 pruebas H2 y el gate; el merge y CI remotos aún deben confirmarse antes de actualizar esta línea.
