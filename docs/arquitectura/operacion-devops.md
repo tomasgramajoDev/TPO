@@ -79,6 +79,10 @@ La identidad recibe `Contributor` solamente en los resource groups de ambos ambi
 
 ## Reglas operativas
 
+### Cuentas de demostración de Test
+
+El environment `test` de GitHub conserva el secreto `TEST_BOOTSTRAP_USERS` con un array JSON de seis cuentas, que se entrega a Terraform como variable sensible y a Container Apps como `AUTH_BOOTSTRAP_USERS`. El archivo privado de origen no se sube a Git. El backend con Flyway V4 crea solamente cuentas faltantes: cambiar este secreto no modifica contraseñas ni roles persistidos. Después de actualizar el secreto en Container Apps, el workflow reinicia la revisión activa del backend para que lea el valor nuevo. Antes de entregar credenciales a Testing, verificar individualmente el login de las seis cuentas; las cinco previamente persistidas pueden conservar una contraseña anterior.
+
 - Revisar el archivo de plan generado antes de aprobar el job `apply`.
 - No ejecutar `terraform apply` simultáneamente sobre el mismo ambiente.
 - No guardar `.tfstate`, `.tfvars` reales, tokens ni contraseñas en Git.

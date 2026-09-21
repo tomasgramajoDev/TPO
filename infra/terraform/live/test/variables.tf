@@ -101,3 +101,11 @@ variable "application_demo_password" {
   nullable    = true
   sensitive   = true
 }
+
+variable "application_bootstrap_users_json" {
+  description = "JSON privado de las cuentas de Test. Se recibe solo desde el secreto GitHub TEST_BOOTSTRAP_USERS."
+  type        = string
+  default     = null
+  nullable    = true
+  sensitive   = true
+}

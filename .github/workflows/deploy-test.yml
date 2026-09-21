@@ -28,6 +28,7 @@ env:
   TF_IN_AUTOMATION: true
   TF_INPUT: false
   TF_VAR_application_demo_password: ${{ secrets.TEST_DEMO_PASSWORD }}
+  TF_VAR_application_bootstrap_users_json: ${{ secrets.TEST_BOOTSTRAP_USERS }}
 
 jobs:
   plan:
@@ -180,6 +181,15 @@ jobs:
 
       - name: Apply approved plan
         run: terraform apply -input=false -lock-timeout=5m -auto-approve test.tfplan
+
+      - name: Restart backend revision to load updated bootstrap secret
+        shell: bash
+        run: |
+          resource_group="$(terraform output -raw resource_group_name)"
+          backend_name="ca-obras-publicas-tst-backend"
+          revision="$(az containerapp show --resource-group "$resource_group" --name "$backend_name" --query properties.latestReadyRevisionName --output tsv)"
+          test -n "$revision"
+          az containerapp revision restart --resource-group "$resource_group" --name "$backend_name" --revision "$revision"
 
       - name: Publish deployment result
         run: |

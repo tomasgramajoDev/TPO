@@ -162,3 +162,16 @@ variable "application_demo_password" {
   nullable    = true
   sensitive   = true
 }
+
+variable "application_bootstrap_users_json" {
+  description = "Array JSON opcional de cuentas iniciales suministrado como secreto por ambiente. No actualiza cuentas existentes."
+  type        = string
+  default     = null
+  nullable    = true
+  sensitive   = true
+
+  validation {
+    condition     = var.application_bootstrap_users_json == null ? true : can(jsondecode(var.application_bootstrap_users_json))
+    error_message = "application_bootstrap_users_json debe ser JSON valido."
+  }
+}

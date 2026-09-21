@@ -218,3 +218,9 @@ No se eliminó el antecedente de los eventos genéricos; permanece documentado c
 - Azure Test quedó disponible en `https://ca-obras-publicas-tst-frontend.purpleisland-1134bab8.chilecentral.azurecontainerapps.io`; Front y `/api/health` respondieron HTTP 200 y PostgreSQL informó `up`.
 - Se probaron las cinco cuentas y sus roles mediante login y `/api/auth/me`. La prueba integrada creó proyecto `1`, comprobó denegación HTTP 403 con rol incorrecto, aprobó el proyecto, creó cuadrilla `1`, rechazó una orden PROYECTO sin `projectId` con HTTP 400 y recorrió la orden `1` por `ASIGNADA`, `EN_EJECUCION`, `PAUSADA`, `EN_EJECUCION`, `COMPLETADA` y `VALIDADA`.
 - Se agregó un plan de Testing basado en el TPO y un guion separado de un minuto para la demostración. Las integraciones externas M2/M6/M7 y las brechas funcionales declaradas continúan pendientes; no se presentaron como implementadas.
+## 2026-09-21 — Sexta cuenta de demostración en Test
+
+- Se recibió un array JSON privado con seis cuentas, una más que las cinco previamente aprovisionadas.
+- Se preparó Terraform para consumir `AUTH_BOOTSTRAP_USERS` desde el secreto `TEST_BOOTSTRAP_USERS` del environment GitHub `test`, sin almacenar credenciales en Git.
+- El bootstrap del backend crea únicamente cuentas ausentes y no rota credenciales existentes. El workflow reinicia la revisión activa al actualizar el secreto para que tome efecto.
+- La verificación de las seis credenciales desde el frontend queda sujeta al despliegue y a la evidencia de login; no se declara aprobada por el mero cambio de configuración.
