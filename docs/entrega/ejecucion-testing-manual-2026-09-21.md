@@ -114,3 +114,26 @@ Se publicó en Test el Front del commit `f8d6a585e0f8e17fb19fa0a76d2e9de72ca6fc3
 El navegador integrado se cerró inesperadamente al intentar abrir su selector nativo de fecha; se reabrió la página y se ingresó la fecha directamente en el campo. La programación persistió, por lo que no se atribuye ese fallo del selector al código de la aplicación. La OT #3 quedó **Validada**; la OT #2 y el corte ficticio de la ejecución anterior permanecen como datos de prueba, no como trabajo real.
 
 **Criterio de salida actualizado:** el caso de uso principal QA-01 a QA-06 está demostrado de punta a punta con roles y PostgreSQL. Sigue sin corresponder declarar cumplido el TPO completo: las integraciones bilaterales M2/M6/M7, evidencia/materiales obligatorios y otras brechas del plan no están implementadas o confirmadas. La release es candidata a demo del alcance vigente, con estas limitaciones explícitas.
+
+## Cierre de la matriz QA de la release de demostración
+
+La revisión complementaria terminó sobre la misma imagen de Front y Back, sin nuevos cambios de aplicación. Se verificaron por HTTP, sin token, las siete rutas protegidas principales: `/api/auth/me`, Dashboard, proyectos, órdenes, cuadrillas, recursos y cortes devolvieron 401. Una escritura de Operario sobre proyectos devolvió 403 y no alteró el recuento. Un presupuesto negativo devolvió 400; un proyecto inexistente y una orden que lo referenciaba devolvieron 404; ninguno creó registros. Los seis perfiles pudieron ingresar por el proxy en el pipeline de despliegue.
+
+| Caso | Cierre | Evidencia principal |
+| --- | --- | --- |
+| QA-01 | APROBADO | Seis logins en deploy; rol visible, recarga, salida y credencial incorrecta comprobados en la ejecución exploratoria. |
+| QA-02 | APROBADO | Proyecto QA #2 creado y presentado por Personal. |
+| QA-03 | APROBADO | Proyecto QA #2 aprobado por Responsable y persistido. |
+| QA-04 | APROBADO | OT #3 asociada al proyecto #2; proyecto omitido rechazado en formulario e ID inexistente rechazado por API con 404. |
+| QA-05 | APROBADO | OT #3 programada, iniciada, pausada, reanudada y completada con roles Jefe/Operario. |
+| QA-06 | APROBADO | OT #3 reabierta con motivo, retrabajada y finalmente validada por Inspector. |
+| QA-07 | APROBADO | Siete rutas protegidas rechazaron acceso anónimo con 401. |
+| QA-08 | APROBADO | Acción ajena al rol deshabilitada en UI y escritura de Operario rechazada con 403 sin cambiar datos. |
+| QA-09 | APROBADO para casos del plan | Vacíos obligatorios, presupuesto negativo e IDs inexistentes generaron errores controlados sin datos incompletos. No equivale a pruebas exhaustivas de límites. |
+| QA-10 | APROBADO para datos y vistas actuales | Proyectos #1/#2, órdenes #1/#2/#3, cuadrilla QA y corte QA visibles; detalle y filtro Validada correctos tras recarga. |
+| QA-11 | APROBADO para solicitud local | Corte QA ligado a OT #2 persistió Pendiente. La decisión real de M7 no forma parte de la versión. |
+| QA-12 | APROBADO para indicadores actuales | Dos proyectos activos, una orden abierta (#2), cero órdenes de reclamo/inspección y cero demoras, coherentes con los registros. El avance físico sigue en 0% porque no se registraron etapas. |
+| QA-13 | APROBADO en recorrido visual básico | A 390 px se recorrieron Dashboard, Proyectos, Órdenes, Recursos, Cortes e Integraciones; navegación sin superposición, ancho del documento no superior al viewport y sin error de token. |
+| QA-14 | APROBADO | Tras recarga, la inspección de red mostró seis solicitudes `/api/...` al mismo origen público del Front: Dashboard, proyectos, órdenes, recursos, cortes y usuario actual. |
+
+Este cierre aprueba el **alcance funcional implementado para la demo**, no funcionalidades ausentes del TPO. Siguen no implementadas o sin acuerdo externo verificable las integraciones de eventos M2/M6/M7 y autorización del corte, además de las brechas funcionales enumeradas en el plan. La OT QA #2 y el corte QA asociado continúan abiertos deliberadamente como datos de prueba en Test; la OT QA #3 quedó Validada. Front `v0.2.1` y Back `v0.2.0` están fusionados; la infraestructura de Test usa la release `v0.2.8`.
