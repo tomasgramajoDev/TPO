@@ -193,7 +193,9 @@ jobs:
             echo "No hay revision activa del backend para reiniciar" >&2
             exit 1
           fi
-          az containerapp revision restart --resource-group "$resource_group" --name "$backend_name" --revision "$revision"
+          if ! az containerapp revision restart --resource-group "$resource_group" --name "$backend_name" --revision "$revision"; then
+            echo "Azure no pudo reiniciar la revision; la comprobacion de seis logins determinara si el secreto ya esta activo." >&2
+          fi
 
       - name: Verify six demo logins through frontend proxy
         shell: bash
