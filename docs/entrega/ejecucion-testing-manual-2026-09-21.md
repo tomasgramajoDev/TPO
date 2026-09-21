@@ -58,3 +58,35 @@ En un navegador real, `ingeniero.arquitecto` ingresó correctamente y la interfa
 La pantalla Integraciones declara «La integración completa entre módulos queda fuera de esta primera entrega». No se marcaron como aprobados contratos o eventos externos solo por aparecer listados. Las acciones de Ingeniería/Arquitectura que faltan no se etiquetan como defecto definitivo hasta acordar su alcance funcional.
 
 **Estado de aceptación:** la incidencia CORS quedó resuelta, pero la prueba funcional de los cinco roles operativos y el flujo nuevo proyecto → orden → ejecución → inspección continúa pendiente. El menú móvil falló. Esta evidencia no basta para aceptar el TPO completo.
+
+## Segunda ejecución manual: seis perfiles y flujo nuevo
+
+Se continuó en el Front público de Test el 2026-09-21, aproximadamente entre las 19:07 y las 19:17 de Argentina. Se ingresó desde la interfaz con `ingeniero.arquitecto` (en la primera ejecución), `personal.obras`, `responsable`, `jefe.cuadrilla`, `operario` e `inspector`. La contraseña compartida se obtuvo del secreto del ambiente mediante un intercambio cifrado temporal; no se incorporó a Git ni a este informe. El workflow temporal de recuperación se retiró al terminar (PR `#37` y `#38`). Una solicitud de login recibió inicialmente HTTP 503 durante el arranque; `/api/health` respondió luego 200 con `database: up` y el segundo intento de login funcionó. No se interpreta el 503 aislado como caída persistente.
+
+| Caso | Resultado observado | Evidencia de interfaz y límite |
+| --- | --- | --- |
+| QA-01 | APROBADO en los seis ingresos; PARCIAL en carga inicial | La pantalla mostró cada rol correcto. La sesión sobrevivió una recarga y «Salir» volvió al login. La primera navegación tras ingresar volvió a mostrar en algunos perfiles «Se requiere un token valido»; recargar normalizó los datos. |
+| QA-02 | APROBADO | `personal.obras` creó el proyecto ficticio `QA-UI-Proyecto-20260921-1907`, ID `2`, en Borrador; el formulario vacío informó errores por campo. «Enviar» lo pasó a Pendiente aprobación. El botón de aprobar permaneció deshabilitado para ese rol. |
+| QA-03 | APROBADO | `responsable` aprobó el proyecto #2 por $1.500.000 y 15 días, con observación QA. Tras recarga, lista y detalle mostraron Aprobado, presupuesto, plazo y fecha de aprobación. |
+| QA-04 | APROBADO para vínculo y ausencia; NO EJECUTADO para ID inexistente | El formulario rechazó una orden de origen Proyecto sin seleccionar proyecto, con «Seleccioná un proyecto válido». Al elegir proyecto #2 y la cuadrilla existente, se creó la OT #2 en estado Asignada. El detalle mostró origen Proyecto, vínculo #2 y cuadrilla. No se probó un proyecto ID inexistente porque el selector no lo permite desde la UI. |
+| QA-05 | PARCIAL / BLOQUEADO para Programar y Completar | `jefe.cuadrilla` inició la OT #2, la pausó y la reanudó; lista y detalle mostraron las transiciones hasta En ejecución. «Programar» no avanzó porque este navegador integrado no admite el `window.prompt()` que invoca el Front; consola: `Error: prompt() is not supported.` El mismo límite impidió a `operario` completar la OT. No se marca Programar ni Completar como aprobados, ni como falla comprobada en un navegador estándar. |
+| QA-06 | BLOQUEADO por QA-05 | `inspector` ingresó y vio la OT #2 En ejecución; «Validar» estuvo deshabilitado, conforme al estado. No se pudo probar Validar/Reabrir con una OT recién completada desde este navegador. |
+| QA-07 | PARCIAL | Se mantiene el control previo de recurso protegido sin sesión: HTTP 401. No se recorrieron todas las rutas anónimas. |
+| QA-08 | PARCIAL | La UI deshabilitó aprobar para Personal, crear proyecto/orden para roles no autorizados, y validar antes de completar. La comprobación previa de denegación HTTP 403 por rol permanece documentada en la bitácora de despliegue; esta ejecución no envió nuevas escrituras ilegales. |
+| QA-09 | PARCIAL | Proyecto vacío, orden Proyecto sin proyecto y corte vacío mostraron errores específicos sin crear datos. No se probaron importes negativos ni todos los límites. |
+| QA-10 | PARCIAL | Proyecto #2, OT #2, cuadrilla y detalle fueron visibles; el filtro «En ejecución» dejó solo la OT #2. Los datos sobrevivieron a cambios de rol y recarga. |
+| QA-11 | APROBADO para solicitud local; M7 NO IMPLEMENTADO | `personal.obras` creó una solicitud de corte ficticia para OT #2 del 2026-09-23 al 2026-09-24, ID `c18ef086-83da-4def-a62c-a0f5a9c5fb42`, en Pendiente. Persistió tras recarga. La pantalla aclara que autorización/rechazo de Tránsito depende de la integración externa. |
+| QA-12 | PARCIAL | Tras recarga, el tablero mostró 2 obras activas, 1 orden abierta y ambos proyectos con 0% de avance. No se completó la OT ni se midió el impacto de ese estado. |
+| QA-13 | FALLÓ en móvil | Persiste el solapamiento de navegación a 390 px registrado arriba. Escritorio permitió el flujo parcial descrito. |
+| QA-14 | PARCIAL | Las operaciones observadas se hicieron desde el Front público y su `/api`; no se cubrieron todas las rutas. La etiqueta `development - /api` persiste en Test. |
+
+### Incidencias y restricciones diferenciadas
+
+- **Media, Front:** al cambiar de perfil inmediatamente después de enviar/aprobar el proyecto, la lista mostraba el estado nuevo, pero el panel de detalle que había quedado abierto seguía mostrando `Borrador` y campos «Sin aprobar». Al volver a abrir el detalle tras recargar, mostró correctamente `Aprobado`. Parece estado de detalle no invalidado después de la mutación; no es evidencia de pérdida en PostgreSQL.
+- **Media, Front:** la carga inicial tras login sigue mostrando esporádicamente «Se requiere un token valido» hasta reintento/recarga.
+- **Media, usabilidad y automatización:** Programar, Completar y Validar dependen de cuadros nativos `window.prompt()`. Este navegador de prueba no los implementa; requiere verificación manual en Chrome/Edge normal o formularios/modales dentro de la aplicación. No atribuir el error del navegador integrado al backend.
+- **Baja, presentación:** `development - /api` aparece en el ambiente Test.
+- **Baja, dato explicativo por revisar:** el tablero mostró «Ordenes externas 0 — origen no manual» aunque las OT #1 y #2 figuran como origen Proyecto. Confirmar si el contador excluye deliberadamente Proyecto; de ser así, la leyenda es imprecisa.
+- **Fuera de alcance confirmado:** autorización M7 y contratos/eventos M2/M6/M7 no se aceptan por ver una pantalla.
+
+**Estado de aceptación al cierre:** no se puede declarar terminado el flujo completo QA-01 a QA-06. Proyecto, aprobación, orden y parte de la ejecución se verificaron con interacción real; programación, finalización e inspección quedan por probar en un navegador que admita los diálogos o tras sustituirlos en el Front. La OT de prueba #2 permanece En ejecución y el corte de prueba permanece Pendiente. No se alteraron datos reales fuera de Test.
