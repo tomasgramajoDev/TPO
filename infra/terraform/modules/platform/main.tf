@@ -180,7 +180,7 @@ resource "azurerm_container_app" "backend" {
 
   secret {
     name = "auth-bootstrap-users"
-    value = jsonencode([
+    value = var.application_bootstrap_users_json != null ? var.application_bootstrap_users_json : jsonencode([
       { username = "personal.obras", password = local.application_demo_password, role = "PERSONAL_OBRAS" },
       { username = "responsable", password = local.application_demo_password, role = "RESPONSABLE_AUTORIZADO" },
       { username = "jefe.cuadrilla", password = local.application_demo_password, role = "JEFE_CUADRILLA" },

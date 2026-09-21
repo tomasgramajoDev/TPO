@@ -18,12 +18,13 @@ module "platform" {
 
   enable_event_grid = true
 
-  enable_applications            = true
-  container_registry_server      = var.container_registry_server
-  container_registry_identity_id = var.container_registry_identity_id
-  backend_image                  = var.backend_image
-  frontend_image                 = var.frontend_image
-  application_auth_username      = var.application_auth_username
-  application_auth_role          = var.application_auth_role
-  application_demo_password      = var.application_demo_password
+  enable_applications              = true
+  container_registry_server        = var.container_registry_server
+  container_registry_identity_id   = var.container_registry_identity_id
+  backend_image                    = var.backend_image
+  frontend_image                   = var.frontend_image
+  application_auth_username        = var.application_auth_username
+  application_auth_role            = var.application_auth_role
+  application_demo_password        = var.application_demo_password
+  application_bootstrap_users_json = var.application_bootstrap_users_json
 }
