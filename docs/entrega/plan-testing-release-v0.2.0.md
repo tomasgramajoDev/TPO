@@ -12,7 +12,7 @@ No se considera aprobada una prueba solo porque la pantalla cargue: debe comprob
 - Frontend: `https://ca-obras-publicas-tst-frontend.purpleisland-1134bab8.chilecentral.azurecontainerapps.io`.
 - API: el navegador accede por rutas relativas `/api/...`; Testing no debe reemplazarlas por URLs de Azure ni por `localhost`.
 - Base: PostgreSQL administrado en Azure; no se comparte su contraseña con Testing.
-- Credenciales: DevOps entrega por un canal privado una contraseña temporal común para cinco cuentas. No debe copiarse en Git, capturas, Trello ni este documento.
+- Credenciales: DevOps entrega por un canal privado las contraseñas vigentes. Las cinco cuentas operativas comparten la clave inicial; la sexta cuenta de ingeniería se agregó después y puede tener otra clave. El bootstrap no sobrescribe claves existentes. No copiarlas en Git, capturas, Trello ni este documento.
 
 | Usuario | Rol | Parte del flujo que prueba |
 | --- | --- | --- |
@@ -21,6 +21,7 @@ No se considera aprobada una prueba solo porque la pantalla cargue: debe comprob
 | `jefe.cuadrilla` | `JEFE_CUADRILLA` | Programa, inicia, pausa y reanuda órdenes. |
 | `operario` | `OPERARIO_CONTRATISTA` | Registra la finalización operativa. |
 | `inspector` | `INSPECTOR_OBRA` | Valida o reabre el trabajo terminado. |
+| `ingeniero.arquitecto` | `INGENIERO_ARQUITECTO` | Verifica login, consultas y permisos habilitados para ingeniería. |
 
 Usar nombres que comiencen con `QA-` y anotar todos los identificadores creados. No borrar evidencia antes de cerrar el informe.
 
@@ -28,7 +29,7 @@ Usar nombres que comiencen con `QA-` y anotar todos los identificadores creados.
 
 1. DevOps confirma que Front, Back y PostgreSQL están encendidos y que `/api/health` responde correctamente. Verificación inicial del 2026-09-20: HTTP 200 y `database: up`.
 2. Abrir el frontend en una ventana privada para evitar sesiones viejas.
-3. Disponer de las cinco cuentas y la contraseña recibida en privado.
+3. Disponer de las seis cuentas y sus contraseñas vigentes recibidas en privado.
 4. Crear una carpeta de evidencias con fecha. Para cada caso guardar captura inicial, captura final, usuario utilizado y resultado.
 5. Si aparece un error, registrar hora, pantalla, acción anterior, usuario, datos ingresados y respuesta visible. No repetir muchas veces sin guardar la primera evidencia.
 
@@ -36,7 +37,7 @@ Usar nombres que comiencen con `QA-` y anotar todos los identificadores creados.
 
 ### QA-01 — Autenticación y rol persistido
 
-1. Iniciar sesión con cada una de las cinco cuentas.
+1. Iniciar sesión con cada una de las seis cuentas.
 2. Comprobar que la interfaz muestra el rol correcto.
 3. Recargar la página: la sesión debe continuar vigente.
 4. Cerrar sesión e intentar reutilizar la pantalla protegida.

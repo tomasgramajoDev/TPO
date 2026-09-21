@@ -236,3 +236,10 @@ No se eliminó el antecedente de los eventos genéricos; permanece documentado c
 - PR `#35` agregó `CORS_ALLOWED_ORIGINS` en Terraform para el Front público de Test y reforzó los seis logins del pipeline con el encabezado `Origin`; las validaciones de Terraform pasaron.
 - Release de infraestructura `v0.2.7`, workflow `35640984823`: plan 0 altas, 2 cambios in-place, 0 bajas; aplicación y smoke test finalizados correctamente.
 - Desde navegador, `ingeniero.arquitecto` ingresó, navegó, consultó proyecto y orden existentes, filtró órdenes, recargó sesión y cerró sesión. Se registraron una carga inicial que requiere reintento, menú móvil solapado y etiqueta `development` en Test. El recorrido de los cinco roles operativos continúa pendiente; detalles en el informe de ejecución.
+
+## 2026-09-21 — Segunda ejecución funcional por interfaz en Test
+
+- Se comprobó el ingreso de los cinco perfiles operativos restantes y se continuó el caso de uso desde el Front público. Para recuperar la contraseña compartida sin publicarla se usó un workflow temporal que entregó solo texto cifrado; se retiró después (PR `#37` y `#38`). No se guardó la clave en documentación ni Git.
+- Personal de Obras creó y presentó proyecto ficticio #2; Responsable Autorizado lo aprobó. Personal creó la OT #2 con origen Proyecto y vínculo #2. La falta de proyecto fue rechazada por el formulario. Jefe de Cuadrilla inició, pausó y reanudó la orden; Inspector pudo leerla, pero no validarla aún por su estado. Se creó un corte de prueba para la OT #2, que persistió en estado Pendiente.
+- El navegador integrado no implementa `window.prompt()`, usado por el Front para Programar, Completar y Validar; esos pasos no se declararon aprobados. Se registraron además el detalle de proyecto desactualizado después de la mutación, la carga inicial intermitente del token, el menú móvil solapado y la etiqueta de ambiente confusa. La aceptación del flujo completo sigue pendiente. Evidencia y resultados por caso en `docs/entrega/ejecucion-testing-manual-2026-09-21.md`.
+- Se actualizó el instructivo de Testing para incluir la sexta cuenta de ingeniería sin revelar contraseñas.
