@@ -187,8 +187,19 @@ jobs:
         run: |
           resource_group="$(terraform output -raw resource_group_name)"
           backend_name="ca-obras-publicas-tst-backend"
-          revision="$(az containerapp show --resource-group "$resource_group" --name "$backend_name" --query properties.latestReadyRevisionName --output tsv)"
-          test -n "$revision"
+          revision=""
+          for attempt in {1..24}; do
+            revision="$(az containerapp show --resource-group "$resource_group" --name "$backend_name" --query properties.latestReadyRevisionName --output tsv)"
+            if [[ -n "$revision" && "$revision" != "None" ]]; then
+              break
+            fi
+            sleep 5
+          done
+          if [[ -z "$revision" || "$revision" == "None" ]]; then
+            az containerapp revision list --resource-group "$resource_group" --name "$backend_name" --query '[].{name:name,active:properties.active,provisioningState:properties.provisioningState}' --output table
+            echo "No hay revision lista del backend para reiniciar" >&2
+            exit 1
+          fi
           az containerapp revision restart --resource-group "$resource_group" --name "$backend_name" --revision "$revision"
 
       - name: Publish deployment result
