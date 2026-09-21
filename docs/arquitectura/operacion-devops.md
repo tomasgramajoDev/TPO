@@ -83,6 +83,8 @@ La identidad recibe `Contributor` solamente en los resource groups de ambos ambi
 
 El environment `test` de GitHub conserva el secreto `TEST_BOOTSTRAP_USERS` con un array JSON de seis cuentas, que se entrega a Terraform como variable sensible y a Container Apps como `AUTH_BOOTSTRAP_USERS`. El archivo privado de origen no se sube a Git. El backend con Flyway V4 crea solamente cuentas faltantes: cambiar este secreto no modifica contraseñas ni roles persistidos. El workflow intenta reiniciar la revisión activa; Azure puede rechazar ese reinicio con un error interno, por lo que el criterio definitivo es el health y los seis logins a través del frontend. En la ejecución `35615302917` del 2026-09-21 los seis ingresaron: las cinco cuentas ya persistidas con la contraseña anterior de `TEST_DEMO_PASSWORD` y la nueva `ingeniero.arquitecto` con la contraseña de `users.json`. No se debe entregar una contraseña única del JSON para las seis cuentas: las existentes no se rotaron.
 
+Esos seis logins fueron solicitudes `curl` a través del proxy del Front, **no** sesiones abiertas desde el navegador. La prueba exploratoria posterior detectó que el navegador envía `Origin` y recibía HTTP 403. Terraform fija `CORS_ALLOWED_ORIGINS` al origen público exacto del Front de Test; si cambia el FQDN, se debe actualizar ese valor. El smoke test del pipeline ahora envía el encabezado `Origin` para detectar este fallo, pero la aceptación funcional sigue requiriendo probar las pantallas.
+
 - Revisar el archivo de plan generado antes de aprobar el job `apply`.
 - No ejecutar `terraform apply` simultáneamente sobre el mismo ambiente.
 - No guardar `.tfstate`, `.tfvars` reales, tokens ni contraseñas en Git.

@@ -27,4 +27,7 @@ module "platform" {
   application_auth_role            = var.application_auth_role
   application_demo_password        = var.application_demo_password
   application_bootstrap_users_json = var.application_bootstrap_users_json
+  # El backend no puede depender del FQDN del frontend: este ya depende del backend.
+  # Mantener este origen exacto sincronizado con la URL publica de Test.
+  application_cors_allowed_origins = "https://ca-obras-publicas-tst-frontend.purpleisland-1134bab8.chilecentral.azurecontainerapps.io"
 }

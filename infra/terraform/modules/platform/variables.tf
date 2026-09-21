@@ -175,3 +175,10 @@ variable "application_bootstrap_users_json" {
     error_message = "application_bootstrap_users_json debe ser JSON valido."
   }
 }
+
+variable "application_cors_allowed_origins" {
+  description = "Origenes HTTPS del frontend autorizados por el backend para peticiones del navegador. Separar varios con comas."
+  type        = string
+  default     = null
+  nullable    = true
+}

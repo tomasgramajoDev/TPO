@@ -211,7 +211,7 @@ jobs:
           done
           for username in personal.obras responsable jefe.cuadrilla operario inspector; do
             payload="$(jq -nc --arg username "$username" --arg password "$EXISTING_DEMO_PASSWORD" '{username:$username,password:$password}')"
-            code="$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' --max-time 20 --header 'Content-Type: application/json' --data "$payload" "$frontend/api/auth/login")"
+            code="$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' --max-time 20 --header 'Content-Type: application/json' --header "Origin: $frontend" --data "$payload" "$frontend/api/auth/login")"
             if [[ "$code" != "200" ]]; then
               echo "Login anterior no valido para $username (HTTP $code)" >&2
               exit 1
@@ -219,7 +219,7 @@ jobs:
           done
           new_payload="$(jq -c '.[] | select(.username == "ingeniero.arquitecto") | {username,password}' <<< "$TF_VAR_application_bootstrap_users_json")"
           test -n "$new_payload"
-          code="$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' --max-time 20 --header 'Content-Type: application/json' --data "$new_payload" "$frontend/api/auth/login")"
+          code="$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' --max-time 20 --header 'Content-Type: application/json' --header "Origin: $frontend" --data "$new_payload" "$frontend/api/auth/login")"
           if [[ "$code" != "200" ]]; then
             echo "Login de la sexta cuenta no valido (HTTP $code)" >&2
             exit 1
