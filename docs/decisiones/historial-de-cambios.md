@@ -225,3 +225,8 @@ No se eliminó el antecedente de los eventos genéricos; permanece documentado c
 - El bootstrap del backend crea únicamente cuentas ausentes y no rota credenciales existentes. El workflow reinicia la revisión activa al actualizar el secreto para que tome efecto.
 - La verificación de las seis credenciales desde el frontend queda sujeta al despliegue y a la evidencia de login; no se declara aprobada por el mero cambio de configuración.
 - La release operativa `v0.2.6` finalizó con éxito en el workflow `35615302917`: Terraform aplicó 0 altas, 2 cambios y 0 bajas; `/api/health` informó `database: up`; los cinco logins anteriores pasaron con `TEST_DEMO_PASSWORD` y la sexta cuenta pasó con la clave privada de `users.json`. El reinicio manual de la revisión devolvió un error interno de Azure, pero la revisión activa ya había tomado el secreto y el smoke test fue exitoso.
+
+## 2026-09-21 — Prueba exploratoria desde el navegador
+
+- Se ejecutó el acceso real al Front de Test, registrado en `docs/entrega/ejecucion-testing-manual-2026-09-21.md`. La validación local de campos obligatorios pasó, pero el login con una cuenta válida devolvió HTTP 403 desde el navegador.
+- La misma petición fue HTTP 200 sin `Origin` y HTTP 403 con el origen público del Front. Se registró una incidencia CORS bloqueante; los casos funcionales posteriores quedan pendientes hasta su corrección y nueva verificación desde la interfaz. Los smoke tests previos de API no se reinterpretan como pruebas de UI exitosas.

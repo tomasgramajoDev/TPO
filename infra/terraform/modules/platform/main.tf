@@ -265,6 +265,15 @@ resource "azurerm_container_app" "backend" {
       }
 
       dynamic "env" {
+        for_each = var.application_cors_allowed_origins == null ? [] : [var.application_cors_allowed_origins]
+
+        content {
+          name  = "CORS_ALLOWED_ORIGINS"
+          value = env.value
+        }
+      }
+
+      dynamic "env" {
         for_each = var.enable_event_grid ? [1] : []
 
         content {
