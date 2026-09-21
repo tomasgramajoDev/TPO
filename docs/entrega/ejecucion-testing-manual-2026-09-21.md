@@ -90,3 +90,27 @@ Se continuó en el Front público de Test el 2026-09-21, aproximadamente entre l
 - **Fuera de alcance confirmado:** autorización M7 y contratos/eventos M2/M6/M7 no se aceptan por ver una pantalla.
 
 **Estado de aceptación al cierre:** no se puede declarar terminado el flujo completo QA-01 a QA-06. Proyecto, aprobación, orden y parte de la ejecución se verificaron con interacción real; programación, finalización e inspección quedan por probar en un navegador que admita los diálogos o tras sustituirlos en el Front. La OT de prueba #2 permanece En ejecución y el corte de prueba permanece Pendiente. No se alteraron datos reales fuera de Test.
+
+## Tercera ejecución: Front corregido e infraestructura v0.2.8
+
+Se publicó en Test el Front del commit `f8d6a585e0f8e17fb19fa0a76d2e9de72ca6fc30` mediante la release de infraestructura `v0.2.8`. El workflow `35646785528` terminó correctamente: aplicó el plan aprobado, inició PostgreSQL, y verificó los seis logins por el proxy del Front. Esta ejecución de navegador continuó con datos ficticios `QA-` en el mismo ambiente.
+
+| Caso | Resultado comprobado en esta ejecución | Pendiente o límite |
+| --- | --- | --- |
+| QA-01 | APROBADO: el pipeline verificó seis logins; por interfaz se volvió a ingresar con Personal, Jefe, Operario e Inspector y apareció el rol correcto. No reapareció el error inicial de token. | No se repitió contraseña incorrecta de cada usuario; esa variante se había probado antes. |
+| QA-02 y QA-03 | APROBADOS en la ejecución anterior: proyecto #2 creado, presentado y aprobado desde la interfaz. | No se creó otro proyecto innecesario. |
+| QA-04 | APROBADO: Personal creó OT #3 de origen Proyecto, vinculada al proyecto #2 y a la cuadrilla QA. El listado confirmó ID, origen y vínculo. | El selector impide ingresar un ID de proyecto inexistente por interfaz. |
+| QA-05 | APROBADO: Jefe programó OT #3 para 2026-09-22; se rechazó primero la fecha vacía. Después la inició, pausó y reanudó, con cada estado visible tras consultar el backend. Operario completó la orden con resultado; el resultado vacío mostró error obligatorio. | La evidencia fotográfica no es obligatoria en la versión actual. |
+| QA-06 | APROBADO: Inspector rechazó la OT #3 y la dejó Reabierta; el motivo vacío fue rechazado. Jefe reanudó el retrabajo, Operario la completó de nuevo con resultado corregido e Inspector la dejó Validada. | No implica cierre automático del proyecto. |
+| QA-07 | PARCIAL: sin token, `GET /api/public-works/projects` y `GET /api/public-works/work-orders` devolvieron HTTP 401. | No se repitieron todas las rutas protegidas. |
+| QA-08 | PARCIAL: la interfaz deshabilitó acciones ajenas a cada rol durante el recorrido. | Esta ejecución no volvió a enviar una petición HTTP de escritura con rol incorrecto; existe control previo 403 en la bitácora. |
+| QA-09 | PARCIAL: se comprobaron campos obligatorios en Programar, Completar y Reabrir. | Faltan importes negativos, longitudes extremas e IDs inexistentes por API. |
+| QA-10 | PARCIAL: listado, estado y vínculo de la OT #3 se actualizaron después de cada cambio de rol. | No se recorrieron todos los filtros y recursos otra vez. |
+| QA-11 | APROBADO para solicitud local en la ejecución anterior; corte QA de OT #2 sigue Pendiente. | Autorización de M7 no implementada. |
+| QA-12 | PARCIAL: tras validar la OT #3, el tablero mostró una orden abierta (la OT #2), dos proyectos activos y la leyenda precisa que excluye origen Proyecto del indicador externo. | El progreso físico del proyecto permaneció en 0%; esta prueba no registró avances de etapa. |
+| QA-13 | APROBADO para navegación móvil a 390 px: los seis botones ocupan dos columnas sin superponerse ni exceder los 390 px; medición DOM: `bodyScrollWidth=375`, `innerWidth=390`. | Resto de vistas móviles no revisadas exhaustivamente. |
+| QA-14 | APROBADO para el flujo recorrido: Front mostró `test - /api` y todas las operaciones se hicieron en el origen del Front. | No es una auditoría de todas las rutas de red. |
+
+El navegador integrado se cerró inesperadamente al intentar abrir su selector nativo de fecha; se reabrió la página y se ingresó la fecha directamente en el campo. La programación persistió, por lo que no se atribuye ese fallo del selector al código de la aplicación. La OT #3 quedó **Validada**; la OT #2 y el corte ficticio de la ejecución anterior permanecen como datos de prueba, no como trabajo real.
+
+**Criterio de salida actualizado:** el caso de uso principal QA-01 a QA-06 está demostrado de punta a punta con roles y PostgreSQL. Sigue sin corresponder declarar cumplido el TPO completo: las integraciones bilaterales M2/M6/M7, evidencia/materiales obligatorios y otras brechas del plan no están implementadas o confirmadas. La release es candidata a demo del alcance vigente, con estas limitaciones explícitas.
