@@ -195,6 +195,15 @@ resource "azurerm_container_app" "backend" {
   }
 
   dynamic "secret" {
+    for_each = var.application_messaging_enabled ? [1] : []
+
+    content {
+      name  = "rabbitmq-password"
+      value = var.application_rabbitmq_password
+    }
+  }
+
+  dynamic "secret" {
     for_each = var.enable_event_grid ? [1] : []
 
     content {
@@ -262,6 +271,83 @@ resource "azurerm_container_app" "backend" {
       env {
         name        = "JWT_SECRET"
         secret_name = "jwt-secret"
+      }
+
+      env {
+        name  = "MESSAGING_ENABLED"
+        value = tostring(var.application_messaging_enabled)
+      }
+
+      dynamic "env" {
+        for_each = var.application_messaging_enabled ? [1] : []
+
+        content {
+          name        = "RABBITMQ_PASSWORD"
+          secret_name = "rabbitmq-password"
+        }
+      }
+
+      dynamic "env" {
+        for_each = var.application_messaging_enabled ? [1] : []
+
+        content {
+          name  = "RABBITMQ_HOST"
+          value = "core-uade-2026.duckdns.org"
+        }
+      }
+
+      dynamic "env" {
+        for_each = var.application_messaging_enabled ? [1] : []
+
+        content {
+          name  = "RABBITMQ_PORT"
+          value = "5671"
+        }
+      }
+
+      dynamic "env" {
+        for_each = var.application_messaging_enabled ? [1] : []
+
+        content {
+          name  = "RABBITMQ_USERNAME"
+          value = "module_obras"
+        }
+      }
+
+      dynamic "env" {
+        for_each = var.application_messaging_enabled ? [1] : []
+
+        content {
+          name  = "RABBITMQ_VHOST"
+          value = "core"
+        }
+      }
+
+      dynamic "env" {
+        for_each = var.application_messaging_enabled ? [1] : []
+
+        content {
+          name  = "RABBITMQ_TLS_ENABLED"
+          value = "true"
+        }
+      }
+
+      dynamic "env" {
+        for_each = var.application_messaging_enabled ? [1] : []
+
+        content {
+          name  = "CORE_EXCHANGE"
+          value = "muni.inbox"
+        }
+      }
+
+      dynamic "env" {
+        for_each = var.application_messaging_enabled ? [1] : []
+
+        content {
+          name  = "CORE_QUEUE"
+          value = "q.obras"
+        }
       }
 
       dynamic "env" {

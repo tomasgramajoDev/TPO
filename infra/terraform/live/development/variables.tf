@@ -93,3 +93,16 @@ variable "application_auth_role" {
   type        = string
   default     = "RESPONSABLE_AUTORIZADO"
 }
+
+variable "application_messaging_enabled" {
+  description = "Habilita la conexion AMQPS del backend development con Core."
+  type        = bool
+  default     = false
+}
+
+variable "application_rabbitmq_password" {
+  description = "Contraseña AMQPS de module_obras recibida mediante GitHub Environment secret."
+  type        = string
+  default     = ""
+  sensitive   = true
+}

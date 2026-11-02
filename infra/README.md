@@ -29,6 +29,8 @@ Las imágenes se almacenan en Azure Container Registry con el SHA del commit com
 
 La mensajería de `development` utiliza un tópico personalizado de Azure Event Grid con esquema CloudEvents 1.0. El endpoint y la clave de publicación se entregan al backend mediante `EVENT_GRID_TOPIC_ENDPOINT` y el secreto `EVENT_GRID_ACCESS_KEY`; la clave permanece en el estado remoto y como secreto de Container Apps, nunca en Git. No se crean suscripciones hasta que los módulos consumidores y Core confirmen los contratos y endpoints. Todo cambio posterior debe pasar por plan y autorización de DevOps.
 
+El adaptador RabbitMQ/Core se configura por Terraform y permanece deshabilitado por defecto. Para habilitarlo, DevOps debe cargar `RABBITMQ_PASSWORD` como secreto del environment `development` y ejecutar `deploy-development.yml` con `enable_core_messaging=true`. Terraform entrega `MESSAGING_ENABLED`, host, puerto 5671, usuario `module_obras`, vhost `core`, exchange `muni.inbox` y cola `q.obras`; la contraseña nunca se guarda en Git.
+
 URLs vigentes de desarrollo:
 
 - frontend: <https://ca-obras-publicas-dev-frontend.victoriousground-b333790d.chilecentral.azurecontainerapps.io>;

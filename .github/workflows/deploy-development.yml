@@ -8,6 +8,12 @@ on:
       - ".github/workflows/deploy-development.yml"
       - "infra/terraform/**"
   workflow_dispatch:
+    inputs:
+      enable_core_messaging:
+        description: Habilitar AMQPS con Core (requiere el secreto RABBITMQ_PASSWORD)
+        required: true
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -25,6 +31,8 @@ env:
   ARM_USE_OIDC: true
   TF_IN_AUTOMATION: true
   TF_INPUT: false
+  TF_VAR_application_messaging_enabled: ${{ inputs.enable_core_messaging || 'false' }}
+  TF_VAR_application_rabbitmq_password: ${{ secrets.RABBITMQ_PASSWORD }}
 
 jobs:
   plan:
