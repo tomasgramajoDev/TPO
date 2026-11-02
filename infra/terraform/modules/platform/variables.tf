@@ -182,3 +182,21 @@ variable "application_cors_allowed_origins" {
   default     = null
   nullable    = true
 }
+
+variable "application_messaging_enabled" {
+  description = "Habilita el adaptador AMQPS de Core en el backend."
+  type        = bool
+  default     = false
+}
+
+variable "application_rabbitmq_password" {
+  description = "Contraseña privada del usuario AMQPS module_obras."
+  type        = string
+  default     = ""
+  sensitive   = true
+
+  validation {
+    condition     = !var.application_messaging_enabled || length(trimspace(var.application_rabbitmq_password)) > 0
+    error_message = "application_rabbitmq_password es obligatoria cuando la mensajeria esta habilitada."
+  }
+}

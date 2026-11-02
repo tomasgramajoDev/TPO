@@ -25,4 +25,6 @@ module "platform" {
   frontend_image                 = var.frontend_image
   application_auth_username      = var.application_auth_username
   application_auth_role          = var.application_auth_role
+  application_messaging_enabled  = var.application_messaging_enabled
+  application_rabbitmq_password  = var.application_rabbitmq_password
 }
