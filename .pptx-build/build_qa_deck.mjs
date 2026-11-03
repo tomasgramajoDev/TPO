@@ -50,7 +50,7 @@ function bulletList(slide, items, left, top, width, size=21, color=C.ink, gap=54
   textbox(s, "Evidencia, resultados y pendientes sin ocultar", 76, 370, 720, 52, 24, "#cbd5e1", false);
   textbox(s, "Grupo 5 · Desarrollo de Aplicaciones II · 3 de noviembre de 2026", 76, 618, 1000, 34, 18, C.white, false);
   const accent = s.shapes.add({ geometry: "rect", position: { left: 1060, top: 0, width: 220, height: 720 }, fill: C.teal, line: { fill: "none", width: 0 } });
-  textbox(s, "19", 1090, 180, 160, 86, 58, C.white, true, "center");
+  textbox(s, "22", 1090, 180, 160, 86, 58, C.white, true, "center");
   textbox(s, "casos con\nevidencia PASS", 1090, 270, 160, 82, 20, C.white, true, "center");
   textbox(s, "60%", 1090, 410, 160, 76, 46, C.white, true, "center");
   textbox(s, "mutation score", 1090, 486, 160, 36, 17, C.white, false, "center");
@@ -92,19 +92,19 @@ function bulletList(slide, items, left, top, width, size=21, color=C.ink, gap=54
 
 // 4. Execution chart
 {
-  const s = base("Estado de los 34 casos", 4);
+  const s = base("Estado de los 36 casos", 4);
   s.charts.add("bar", {
     position: { left: 90, top: 205, width: 720, height: 350 },
     categories: ["PASS", "Preparados", "No aplica"],
-    series: [{ name: "Casos", values: [19, 14, 1], fill: C.teal }],
+    series: [{ name: "Casos", values: [22, 13, 1], fill: C.teal }],
     hasLegend: false,
     dataLabels: { showValue: true, position: "outEnd" },
     xAxis: { majorGridlines: { style: "solid", fill: "#e2e8f0", width: 1 } },
     yAxis: {}
   });
-  textbox(s, "19", 900, 218, 200, 74, 54, C.green, true);
+  textbox(s, "22", 900, 218, 200, 74, 54, C.green, true);
   textbox(s, "con evidencia", 900, 288, 250, 32, 20, C.gray);
-  textbox(s, "14", 900, 355, 200, 74, 54, C.amber, true);
+  textbox(s, "13", 900, 355, 200, 74, 54, C.amber, true);
   textbox(s, "esperan ambiente o prueba compartida", 900, 425, 285, 60, 20, C.gray);
   textbox(s, "1", 900, 512, 200, 62, 46, C.gray, true);
   textbox(s, "XXE no aplica: la API expuesta usa JSON", 900, 570, 300, 54, 18, C.gray);
@@ -134,11 +134,11 @@ function bulletList(slide, items, left, top, width, size=21, color=C.ink, gap=54
   bulletList(s, [
     "Gitleaks 8.30.1 revisó toda la historia de Front, Back y TPO: 0 hallazgos",
     "Los roles y JWT tienen casos positivos y negativos automatizados",
-    "El pipeline ejecuta auditoría de dependencias y ZAP sobre el stack limpio",
+    "Trivy y ZAP aprobaron: 0 vulnerabilidades High/Critical en la evidencia final",
     "Las credenciales viven en secretos o .env local y nunca aparecen en logs ni evidencias"
   ], 88, 190, 1090, 22, C.ink, 82);
-  textbox(s, "Pendiente de la corrida final", 88, 540, 360, 34, 18, C.amber, true);
-  textbox(s, "Confirmar 0 vulnerabilidades High/Critical en ZAP y conservar el artefacto del job.", 88, 580, 1060, 56, 23, C.navy, true);
+  textbox(s, "Evidencia final", 88, 540, 360, 34, 18, C.green, true);
+  textbox(s, "Run 41640508507: ZAP 0 High/Critical. El resumen k6 fue sanitizado y no contiene el token efímero.", 88, 580, 1060, 56, 23, C.navy, true);
 }
 
 // 7. Resilience
@@ -171,7 +171,7 @@ function bulletList(slide, items, left, top, width, size=21, color=C.ink, gap=54
 {
   const s = base("Qué falta para cerrar la entrega", 9);
   bulletList(s, [
-    "Ejecutar y guardar el job final de Compose, k6 y ZAP",
+    "Adjuntar en Jira y Teams la evidencia del run 41640508507",
     "Configurar SonarCloud y obtener Quality Gate Approved",
     "Completar la prueba bilateral con Core y módulos externos",
     "Cargar evidencias en Jira, Trello y Teams antes del límite",

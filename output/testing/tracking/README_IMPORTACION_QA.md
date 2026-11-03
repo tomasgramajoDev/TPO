@@ -1,6 +1,6 @@
 # Importación de seguimiento QA
 
-Este paquete contiene 34 casos de prueba preparados a partir de los criterios de la Clase 15.
+Este paquete contiene 36 casos de prueba preparados a partir de los criterios de la Clase 15.
 
 ## Jira
 

@@ -264,10 +264,26 @@ Resultado esperado: 0 secretos
 Evidencia actual: Gitleaks 8.30.1: 0 hallazgos en Front, Back y TPO
 Regla: no marcar como aprobado sin evidencia reproducible.",Highest,"qa-testing,seguridad"
 [SEC-10] SCA y DAST,Task,"ID: SEC-10
-Estado QA: PREPARADO
+Estado QA: PASS
 Prioridad: P0
 Precondición: Stack limpio
 Pasos: Ejecutar auditorías y ZAP
 Resultado esperado: 0 High/Critical
-Evidencia actual: Workflow preparado; corrida final pendiente
+Evidencia actual: Back CI #41638341162: Trivy aprobado; TPO CI #41640508507: ZAP 0 High/Critical
 Regla: no marcar como aprobado sin evidencia reproducible.",Highest,"qa-testing,seguridad"
+[OPS-01] Arranque limpio con un comando,Task,"ID: OPS-01
+Estado QA: PASS
+Prioridad: P0
+Precondición: Secrets efímeros de CI
+Pasos: Ejecutar docker compose up --build -d --wait
+Resultado esperado: Frontend, backend y PostgreSQL saludables
+Evidencia actual: TPO CI #41640508507: stack saludable en 135 s
+Regla: no marcar como aprobado sin evidencia reproducible.",Highest,"qa-testing,operacion,qa-resiliencia"
+[PERF-01] Carga sostenida de API,Task,"ID: PERF-01
+Estado QA: PASS
+Prioridad: P0
+Precondición: Stack limpio y usuario de prueba
+Pasos: Ejecutar k6 sobre login, health y proyectos
+Resultado esperado: p95 < 500 ms; error < 1%; checks > 99%
+Evidencia actual: TPO CI #41640508507: p95 184,68 ms; error 0%; 226/226 checks
+Regla: no marcar como aprobado sin evidencia reproducible.",Highest,"qa-testing,performance"

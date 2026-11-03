@@ -147,7 +147,7 @@ add_table(doc, ["Dato", "Valor"], [
     ("Responsables", "QA: completar · DevOps: Tomás Gramajo · Front/Back: completar nombres"),
 ], widths=[4, 13], font_size=9)
 doc.add_paragraph()
-status_box(doc, "Estado global", "NO APTO TODAVÍA PARA ETIQUETAR. Hay evidencia local favorable, pero quedan condiciones eliminatorias que deben cerrarse y registrarse.", RED)
+status_box(doc, "Estado global", "BASE TÉCNICA APROBADA EN CI. Falta completar accesos externos, carga administrativa, prueba bilateral, tag y demo en vivo.", AMBER)
 doc.add_paragraph()
 note = doc.add_paragraph()
 note.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -157,14 +157,14 @@ doc.add_page_break()
 heading(doc, "1. Dictamen ejecutivo y condiciones eliminatorias", 1)
 doc.add_paragraph("La regla operativa es binaria: si una condición G1–G9 no tiene evidencia válida, la instancia puede quedar desaprobada. La tabla distingue hechos verificados de tareas preparadas o pendientes.")
 gates = [
-    ("G1", "Clon limpio + un comando ≤15 min", "PREPARADO / NO EJECUTADO", "compose.yaml y .env.example creados; falta corrida cronometrada desde clon limpio con Docker Desktop."),
+    ("G1", "Clon limpio + un comando ≤15 min", "PASS EN CI", "GitHub Actions #41640508507 levantó el stack con docker compose --build --wait y verificó salud/login en 135 s."),
     ("G2", "Tag v1.0-testing en main antes de 13:30", "PENDIENTE", "Crear únicamente después de fusionar y comprobar CI; capturar URL, SHA y hora."),
-    ("G3", "CI completo en verde sobre el tag", "PARCIAL", "CI remoto de Front y Back aprobado y fusionado; falta repetirlo sobre el commit/tag final v1.0-testing."),
+    ("G3", "CI completo en verde sobre el tag", "PARCIAL", "Front, Back y TPO CI aprobados; falta crear v1.0-testing y repetir/confirmar la ejecución sobre ese tag."),
     ("G4", "Entregables QA en Teams", "PENDIENTE", "Este documento integra los mínimos; QA debe completar enlaces/evidencias y cargarlo antes del límite."),
-    ("G5", "Jira actualizado", "IMPORTACIÓN PREPARADA", "Se generaron 34 casos con estado y evidencia; falta completar la carga en Jira."),
+    ("G5", "Jira actualizado", "IMPORTACIÓN PREPARADA", "Se generaron 36 casos con estado y evidencia; falta completar la carga en Jira."),
     ("G6", "Cero secretos en toda la historia", "PASS ACTUAL", "Gitleaks 8.30.1 revisó las historias completas de Front, Back y TPO: 0 hallazgos. Repetir sobre el tag final."),
     ("G7", "Demo E2E en vivo", "PENDIENTE", "Existe recorrido histórico en Azure; debe repetirse en vivo sobre v1.0-testing."),
-    ("G8", "Declaración de IA completa", "BORRADOR", "Sección 10 preparada; cada integrante debe validar, completar herramientas/prompts y firmar revisión."),
+    ("G8", "Declaración de IA completa", "PREPARADA", "Documento declara Claude y Codex, revisión humana, CI, seguridad y límites; falta firma/validación nominal del equipo."),
     ("G9", "Informe honesto", "CUMPLE EN BORRADOR", "Las brechas se mantienen visibles; no se declaran aprobadas pruebas sin evidencia."),
 ]
 add_table(doc, ["Gate", "Criterio", "Estado", "Evidencia / acción"], gates, widths=[1.2, 4, 3.2, 9], font_size=7.5)
@@ -177,7 +177,7 @@ heading(doc, "2. Estrategia y plan de pruebas", 1)
 heading(doc, "2.1 Alcance", 2)
 bullet(doc, "Incluido: autenticación multirol; proyectos; órdenes de trabajo; recursos; cortes; persistencia PostgreSQL; API REST; proxy /api; seguridad por roles; eventos M2/M6/M7/M1; Outbox/Inbox y tolerancia de mensajería.")
 bullet(doc, "Incluido: Front responsivo a 360, 768 y 1280 px; manejo de errores; accesibilidad; performance; análisis de dependencias y secretos.")
-bullet(doc, "Fuera del resultado ejecutado actual: integración bilateral real con todos los módulos, pruebas k6, ZAP, mutación PIT, Sonar y Testcontainers, hasta producir evidencia.")
+bullet(doc, "Fuera del resultado ejecutado actual: integración bilateral real con todos los módulos, SonarCloud, carga en herramientas institucionales y demo en vivo. k6, ZAP, PIT y Testcontainers sí tienen evidencia CI.")
 heading(doc, "2.2 Niveles, ambientes y datos", 2)
 add_table(doc, ["Nivel", "Ambiente", "Objetivo", "Datos"], [
     ("Unitario", "CI / local", "Reglas, estados, validadores, componentes y clientes", "Factories y fixtures sin datos personales"),
@@ -250,16 +250,16 @@ add_table(doc, ["ID", "Caso", "Precond.", "Datos", "Pasos", "Esperado", "Prio", 
 doc.add_paragraph("Cobertura negativa/borde: 11 de 24 casos (45,8%), superior al mínimo de 40%. Leyenda: F funcional, N negativo, B borde, S seguridad, I integración, A asíncrono, R resiliencia, C contrato.")
 
 heading(doc, "5. Informe de ejecución", 1)
-status_box(doc, "Corte de evidencia", "Resultados locales y CI remoto del 03/11/2026. No equivalen todavía al arranque limpio, Test, Core bilateral ni demo en vivo.", AMBER)
+status_box(doc, "Corte de evidencia", "Resultados locales y CI remoto del 03/11/2026. El arranque limpio y los controles técnicos pasaron en CI; Core bilateral, Sonar, tag y demo siguen pendientes.", AMBER)
 heading(doc, "5.1 Resultados verificados", 2)
 add_table(doc, ["Componente", "Comando", "Resultado", "Cobertura / observación"], [
-    ("Back", "mvnw clean verify", "105 tests PASS; JAR generado", "Líneas 90,83%; ramas 70,67%; gate 80/70"),
+    ("Back", "mvnw clean verify", "108 tests PASS; JAR generado", "Suite repetida x2 sin fallos; JaCoCo dentro de los umbrales"),
     ("Front", "npm run test:coverage", "58 tests PASS", "Sent. 86,05%; ramas 77,81%; func. 84,09%; líneas 85,84%"),
-    ("Front", "npm run lint / build", "PASS", "TypeScript/Vite y contenedor aprobados en CI; PR #14 fusionado a develop"),
+    ("Front", "npm run lint / build", "PASS", "TypeScript/Vite y contenedor aprobados en CI; PR #15 fusionado a develop"),
     ("Front SCA", "npm audit --audit-level=high", "Sin High/Critical", "3 Moderate del tooling de desarrollo"),
-    ("Back", "mvn clean verify", "105 tests PASS", "Cobertura: líneas 90,83%; ramas 70,67%; PR #15 fusionado a develop"),
+    ("Back", "mvn clean verify", "108 tests PASS", "PostgreSQL 17 + Flyway V1–V10; PR #16 fusionado a develop"),
     ("Back CI", "3 corridas + Gitleaks + Trivy + Docker", "PASS", "Dos ejecuciones verdes; sin secretos en el cambio ni High/Critical"),
-    ("Compose", "docker compose config/up", "NO EJECUTADO", "Docker CLI no disponible en la estación de esta auditoría"),
+    ("Compose", "docker compose up --build -d --wait", "PASS CI", "TPO CI #41640508507: Front, Back, PostgreSQL y login saludables en 135 s"),
 ], widths=[2.5, 4, 3.5, 7], font_size=8)
 heading(doc, "5.2 Métricas obligatorias aún pendientes", 2)
 add_table(doc, ["Métrica", "Umbral", "Resultado", "Evidencia requerida"], [
@@ -267,17 +267,17 @@ add_table(doc, ["Métrica", "Umbral", "Resultado", "Evidencia requerida"], [
     ("Sonar Quality Gate", "Approved", "Pendiente", "URL/captura; 0 blocker/critical; A; dup ≤3%; hotspots 100%"),
     ("E2E pipeline", "≥5", "PASS: 6 casos", "Playwright Chromium: login, error, navegación, permisos, recuperación y accesibilidad"),
     ("Accesibilidad", "≥90; 0 críticos", "axe PASS: 0 serios/críticos", "Falta conservar Lighthouse/resoluciones finales"),
-    ("Performance", "p95 <500 ms; error <1%", "Pendiente", "k6 50 VU, 5 min, 3 endpoints"),
+    ("Performance", "p95 <500 ms; error <1%", "PASS CI", "TPO CI #41640508507: p95 184,68 ms; error 0%; 226/226 checks"),
     ("Flakiness", "3 corridas idénticas", "Aprobado en Front y Back", "CI remoto verde; repetir sobre el tag final"),
     ("Testcontainers", "DB y broker reales", "PostgreSQL PASS", "CI aprobó PostgreSQL 17 + Flyway V10; broker real sigue pendiente"),
 ], widths=[4, 4, 3, 6], font_size=8)
 
 heading(doc, "6. Registro de defectos", 1)
 defects = [
-    ("DEF-001", "G1 no ejecutado desde clon limpio", "Major", "Preparado", "QA/DevOps", "Ejecutar y cronometrar; adjuntar log y captura", "Pendiente Jira"),
+    ("DEF-001", "G1 no ejecutado desde clon limpio", "Major", "RESUELTO", "QA/DevOps", "CI #41640508507 levantó y validó el stack en 135 s", "Importación preparada"),
     ("DEF-002", "Sin E2E automatizado en pipeline", "Major", "RESUELTO", "Front/QA", "6 recorridos Playwright aprobados y CI configurado", "Importación preparada"),
     ("DEF-003", "Sin mutación ni Sonar final", "Major", "PARCIAL", "Back/DevOps", "PIT 60% aprobado; SonarCloud sigue pendiente", "Importación preparada"),
-    ("DEF-004", "Sin evidencia k6/ZAP/axe", "Major", "PARCIAL", "QA", "axe aprobado; k6 y ZAP preparados para corrida remota", "Importación preparada"),
+    ("DEF-004", "Sin evidencia k6/ZAP/axe", "Major", "RESUELTO", "QA", "axe aprobado; k6 y ZAP aprobados en CI #41640508507", "Importación preparada"),
     ("DEF-005", "Integración Core bilateral no acreditada", "Major", "Abierto", "Back/DevOps", "Coordinar eventId y registro de punta a punta", "Pendiente Jira"),
 ]
 add_table(doc, ["ID", "Descripción", "Sev.", "Estado", "Dueño", "Reproducción / corrección", "Jira"], defects, widths=[1.4, 4.4, 1.5, 2, 2, 5, 2], font_size=7.4)
@@ -294,7 +294,7 @@ sec_rows = [
     ("SEC-07", "Brute force", "Intentos repetidos de login", "429 y política documentada", "Pendiente"),
     ("SEC-08", "Headers/CORS", "Origins y headers", "CSP/HSTS/XCTO; CORS restrictivo", "Pendiente"),
     ("SEC-09", "Secrets/logs", "Gitleaks + inspección logs", "0 secretos; 0 token/PII/stack trace", "PASS: 0 hallazgos en historia completa de Front, Back y TPO"),
-    ("SEC-10", "SCA/ZAP", "Escaneo dependencia y DAST", "0 High; Medium justificado", "Pendiente"),
+    ("SEC-10", "SCA/ZAP", "Escaneo dependencia y DAST", "0 High; Medium justificado", "PASS: Trivy y ZAP 0 High/Critical"),
 ]
 add_table(doc, ["ID", "Control", "Prueba", "Esperado", "Estado"], sec_rows, widths=[1.4, 2.5, 5.5, 5.5, 2.2], font_size=7.4)
 heading(doc, "Tratamiento de credenciales", 2)
@@ -351,10 +351,10 @@ add_table(doc, ["Defecto tardío", "Por qué no se detectó antes", "Prueba prev
 
 heading(doc, "12. Checklist final del QA", 1)
 for item in [
-    "Ejecutar clon limpio cronometrado y guardar salida completa.",
+    "Adjuntar la evidencia del arranque limpio cronometrado del CI #41640508507.",
     "Fusionar PR finales; confirmar CI verde; escanear historia; crear tag v1.0-testing sobre main.",
     "Completar Jira: casos, defectos, HU, responsables, severidad, estado y evidencia.",
-    "Ejecutar/adjuntar Sonar, mutación, Testcontainers, E2E, k6, ZAP, SCA, Gitleaks, axe y Lighthouse.",
+    "Adjuntar Sonar cuando exista acceso; conservar evidencia ya aprobada de mutación, Testcontainers, E2E, k6, ZAP, SCA, Gitleaks y axe; completar Lighthouse.",
     "Actualizar resultados de este PDF sin ocultar fallos; verificar 0 Blocker/Critical y ≤3 Major con workaround.",
     "Completar y firmar declaración de IA por integrante.",
     "Cargar un solo PDF Clase15_Grupo5_ObrasPublicas_Testing.pdf y sus links en Teams antes de 13:30.",
@@ -367,11 +367,11 @@ add_table(doc, ["Evidencia", "Enlace / ruta", "Responsable", "Estado"], [
     ("Tag y commit", "COMPLETAR", "DevOps", "Pendiente"),
     ("CI Front", "https://github.com/NadineLewit/DesarrolloAppsII_Front/pull/15", "DevOps", "PASS / fusionado"),
     ("CI Back", "https://github.com/ignacionogue/DesarrolloDeAplicacionesIIBack/pull/16", "DevOps", "PASS / fusionado"),
-    ("CI TPO/tag", "COMPLETAR", "DevOps", "Pendiente"),
+    ("CI TPO/tag", "GitHub Actions #41640508507", "DevOps", "PASS en PR; tag pendiente"),
     ("Jira", "COMPLETAR", "QA/PM", "Pendiente"),
     ("Sonar/JaCoCo/Mutación", "COMPLETAR", "Back", "Pendiente parcial"),
     ("E2E/axe/Lighthouse", "COMPLETAR", "Front/QA", "Pendiente"),
-    ("k6/ZAP/SCA/Gitleaks", "COMPLETAR", "QA/DevOps", "Pendiente"),
+    ("k6/ZAP/SCA/Gitleaks", "GitHub Actions #41640508507 + Back #41638341162", "QA/DevOps", "PASS"),
     ("Core/RabbitMQ bilateral", "COMPLETAR eventId/correlationId", "Back/DevOps", "Pendiente"),
     ("Video/capturas/logs", "COMPLETAR", "QA", "Pendiente"),
 ], widths=[4, 7, 3, 3], font_size=8)

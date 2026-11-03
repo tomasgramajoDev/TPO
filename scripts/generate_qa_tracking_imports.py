@@ -41,7 +41,9 @@ cases = [
     ("SEC-07", "Brute force de login", "PREPARADO", "P1", "Seguridad", "Login disponible", "Ejecutar intentos repetidos", "429 o política documentada", "Prueba final pendiente"),
     ("SEC-08", "Headers y CORS", "PREPARADO", "P1", "Seguridad", "Front y Back levantados", "Revisar origins y headers", "CORS restrictivo y headers seguros", "ZAP final pendiente"),
     ("SEC-09", "Secretos en repositorios y logs", "PASS", "P0", "Seguridad", "Historia Git completa", "Ejecutar Gitleaks y revisar logs", "0 secretos", "Gitleaks 8.30.1: 0 hallazgos en Front, Back y TPO"),
-    ("SEC-10", "SCA y DAST", "PREPARADO", "P0", "Seguridad", "Stack limpio", "Ejecutar auditorías y ZAP", "0 High/Critical", "Workflow preparado; corrida final pendiente"),
+    ("SEC-10", "SCA y DAST", "PASS", "P0", "Seguridad", "Stack limpio", "Ejecutar auditorías y ZAP", "0 High/Critical", "Back CI #41638341162: Trivy aprobado; TPO CI #41640508507: ZAP 0 High/Critical"),
+    ("OPS-01", "Arranque limpio con un comando", "PASS", "P0", "Operación,Resiliencia", "Secrets efímeros de CI", "Ejecutar docker compose up --build -d --wait", "Frontend, backend y PostgreSQL saludables", "TPO CI #41640508507: stack saludable en 135 s"),
+    ("PERF-01", "Carga sostenida de API", "PASS", "P0", "Performance", "Stack limpio y usuario de prueba", "Ejecutar k6 sobre login, health y proyectos", "p95 < 500 ms; error < 1%; checks > 99%", "TPO CI #41640508507: p95 184,68 ms; error 0%; 226/226 checks"),
 ]
 
 

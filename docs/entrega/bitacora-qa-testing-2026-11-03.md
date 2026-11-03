@@ -7,7 +7,7 @@
 - Mutación: 53 mutaciones generadas, 32 detectadas, score 60% y fuerza de tests 82%.
 - PostgreSQL real: Testcontainers ejecutado en CI con PostgreSQL 17; Flyway aplicó V1–V10 y las dos pruebas aprobaron.
 - Secretos: Gitleaks 8.30.1 ejecutado sobre la historia completa de Front, Back y TPO, con 0 hallazgos.
-- Performance, ZAP y arranque limpio: pipeline preparado. Resultado pendiente de la corrida remota del PR/tag.
+- Performance, ZAP y arranque limpio: TPO CI #41640508507 aprobado; stack saludable en 135 s, ZAP con 0 High/Critical y k6 con p95 de 184,68 ms, 0% de errores y 226/226 controles.
 
 ## Registro de trabajo
 
@@ -22,6 +22,7 @@
 | 03/11 09:37 | Mutation testing | 60% mutation score, 82% test strength | Reporte PIT |
 | 03/11 09:40 | Release gates | Compose limpio, k6 y ZAP definidos | Workflow testing-release |
 | 03/11 09:50 | Actividad IA Clase 14 | Feature, contrato, 20 evals y gobernanza preparados | Clase14_Grupo5_ObrasPublicas_IA.pdf |
+| 03/11 10:15 | Release gates remotos | Compose limpio, ZAP y k6 aprobados; evidencia sanitizada | TPO CI #41640508507 |
 
 ## Hallazgos y correcciones
 
@@ -33,7 +34,6 @@
 
 ## Pendientes que no se deben ocultar
 
-- Corrida remota final de Compose, k6 y ZAP.
 - Sonar Quality Gate, que requiere proyecto y token de SonarCloud.
 - Prueba bilateral real con Core/RabbitMQ y módulos externos.
 - Carga final en Teams, Jira y la demo en vivo.
