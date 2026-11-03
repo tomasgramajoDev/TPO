@@ -159,10 +159,10 @@ doc.add_paragraph("La regla operativa es binaria: si una condición G1–G9 no t
 gates = [
     ("G1", "Clon limpio + un comando ≤15 min", "PREPARADO / NO EJECUTADO", "compose.yaml y .env.example creados; falta corrida cronometrada desde clon limpio con Docker Desktop."),
     ("G2", "Tag v1.0-testing en main antes de 13:30", "PENDIENTE", "Crear únicamente después de fusionar y comprobar CI; capturar URL, SHA y hora."),
-    ("G3", "CI completo en verde sobre el tag", "PENDIENTE", "Gates locales aprobados; falta CI remoto del commit final, análisis estático y evidencia del tag."),
+    ("G3", "CI completo en verde sobre el tag", "PARCIAL", "CI remoto de Front y Back aprobado y fusionado; falta repetirlo sobre el commit/tag final v1.0-testing."),
     ("G4", "Entregables QA en Teams", "PENDIENTE", "Este documento integra los mínimos; QA debe completar enlaces/evidencias y cargarlo antes del límite."),
     ("G5", "Jira actualizado", "PENDIENTE", "Crear/actualizar casos y defectos con HU, dueño, severidad, estado y evidencia."),
-    ("G6", "Cero secretos en toda la historia", "PENDIENTE", "CI propuesto con Gitleaks; falta resultado remoto y escaneo histórico del tag."),
+    ("G6", "Cero secretos en toda la historia", "PARCIAL", "Gitleaks aprobó los PR; falta ejecutar y conservar evidencia del escaneo de toda la historia sobre el tag."),
     ("G7", "Demo E2E en vivo", "PENDIENTE", "Existe recorrido histórico en Azure; debe repetirse en vivo sobre v1.0-testing."),
     ("G8", "Declaración de IA completa", "BORRADOR", "Sección 10 preparada; cada integrante debe validar, completar herramientas/prompts y firmar revisión."),
     ("G9", "Informe honesto", "CUMPLE EN BORRADOR", "Las brechas se mantienen visibles; no se declaran aprobadas pruebas sin evidencia."),
@@ -250,13 +250,15 @@ add_table(doc, ["ID", "Caso", "Precond.", "Datos", "Pasos", "Esperado", "Prio", 
 doc.add_paragraph("Cobertura negativa/borde: 11 de 24 casos (45,8%), superior al mínimo de 40%. Leyenda: F funcional, N negativo, B borde, S seguridad, I integración, A asíncrono, R resiliencia, C contrato.")
 
 heading(doc, "5. Informe de ejecución", 1)
-status_box(doc, "Corte de evidencia", "Resultados locales del 03/11/2026. No equivalen a CI remoto, Test, Core bilateral ni demo en vivo.", AMBER)
+status_box(doc, "Corte de evidencia", "Resultados locales y CI remoto del 03/11/2026. No equivalen todavía al arranque limpio, Test, Core bilateral ni demo en vivo.", AMBER)
 heading(doc, "5.1 Resultados verificados", 2)
 add_table(doc, ["Componente", "Comando", "Resultado", "Cobertura / observación"], [
     ("Back", "mvnw clean verify", "105 tests PASS; JAR generado", "Líneas 90,83%; ramas 70,67%; gate 80/70"),
     ("Front", "npm run test:coverage", "58 tests PASS", "Sent. 86,05%; ramas 77,81%; func. 84,09%; líneas 85,84%"),
-    ("Front", "npm run lint / build", "PASS", "TypeScript/Vite y contenedor pendientes de CI final"),
+    ("Front", "npm run lint / build", "PASS", "TypeScript/Vite y contenedor aprobados en CI; PR #14 fusionado a develop"),
     ("Front SCA", "npm audit --audit-level=high", "Sin High/Critical", "3 Moderate del tooling de desarrollo"),
+    ("Back", "mvn clean verify", "105 tests PASS", "Cobertura: líneas 90,83%; ramas 70,67%; PR #15 fusionado a develop"),
+    ("Back CI", "3 corridas + Gitleaks + Trivy + Docker", "PASS", "Dos ejecuciones verdes; sin secretos en el cambio ni High/Critical"),
     ("Compose", "docker compose config/up", "NO EJECUTADO", "Docker CLI no disponible en la estación de esta auditoría"),
 ], widths=[2.5, 4, 3.5, 7], font_size=8)
 heading(doc, "5.2 Métricas obligatorias aún pendientes", 2)
@@ -266,7 +268,7 @@ add_table(doc, ["Métrica", "Umbral", "Resultado", "Evidencia requerida"], [
     ("E2E pipeline", "≥5", "Pendiente", "Job CI y artefactos Playwright/Cypress"),
     ("Accesibilidad", "≥90; 0 críticos", "Pendiente", "Lighthouse + axe 360/768/1280"),
     ("Performance", "p95 <500 ms; error <1%", "Pendiente", "k6 50 VU, 5 min, 3 endpoints"),
-    ("Flakiness", "3 corridas idénticas", "Preparado", "CI modificado; falta enlace verde final"),
+    ("Flakiness", "3 corridas idénticas", "Aprobado en Front y Back", "CI remoto verde; repetir sobre el tag final"),
     ("Testcontainers", "DB y broker reales", "Pendiente", "Pruebas CI con PostgreSQL/RabbitMQ containers"),
 ], widths=[4, 4, 3, 6], font_size=8)
 
@@ -291,7 +293,7 @@ sec_rows = [
     ("SEC-06", "XXE", "XML con entidad externa si aplica", "Rechazo seguro/no aplicable justificado", "Pendiente"),
     ("SEC-07", "Brute force", "Intentos repetidos de login", "429 y política documentada", "Pendiente"),
     ("SEC-08", "Headers/CORS", "Origins y headers", "CSP/HSTS/XCTO; CORS restrictivo", "Pendiente"),
-    ("SEC-09", "Secrets/logs", "Gitleaks + inspección logs", "0 secretos; 0 token/PII/stack trace", "Pendiente CI"),
+    ("SEC-09", "Secrets/logs", "Gitleaks + inspección logs", "0 secretos; 0 token/PII/stack trace", "Gitleaks PR PASS; historia completa pendiente"),
     ("SEC-10", "SCA/ZAP", "Escaneo dependencia y DAST", "0 High; Medium justificado", "Pendiente"),
 ]
 add_table(doc, ["ID", "Control", "Prueba", "Esperado", "Estado"], sec_rows, widths=[1.4, 2.5, 5.5, 5.5, 2.2], font_size=7.4)
@@ -363,7 +365,9 @@ for item in [
 heading(doc, "13. Índice de evidencias a completar", 1)
 add_table(doc, ["Evidencia", "Enlace / ruta", "Responsable", "Estado"], [
     ("Tag y commit", "COMPLETAR", "DevOps", "Pendiente"),
-    ("CI Front/Back/TPO", "COMPLETAR", "DevOps", "Pendiente"),
+    ("CI Front", "https://github.com/NadineLewit/DesarrolloAppsII_Front/pull/14", "DevOps", "PASS / fusionado"),
+    ("CI Back", "https://github.com/ignacionogue/DesarrolloDeAplicacionesIIBack/pull/15", "DevOps", "PASS / fusionado"),
+    ("CI TPO/tag", "COMPLETAR", "DevOps", "Pendiente"),
     ("Jira", "COMPLETAR", "QA/PM", "Pendiente"),
     ("Sonar/JaCoCo/Mutación", "COMPLETAR", "Back", "Pendiente parcial"),
     ("E2E/axe/Lighthouse", "COMPLETAR", "Front/QA", "Pendiente"),
