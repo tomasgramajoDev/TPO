@@ -259,3 +259,11 @@ No se eliminó el antecedente de los eventos genéricos; permanece documentado c
 - Se cotejó la release de Test con las páginas 2–4 y 9–10 del TPO. El informe `docs/entrega/auditoria-tpo-final-2026-09-21.md` separa el caso de uso demostrado de las funciones e integraciones ausentes; no se cambió el estado contractual de ningún evento externo.
 - Front PR `#12` añadió pruebas de API y flujos de interfaz, con 58 pruebas aprobadas y gate CI de 85% para líneas y sentencias sobre todo `src`. El PR pasó CI en Linux y se fusionó en `develop`. La imagen activa en Azure no se modificó por este cambio de pruebas.
 - Back PR `#9` propuso el control JaCoCo de 85% de líneas en `mvn verify`. Localmente pasaron las 60 pruebas H2 y el gate; el merge y CI remotos aún deben confirmarse antes de actualizar esta línea.
+
+## 2026-11-03 — Preparación de la entrega de Testing de Clase 15
+
+- Se incorporó un `compose.yaml` reproducible para iniciar Front, Back, PostgreSQL y RabbitMQ desde un clon limpio con `docker compose up --build`, más `.env.example` sin secretos y validación temprana de variables obligatorias.
+- La mensajería del Back permanece deshabilitada en el stack local: el RabbitMQ local permite verificar disponibilidad, pero no sustituye la prueba bilateral contra el Core compartido ni sus credenciales privadas.
+- Se volvió a ejecutar el Back con 105 pruebas aprobadas y un gate JaCoCo de 80% de líneas y 70% de ramas; el resultado observado fue 90,83% de líneas y 70,67% de ramas.
+- Se volvió a ejecutar el Front con 58 pruebas aprobadas; la cobertura observada fue 86,05% de sentencias, 77,81% de ramas, 84,09% de funciones y 85,84% de líneas. El audit local quedó sin vulnerabilidades altas o críticas y con tres moderadas del tooling de desarrollo.
+- Estos resultados locales no acreditan por sí mismos G2, G3, G4, G5 o G7: tag, CI remoto, carga en Teams/Jira y demo en vivo requieren evidencia posterior.

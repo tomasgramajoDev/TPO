@@ -26,6 +26,7 @@ terraform.rc
 work/
 tmp/
 outputs/
+output/testing/rendered/
 
 # Sistema operativo y editores
 .DS_Store
