@@ -161,8 +161,8 @@ gates = [
     ("G2", "Tag v1.0-testing en main antes de 13:30", "PENDIENTE", "Crear únicamente después de fusionar y comprobar CI; capturar URL, SHA y hora."),
     ("G3", "CI completo en verde sobre el tag", "PARCIAL", "CI remoto de Front y Back aprobado y fusionado; falta repetirlo sobre el commit/tag final v1.0-testing."),
     ("G4", "Entregables QA en Teams", "PENDIENTE", "Este documento integra los mínimos; QA debe completar enlaces/evidencias y cargarlo antes del límite."),
-    ("G5", "Jira actualizado", "PENDIENTE", "Crear/actualizar casos y defectos con HU, dueño, severidad, estado y evidencia."),
-    ("G6", "Cero secretos en toda la historia", "PARCIAL", "Gitleaks aprobó los PR; falta ejecutar y conservar evidencia del escaneo de toda la historia sobre el tag."),
+    ("G5", "Jira actualizado", "IMPORTACIÓN PREPARADA", "Se generaron 34 casos con estado y evidencia; falta completar la carga en Jira."),
+    ("G6", "Cero secretos en toda la historia", "PASS ACTUAL", "Gitleaks 8.30.1 revisó las historias completas de Front, Back y TPO: 0 hallazgos. Repetir sobre el tag final."),
     ("G7", "Demo E2E en vivo", "PENDIENTE", "Existe recorrido histórico en Azure; debe repetirse en vivo sobre v1.0-testing."),
     ("G8", "Declaración de IA completa", "BORRADOR", "Sección 10 preparada; cada integrante debe validar, completar herramientas/prompts y firmar revisión."),
     ("G9", "Informe honesto", "CUMPLE EN BORRADOR", "Las brechas se mantienen visibles; no se declaran aprobadas pruebas sin evidencia."),
@@ -263,21 +263,21 @@ add_table(doc, ["Componente", "Comando", "Resultado", "Cobertura / observación"
 ], widths=[2.5, 4, 3.5, 7], font_size=8)
 heading(doc, "5.2 Métricas obligatorias aún pendientes", 2)
 add_table(doc, ["Métrica", "Umbral", "Resultado", "Evidencia requerida"], [
-    ("Mutación dominio", "≥60%", "Pendiente", "Reporte PIT/Stryker del commit etiquetado"),
+    ("Mutación dominio", "≥60%", "PASS CI: 60%", "53 mutaciones, 32 detectadas; fuerza de tests 82%; repetir sobre el tag final"),
     ("Sonar Quality Gate", "Approved", "Pendiente", "URL/captura; 0 blocker/critical; A; dup ≤3%; hotspots 100%"),
-    ("E2E pipeline", "≥5", "Pendiente", "Job CI y artefactos Playwright/Cypress"),
-    ("Accesibilidad", "≥90; 0 críticos", "Pendiente", "Lighthouse + axe 360/768/1280"),
+    ("E2E pipeline", "≥5", "PASS: 6 casos", "Playwright Chromium: login, error, navegación, permisos, recuperación y accesibilidad"),
+    ("Accesibilidad", "≥90; 0 críticos", "axe PASS: 0 serios/críticos", "Falta conservar Lighthouse/resoluciones finales"),
     ("Performance", "p95 <500 ms; error <1%", "Pendiente", "k6 50 VU, 5 min, 3 endpoints"),
     ("Flakiness", "3 corridas idénticas", "Aprobado en Front y Back", "CI remoto verde; repetir sobre el tag final"),
-    ("Testcontainers", "DB y broker reales", "Pendiente", "Pruebas CI con PostgreSQL/RabbitMQ containers"),
+    ("Testcontainers", "DB y broker reales", "PostgreSQL PASS", "CI aprobó PostgreSQL 17 + Flyway V10; broker real sigue pendiente"),
 ], widths=[4, 4, 3, 6], font_size=8)
 
 heading(doc, "6. Registro de defectos", 1)
 defects = [
     ("DEF-001", "G1 no ejecutado desde clon limpio", "Major", "Preparado", "QA/DevOps", "Ejecutar y cronometrar; adjuntar log y captura", "Pendiente Jira"),
-    ("DEF-002", "Sin E2E automatizado en pipeline", "Major", "Abierto", "Front/QA", "Implementar ≥5 recorridos Playwright", "Pendiente Jira"),
-    ("DEF-003", "Sin mutación ni Sonar final", "Major", "Abierto", "Back/DevOps", "Configurar y conservar reportes", "Pendiente Jira"),
-    ("DEF-004", "Sin evidencia k6/ZAP/axe", "Major", "Abierto", "QA", "Ejecutar contra Test controlado", "Pendiente Jira"),
+    ("DEF-002", "Sin E2E automatizado en pipeline", "Major", "RESUELTO", "Front/QA", "6 recorridos Playwright aprobados y CI configurado", "Importación preparada"),
+    ("DEF-003", "Sin mutación ni Sonar final", "Major", "PARCIAL", "Back/DevOps", "PIT 60% aprobado; SonarCloud sigue pendiente", "Importación preparada"),
+    ("DEF-004", "Sin evidencia k6/ZAP/axe", "Major", "PARCIAL", "QA", "axe aprobado; k6 y ZAP preparados para corrida remota", "Importación preparada"),
     ("DEF-005", "Integración Core bilateral no acreditada", "Major", "Abierto", "Back/DevOps", "Coordinar eventId y registro de punta a punta", "Pendiente Jira"),
 ]
 add_table(doc, ["ID", "Descripción", "Sev.", "Estado", "Dueño", "Reproducción / corrección", "Jira"], defects, widths=[1.4, 4.4, 1.5, 2, 2, 5, 2], font_size=7.4)
@@ -293,7 +293,7 @@ sec_rows = [
     ("SEC-06", "XXE", "XML con entidad externa si aplica", "Rechazo seguro/no aplicable justificado", "Pendiente"),
     ("SEC-07", "Brute force", "Intentos repetidos de login", "429 y política documentada", "Pendiente"),
     ("SEC-08", "Headers/CORS", "Origins y headers", "CSP/HSTS/XCTO; CORS restrictivo", "Pendiente"),
-    ("SEC-09", "Secrets/logs", "Gitleaks + inspección logs", "0 secretos; 0 token/PII/stack trace", "Gitleaks PR PASS; historia completa pendiente"),
+    ("SEC-09", "Secrets/logs", "Gitleaks + inspección logs", "0 secretos; 0 token/PII/stack trace", "PASS: 0 hallazgos en historia completa de Front, Back y TPO"),
     ("SEC-10", "SCA/ZAP", "Escaneo dependencia y DAST", "0 High; Medium justificado", "Pendiente"),
 ]
 add_table(doc, ["ID", "Control", "Prueba", "Esperado", "Estado"], sec_rows, widths=[1.4, 2.5, 5.5, 5.5, 2.2], font_size=7.4)
@@ -332,8 +332,8 @@ doc.add_paragraph("El plan B solo conserva evidencia para diagnosticar; no reemp
 
 heading(doc, "10. Declaración de uso de IA", 1)
 add_table(doc, ["Herramienta/versión", "Uso", "Prompt o referencia", "Aceptado/corregido", "Verificación humana"], [
-    ("Codex (modelo de la sesión)", "Auditoría, propuesta de CI, casos y documento", "Historial de trabajo del 03/11/2026", "Se aceptaron estructuras; resultados se verificaron por comandos", "QA/DevOps revisa líneas, métricas y enlaces"),
-    ("Completar por integrante", "Código/tests/documentación", "URL o extracto", "Detallar cambios", "Firma/revisor"),
+    ("Claude", "Análisis, alternativas, explicaciones y propuestas de código/documentación", "Historial de trabajo del equipo", "Se aceptan o corrigen sugerencias después de revisión", "Diff humano + tests + CI"),
+    ("Codex", "Auditoría de repositorios, pruebas, automatización y documentación", "Historial de trabajo del 03/11/2026", "Resultados aceptados solo con evidencia reproducible", "Diff humano + tests + CI + Gitleaks"),
 ], widths=[3.5, 4, 4, 3.5, 3], font_size=7.8)
 heading(doc, "Ejemplo de sugerencia incorrecta de IA", 2)
 doc.add_paragraph("La IA podría afirmar que “tener 105 pruebas implica cumplir Testing”. Se rechazó: el criterio exige además cobertura, mutación, integración real, E2E, seguridad, resiliencia, performance, trazabilidad y evidencia. La corrección fue separar resultados locales de pendientes eliminatorios.")
@@ -365,8 +365,8 @@ for item in [
 heading(doc, "13. Índice de evidencias a completar", 1)
 add_table(doc, ["Evidencia", "Enlace / ruta", "Responsable", "Estado"], [
     ("Tag y commit", "COMPLETAR", "DevOps", "Pendiente"),
-    ("CI Front", "https://github.com/NadineLewit/DesarrolloAppsII_Front/pull/14", "DevOps", "PASS / fusionado"),
-    ("CI Back", "https://github.com/ignacionogue/DesarrolloDeAplicacionesIIBack/pull/15", "DevOps", "PASS / fusionado"),
+    ("CI Front", "https://github.com/NadineLewit/DesarrolloAppsII_Front/pull/15", "DevOps", "PASS / fusionado"),
+    ("CI Back", "https://github.com/ignacionogue/DesarrolloDeAplicacionesIIBack/pull/16", "DevOps", "PASS / fusionado"),
     ("CI TPO/tag", "COMPLETAR", "DevOps", "Pendiente"),
     ("Jira", "COMPLETAR", "QA/PM", "Pendiente"),
     ("Sonar/JaCoCo/Mutación", "COMPLETAR", "Back", "Pendiente parcial"),

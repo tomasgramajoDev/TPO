@@ -1,0 +1,145 @@
+name: Testing release gates
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+    tags: [v1.0-testing]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: testing-release-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  clean-start-security-performance:
+    name: Clean start, secrets, smoke and performance
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout full history
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Scan the complete Git history for secrets
+        run: >-
+          docker run --rm
+          -v "$PWD:/repo"
+          ghcr.io/gitleaks/gitleaks:v8.30.1
+          git /repo --redact
+
+      - name: Create ephemeral local-only configuration
+        shell: bash
+        run: |
+          DB_PASSWORD="$(openssl rand -hex 24)"
+          JWT_SECRET="$(openssl rand -hex 32)"
+          DEMO_PASSWORD="$(openssl rand -hex 24)"
+          RABBITMQ_PASSWORD="$(openssl rand -hex 24)"
+          printf 'DB_PASSWORD=%s\nJWT_SECRET=%s\nDEMO_PASSWORD=%s\nRABBITMQ_PASSWORD=%s\n' \
+            "$DB_PASSWORD" "$JWT_SECRET" "$DEMO_PASSWORD" "$RABBITMQ_PASSWORD" > .env
+          echo "::add-mask::$DEMO_PASSWORD"
+          echo "DEMO_PASSWORD=$DEMO_PASSWORD" >> "$GITHUB_ENV"
+
+      - name: Validate fail-fast Compose configuration
+        run: docker compose config --quiet
+
+      - name: Start a clean clone with the documented command
+        shell: bash
+        run: |
+          started_at="$(date +%s)"
+          docker compose up --build -d --wait --wait-timeout 720
+          elapsed="$(( $(date +%s) - started_at ))"
+          echo "CLEAN_START_SECONDS=$elapsed" | tee testing-clean-start.txt
+          test "$elapsed" -le 900
+
+      - name: Verify Front, Back, PostgreSQL and login
+        shell: bash
+        run: |
+          curl --fail --retry 20 --retry-delay 3 http://localhost:8080/health | tee frontend-health.json
+          curl --fail --retry 20 --retry-delay 3 http://localhost:8081/api/health | tee backend-health.json
+          body="$(jq -nc --arg u 'personal.obras' --arg p "$DEMO_PASSWORD" '{username:$u,password:$p}')"
+          token="$(curl --fail --silent --show-error -H 'Content-Type: application/json' -d "$body" \
+            http://localhost:8081/api/auth/login | jq -er '.accessToken')"
+          test -n "$token"
+
+      - name: OWASP ZAP passive baseline
+        uses: zaproxy/action-baseline@v0.15.0
+        with:
+          target: http://localhost:8080
+          fail_action: false
+          allow_issue_writing: false
+          artifact_name: zap-testing-report
+
+      - name: Reject High or Critical ZAP findings
+        shell: python
+        run: |
+          import json
+          from pathlib import Path
+          report = Path("report_json.json")
+          if not report.exists():
+              raise SystemExit("ZAP no produjo report_json.json")
+          payload = json.loads(report.read_text(encoding="utf-8"))
+          blocking = []
+          for site in payload.get("site", []):
+              for alert in site.get("alerts", []):
+                  if int(alert.get("riskcode", 0)) >= 3:
+                      blocking.append(alert.get("name", "Hallazgo sin nombre"))
+          if blocking:
+              print("Hallazgos High/Critical:", *blocking, sep="\n- ")
+              raise SystemExit(1)
+          print("ZAP: 0 hallazgos High/Critical")
+
+      - name: Setup k6
+        uses: grafana/setup-k6-action@v1
+        with:
+          k6-version: '2.3.0'
+
+      - name: Run performance gate
+        shell: bash
+        run: |
+          if [[ "$GITHUB_REF" == "refs/tags/v1.0-testing" ]]; then
+            export K6_VUS=50 K6_DURATION=5m
+          else
+            export K6_VUS=5 K6_DURATION=15s
+          fi
+          k6 run \
+            -e BASE_URL=http://localhost:8081 \
+            -e TEST_USERNAME=personal.obras \
+            -e TEST_PASSWORD="$DEMO_PASSWORD" \
+            tests/performance/k6-api.js
+
+      - name: Save diagnostic evidence
+        if: always()
+        shell: bash
+        run: |
+          docker compose ps --format json > compose-services.json || true
+          docker compose logs --no-color --tail=300 > compose-logs.txt || true
+
+      - name: Upload testing evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: testing-release-evidence-${{ github.run_id }}
+          path: |
+            testing-clean-start.txt
+            frontend-health.json
+            backend-health.json
+            k6-summary.json
+            report_json.json
+            report_html.html
+            report_md.md
+            compose-services.json
+            compose-logs.txt
+          if-no-files-found: ignore
+          retention-days: 30
+
+      - name: Stop and remove the clean environment
+        if: always()
+        run: docker compose down --volumes --remove-orphans

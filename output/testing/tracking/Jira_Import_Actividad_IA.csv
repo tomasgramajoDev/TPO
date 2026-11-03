@@ -1,0 +1,11 @@
+Summary,Issue Type,Description,Priority,Labels
+[IA-01] Registrar ADR de modelo y proveedor,Task,"Aprobar propósito, modelo gpt-6-luna propuesto, costo, alternativa y condición de apagado. DoD: ADR revisado por PO y Backend.",High,"ia,gobernanza"
+[IA-02] Implementar AIGateway y adapter desacoplado,Task,"Crear interfaz AIGateway y OpenAIAdapter sin llamadas directas desde negocio. DoD: tests unitarios con cliente mockeado.",High,"ia,backend"
+[IA-03] Versionar prompt incident-triage v1,Task,"Cargar prompt desde PromptRepository; no hardcodear instrucciones. DoD: versión registrada en métricas.",Medium,"ia,prompt"
+[IA-04] Validar Structured Output con JSON Schema,Task,"Rechazar o enviar a fallback cualquier respuesta fuera del schema y enums permitidos.",High,"ia,seguridad"
+[IA-05] Sanitizar PII y secretos antes del proveedor,Task,"Eliminar nombres, DNI, teléfono, correo, tokens y adjuntos. DoD: casos adversariales sin fugas.",Highest,"ia,seguridad,datos"
+[IA-06] Agregar timeout circuit breaker y fallback,Task,"Timeout 5 s y retorno a selección manual. El flujo de órdenes debe funcionar con la IA apagada o caída.",Highest,"ia,resiliencia"
+[IA-07] Incorporar feature flag AI_TRIAGE_ENABLED,Task,"Valor por defecto false y configuración por ambiente sin secretos. DoD: prueba de apagado.",High,"ia,devops"
+[IA-08] Ejecutar eval set de 20 casos en CI,Task,"Validar schema, categoría, prioridad, recurso, PII e injections con los umbrales acordados.",Highest,"ia,testing"
+[IA-09] Registrar métricas de operación sin PII,Task,"Medir latencia, fallback, tokens, costo, aceptación y corrección humana sin guardar texto sensible.",Medium,"ia,observabilidad"
+[IA-10] Implementar confirmación humana en Front,Task,"Mostrar sugerencia como editable y exigir confirmación explícita; nunca crear ni asignar automáticamente.",Highest,"ia,frontend,human-in-the-loop"

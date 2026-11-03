@@ -1,0 +1,91 @@
+from __future__ import annotations
+
+import csv
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+OUT = ROOT / "output" / "testing" / "tracking"
+OUT.mkdir(parents=True, exist_ok=True)
+
+cases = [
+    ("TC-001", "Login válido por cada rol", "PASS", "P0", "Funcional,Seguridad", "Usuarios demo cargados", "Ingresar con cada rol y verificar menú y permisos", "200, token y UI correspondiente al rol", "Unitarias Back + E2E-01/E2E-04"),
+    ("TC-002", "Password incorrecta", "PASS", "P0", "Negativo,Seguridad", "Usuario existente", "Intentar login con password inválida", "401 sin crear sesión ni filtrar datos", "E2E-02"),
+    ("TC-003", "JWT expirado, manipulado o alg none", "PASS", "P0", "Negativo,Seguridad", "Endpoint protegido", "Enviar tokens inválidos", "401 uniforme", "AuthApprovalReviewTests"),
+    ("TC-004", "Crear y presentar proyecto", "PASS", "P0", "Funcional", "Rol PERSONAL_OBRAS", "Crear, editar y presentar el proyecto", "Datos persistidos y estado PENDIENTE_APROBACION", "AuthApprovalReviewTests"),
+    ("TC-005", "Presupuesto negativo", "PASS", "P0", "Negativo", "Sesión válida", "Crear proyecto con presupuesto -1", "400 y sin alta", "Validaciones Backend"),
+    ("TC-006", "Aprobar proyecto sin rol", "PASS", "P0", "Negativo,Seguridad", "Proyecto pendiente", "Intentar aprobar como OPERARIO", "403 y estado intacto", "AuthApprovalReviewTests"),
+    ("TC-007", "Crear OT desde proyecto", "PASS", "P0", "Funcional", "Proyecto válido", "Crear OT con origin PROYECTO", "OT vinculada una sola vez", "WorkOrderFlowTests"),
+    ("TC-008", "Crear OT con proyecto inexistente", "PASS", "P0", "Negativo", "Sesión válida", "Usar projectId inexistente", "404 y sin alta", "WorkOrderFlowTests"),
+    ("TC-009", "Programar, iniciar y completar OT", "PASS", "P0", "Funcional", "OT creada", "Ejecutar transiciones con roles habilitados", "Estados y auditoría correctos", "WorkOrderFlowTests"),
+    ("TC-010", "Transición inválida de OT", "PASS", "P0", "Negativo", "OT en estado incompatible", "Intentar iniciar o validar", "409 y sin mutación", "WorkOrderFlowTests"),
+    ("TC-011", "Reabrir y validar OT", "PASS", "P0", "Funcional", "OT completada", "Reabrir, corregir, completar y validar", "Historial y estado VALIDADA", "WorkOrderFlowTests"),
+    ("TC-012", "Asignar recurso disponible", "PASS", "P1", "Funcional", "OT programada y cuadrilla disponible", "Asignar cuadrilla", "Vínculo y carga actualizados", "Suite Backend"),
+    ("TC-013", "Stock insuficiente", "PREPARADO", "P0", "Negativo", "Material con stock bajo", "Asignar cantidad superior al stock", "409 y stock nunca negativo", "Caso documentado; ejecución final pendiente"),
+    ("TC-014", "Concurrencia con ETag obsoleto", "PREPARADO", "P1", "Resiliencia", "Dos clientes", "Actualizar con versión vieja", "412 Precondition Failed", "Caso documentado; ejecución final pendiente"),
+    ("TC-015", "Solicitar corte estructurado", "PASS", "P0", "Integración", "OT válida", "Emitir streetClosureRequested", "Envelope y data v1.0 válidos", "TrafficEventsTests + schemas"),
+    ("TC-016", "Consumir corte rechazado", "PASS", "P0", "Integración,Negativo", "Solicitud emitida", "Consumir streetClosureRejected", "Estado rechazado y motivo persistido", "TrafficEventsTests"),
+    ("TC-017", "Vencimiento de corte", "PREPARADO", "P1", "Integración,Tiempo", "Corte ACTIVE o APPROVED", "Superar endDate", "ACTIVE finaliza; APPROVED pasa a EXPIRED", "Requiere prueba bilateral M7"),
+    ("TC-018", "Ignorar ticketUpdated de otra área", "PASS", "P0", "Integración,Negativo", "Consumidor activo", "Recibir responsibleAreaId distinto de M3", "ACK sin mutación", "TicketUpdatedHandlerTests"),
+    ("TC-019", "STARTED antes de PROGRESS", "PREPARADO", "P0", "Integración", "Ticket ROUTED", "Publicar STARTED y luego PROGRESS", "M2 acepta ambos", "Requiere Core/M2 compartido"),
+    ("TC-020", "PROGRESS fuera de orden", "PREPARADO", "P0", "Integración,Negativo", "Ticket ROUTED", "Publicar PROGRESS", "NACK y política Core sin inconsistencia", "Requiere Core/M2 compartido"),
+    ("TC-021", "requestId a sourceRequestId", "PREPARADO", "P0", "Integración", "M6 y Core activos", "Consumir solicitud y emitir schedule/completed", "Correlación UUID preservada", "Requiere Core/M6 compartido"),
+    ("TC-022", "Envelope sin data", "PREPARADO", "P0", "Contrato,Negativo", "Core disponible", "Publicar envelope omitiendo data", "422 y no entra al hub", "Contrato implementado; E2E Core pendiente"),
+    ("TC-023", "Evento duplicado exacto", "PASS", "P0", "Resiliencia", "Inbox activa", "Entregar dos veces el mismo eventId", "Una mutación y deduplicación", "TicketUpdatedHandlerTests/TrafficEventsTests"),
+    ("TC-024", "Broker caído y recuperación", "PREPARADO", "P0", "Resiliencia", "Stack completo", "Detener broker, operar y restaurar", "Outbox conserva y reintenta sin pérdida", "Requiere Docker/Core en prueba final"),
+    ("SEC-01", "BOLA entre proyectos u órdenes", "PREPARADO", "P0", "Seguridad", "Dos identidades", "Cambiar UUID ajeno", "403 o 404 sin filtración", "Ejecución DAST final pendiente"),
+    ("SEC-02", "BFLA de aprobación", "PASS", "P0", "Seguridad", "Usuario OPERARIO", "Intentar aprobar o rechazar", "403 y sin mutación", "WorkOrderFlowTests/AuthApprovalReviewTests"),
+    ("SEC-03", "Validación JWT", "PASS", "P0", "Seguridad", "Endpoint protegido", "Usar expirado, firma alterada, alg none e issuer incorrecto", "401 uniforme", "AuthApprovalReviewTests"),
+    ("SEC-04", "Mass assignment", "PREPARADO", "P0", "Seguridad,Negativo", "Payload con campos internos", "Enviar role, status y owner", "400 o campos ignorados", "ZAP/manual pendiente"),
+    ("SEC-05", "Injection y XSS", "PREPARADO", "P0", "Seguridad,Negativo", "Campos de texto", "Enviar SQL/meta y scripts", "Sin ejecución ni reflejo inseguro", "ZAP/manual pendiente"),
+    ("SEC-06", "XXE", "NO_APLICA", "P2", "Seguridad", "API JSON", "Confirmar ausencia de parser XML expuesto", "No aplicable justificado", "La API expuesta usa JSON"),
+    ("SEC-07", "Brute force de login", "PREPARADO", "P1", "Seguridad", "Login disponible", "Ejecutar intentos repetidos", "429 o política documentada", "Prueba final pendiente"),
+    ("SEC-08", "Headers y CORS", "PREPARADO", "P1", "Seguridad", "Front y Back levantados", "Revisar origins y headers", "CORS restrictivo y headers seguros", "ZAP final pendiente"),
+    ("SEC-09", "Secretos en repositorios y logs", "PASS", "P0", "Seguridad", "Historia Git completa", "Ejecutar Gitleaks y revisar logs", "0 secretos", "Gitleaks 8.30.1: 0 hallazgos en Front, Back y TPO"),
+    ("SEC-10", "SCA y DAST", "PREPARADO", "P0", "Seguridad", "Stack limpio", "Ejecutar auditorías y ZAP", "0 High/Critical", "Workflow preparado; corrida final pendiente"),
+]
+
+
+def description(row):
+    id_, title, status, priority, labels, pre, steps, expected, evidence = row
+    return (
+        f"ID: {id_}\nEstado QA: {status}\nPrioridad: {priority}\n"
+        f"Precondición: {pre}\nPasos: {steps}\nResultado esperado: {expected}\n"
+        f"Evidencia actual: {evidence}\n"
+        "Regla: no marcar como aprobado sin evidencia reproducible."
+    )
+
+
+with (OUT / "Jira_Import_Casos_QA.csv").open("w", newline="", encoding="utf-8-sig") as file:
+    writer = csv.DictWriter(file, fieldnames=["Summary", "Issue Type", "Description", "Priority", "Labels"])
+    writer.writeheader()
+    for row in cases:
+        writer.writerow({
+            "Summary": f"[{row[0]}] {row[1]}",
+            "Issue Type": "Task",
+            "Description": description(row),
+            "Priority": {"P0": "Highest", "P1": "High", "P2": "Medium"}[row[3]],
+            "Labels": "qa-testing," + row[4].lower().replace("ó", "o").replace(" ", "-").replace(",", ",qa-"),
+        })
+
+with (OUT / "Trello_Import_Casos_QA.csv").open("w", newline="", encoding="utf-8-sig") as file:
+    writer = csv.DictWriter(file, fieldnames=["Name", "Description", "List", "Labels"])
+    writer.writeheader()
+    for row in cases:
+        list_name = {
+            "PASS": "QA - Aprobados",
+            "PREPARADO": "QA - Preparados para ejecutar",
+            "NO_APLICA": "QA - No aplica justificado",
+        }[row[2]]
+        writer.writerow({
+            "Name": f"[{row[0]}] {row[1]}",
+            "Description": description(row),
+            "List": list_name,
+            "Labels": f"{row[3]},{row[4]}",
+        })
+
+with (OUT / "Matriz_Ejecucion_QA.csv").open("w", newline="", encoding="utf-8-sig") as file:
+    writer = csv.writer(file)
+    writer.writerow(["ID", "Caso", "Estado", "Prioridad", "Tipo", "Precondición", "Pasos", "Esperado", "Evidencia"])
+    writer.writerows(cases)
+
+print(f"Generados {len(cases)} casos en {OUT}")

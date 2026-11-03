@@ -1,5 +1,18 @@
 # Historial de cambios
 
+## 2026-11-03 — Actividad integradora de IA y controles de uso responsable
+
+- Se diseñó como `PROPOSED` un copiloto de clasificación de incidencias, deshabilitado por defecto y con confirmación humana obligatoria.
+- Se agregaron prompt versionado, JSON Schema, 20 casos de evaluación —incluidos cinco adversariales—, umbrales, gobernanza y backlog importable con etiqueta `ia`.
+- Se documentó el uso de Claude y Codex con revisión humana, pruebas, CI, control de secretos y prohibición de aprobar o desplegar resultados sin evidencia.
+
+## 2026-11-03 — Gates automatizados para la entrega de Testing
+
+- Se agregó un pipeline reproducible de arranque desde clon limpio con `docker compose up --build`, verificación de salud, login, límite de 15 minutos y artefactos de evidencia.
+- Se agregó un escaneo Gitleaks sobre la historia completa y se registraron los resultados verificados de Backend, Frontend y TPO.
+- Se agregó una prueba k6 de tres endpoints con umbrales de p95 menor a 500 ms y errores menores al 1%; el tag `v1.0-testing` ejecuta 50 usuarios virtuales durante 5 minutos.
+- Estos controles no crean el tag ni sustituyen Teams, Jira o la demostración presencial.
+
 ## 2026-08-13 — Adopción de GitFlow simplificado para aplicaciones
 
 - El usuario confirmó que frontend y backend seguirán el esquema docente `feature/*` → `develop` → `release/vX.Y.Z` → `main`.
