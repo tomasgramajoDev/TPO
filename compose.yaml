@@ -1,0 +1,69 @@
+name: obras-publicas-testing
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: obras_publicas
+      POSTGRES_USER: obras
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Falta DB_PASSWORD en .env}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U obras -d obras_publicas"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  rabbitmq:
+    image: rabbitmq:4-management-alpine
+    environment:
+      RABBITMQ_DEFAULT_USER: obras_local
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:?Falta RABBITMQ_PASSWORD en .env}
+      RABBITMQ_DEFAULT_VHOST: obras_local
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  backend:
+    build:
+      context: https://github.com/ignacionogue/DesarrolloDeAplicacionesIIBack.git#develop
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/obras_publicas
+      DB_USERNAME: obras
+      DB_PASSWORD: ${DB_PASSWORD:?Falta DB_PASSWORD en .env}
+      JWT_SECRET: ${JWT_SECRET:?Falta JWT_SECRET en .env}
+      AUTH_BOOTSTRAP_USERS: >-
+        [{"username":"personal.obras","password":"${DEMO_PASSWORD:?Falta DEMO_PASSWORD en .env}","role":"PERSONAL_OBRAS"},{"username":"responsable.autorizado","password":"${DEMO_PASSWORD:?Falta DEMO_PASSWORD en .env}","role":"RESPONSABLE_AUTORIZADO"},{"username":"jefe.cuadrilla","password":"${DEMO_PASSWORD:?Falta DEMO_PASSWORD en .env}","role":"JEFE_CUADRILLA"},{"username":"operario.contratista","password":"${DEMO_PASSWORD:?Falta DEMO_PASSWORD en .env}","role":"OPERARIO_CONTRATISTA"},{"username":"inspector.obra","password":"${DEMO_PASSWORD:?Falta DEMO_PASSWORD en .env}","role":"INSPECTOR_OBRA"},{"username":"ingeniero.arquitecto","password":"${DEMO_PASSWORD:?Falta DEMO_PASSWORD en .env}","role":"INGENIERO_ARQUITECTO"}]
+      CORS_ALLOWED_ORIGINS: http://localhost:8080
+      MESSAGING_ENABLED: "false"
+    ports:
+      - "8081:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: https://github.com/NadineLewit/DesarrolloAppsII_Front.git#develop
+    environment:
+      BACKEND_SCHEME: http
+      BACKEND_HOST: backend:8080
+    ports:
+      - "8080:8080"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+
