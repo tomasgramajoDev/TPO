@@ -29,6 +29,7 @@
 - Axe encontró contraste insuficiente en el estado de carga. Se corrigió el color y se repitió la prueba.
 - El smoke PostgreSQL usaba una clase movida en Spring Boot 4. Se sustituyó por una verificación directa del controlador y la suite volvió a verde.
 - PIT obtuvo inicialmente 57%. Se agregó una prueba que impide sobrescribir presupuesto y plazo aprobados; el resultado final llegó al umbral de 60%.
+- La primera evidencia k6 incluyó el token efímero dentro de `setup_data`. El artefacto se eliminó, el resumen se sanitizó y el pipeline se repitió; no se aceptó la primera corrida como evidencia final.
 
 ## Pendientes que no se deben ocultar
 

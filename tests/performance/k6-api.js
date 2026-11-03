@@ -40,8 +40,9 @@ export default function ({ token }) {
 }
 
 export function handleSummary(data) {
+  const { setup_data: _sensitiveSetupData, ...sanitizedSummary } = data;
   return {
-    'k6-summary.json': JSON.stringify(data, null, 2),
+    'k6-summary.json': JSON.stringify(sanitizedSummary, null, 2),
     stdout: `k6: p95=${data.metrics.http_req_duration.values['p(95)']} ms, errores=${data.metrics.http_req_failed.values.rate}\n`,
   };
 }
