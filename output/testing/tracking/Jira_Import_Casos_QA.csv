@@ -1,0 +1,289 @@
+﻿Summary,Issue Type,Description,Priority,Labels
+[TC-001] Login válido por cada rol,Task,"ID: TC-001
+Estado QA: PASS
+Prioridad: P0
+Precondición: Usuarios demo cargados
+Pasos: Ingresar con cada rol y verificar menú y permisos
+Resultado esperado: 200, token y UI correspondiente al rol
+Evidencia actual: Unitarias Back + E2E-01/E2E-04
+Regla: no marcar como aprobado sin evidencia reproducible.",Highest,"qa-testing,funcional,qa-seguridad"
+[TC-002] Password incorrecta,Task,"ID: TC-002
+Estado QA: PASS
+Prioridad: P0
+Precondición: Usuario existente
+Pasos: Intentar login con password inválida
+Resultado esperado: 401 sin crear sesión ni filtrar datos
+Evidencia actual: E2E-02
+Regla: no marcar como aprobado sin evidencia reproducible.",Highest,"qa-testing,negativo,qa-seguridad"
+"[TC-003] JWT expirado, manipulado o alg none",Task,"ID: TC-003
+Estado QA: PASS
+Prioridad: P0
+Precondición: Endpoint protegido
+Pasos: Enviar tokens inválidos
+Resultado esperado: 401 uniforme
+Evidencia actual: AuthApprovalReviewTests
+Regla: no marcar como aprobado sin evidencia reproducible.",Highest,"qa-testing,negativo,qa-seguridad"
+[TC-004] Crear y presentar proyecto,Task,"ID: TC-004
+Estado QA: PASS
+Prioridad: P0
+Precondición: Rol PERSONAL_OBRAS
+Pasos: Crear, editar y presentar el proyecto
+Resultado esperado: Datos persistidos y estado PENDIENTE_APROBACION
+Evidencia actual: AuthApprovalReviewTests
+Regla: no marcar como aprobado sin evidencia reproducible.",Highest,"qa-testing,funcional"
+[TC-005] Presupuesto negativo,Task,"ID: TC-005
+Estado QA: PASS
+Prioridad: P0
+Precondición: Sesión válida
+Pasos: Crear proyecto con presupuesto -1
+Resultado esperado: 400 y sin alta
+Evidencia actual: Validaciones Backend
+Regla: no marcar como aprobado sin evidencia reproducible.",Highest,"qa-testing,negativo"
+[TC-006] Aprobar proyecto sin rol,Task,"ID: TC-006
+Estado QA: PASS
+Prioridad: P0
+Precondición: Proyecto pendiente
+Pasos: Intentar aprobar como OPERARIO
+Resultado esperado: 403 y estado intacto
+Evidencia actual: AuthApprovalReviewTests
+Regla: no marcar como aprobado sin evidencia reproducible.",Highest,"qa-testing,negativo,qa-seguridad"
+[TC-007] Crear OT desde proyecto,Task,"ID: TC-007
+Estado QA: PASS
+Prioridad: P0
+Precondición: Proyecto válido
+Pasos: Crear OT con origin PROYECTO
+Resultado esperado: OT vinculada una sola vez
+Evidencia actual: WorkOrderFlowTests
+Regla: no marcar como aprobado sin evidencia reproducible.",Highest,"qa-testing,funcional"
+[TC-008] Crear OT con proyecto inexistente,Task,"ID: TC-008
+Estado QA: PASS
+Prioridad: P0
+Precondición: Sesión válida
+Pasos: Usar projectId inexistente
+Resultado esperado: 404 y sin alta
+Evidencia actual: WorkOrderFlowTests
+Regla: no marcar como aprobado sin evidencia reproducible.",Highest,"qa-testing,negativo"
+"[TC-009] Programar, iniciar y completar OT",Task,"ID: TC-009
+Estado QA: PASS
+Prioridad: P0
+Precondición: OT creada
+Pasos: Ejecutar transiciones con roles habilitados
+Resultado esperado: Estados y auditoría correctos
+Evidencia actual: WorkOrderFlowTests
+Regla: no marcar como aprobado sin evidencia reproducible.",Highest,"qa-testing,funcional"
+[TC-010] Transición inválida de OT,Task,"ID: TC-010
+Estado QA: PASS
+Prioridad: P0
+Precondición: OT en estado incompatible
+Pasos: Intentar iniciar o validar
+Resultado esperado: 409 y sin mutación
+Evidencia actual: WorkOrderFlowTests
+Regla: no marcar como aprobado sin evidencia reproducible.",Highest,"qa-testing,negativo"
+[TC-011] Reabrir y validar OT,Task,"ID: TC-011
+Estado QA: PASS
+Prioridad: P0
+Precondición: OT completada
+Pasos: Reabrir, corregir, completar y validar
+Resultado esperado: Historial y estado VALIDADA
+Evidencia actual: WorkOrderFlowTests
+Regla: no marcar como aprobado sin evidencia reproducible.",Highest,"qa-testing,funcional"
+[TC-012] Asignar recurso disponible,Task,"ID: TC-012
+Estado QA: PASS
+Prioridad: P1
+Precondición: OT programada y cuadrilla disponible
+Pasos: Asignar cuadrilla
+Resultado esperado: Vínculo y carga actualizados
+Evidencia actual: Suite Backend
+Regla: no marcar como aprobado sin evidencia reproducible.",High,"qa-testing,funcional"
+[TC-013] Stock insuficiente,Task,"ID: TC-013
+Estado QA: PREPARADO
+Prioridad: P0
+Precondición: Material con stock bajo
+Pasos: Asignar cantidad superior al stock
+Resultado esperado: 409 y stock nunca negativo
+Evidencia actual: Caso documentado; ejecución final pendiente
+Regla: no marcar como aprobado sin evidencia reproducible.",Highest,"qa-testing,negativo"
+[TC-014] Concurrencia con ETag obsoleto,Task,"ID: TC-014
+Estado QA: PREPARADO
+Prioridad: P1
+Precondición: Dos clientes
+Pasos: Actualizar con versión vieja
+Resultado esperado: 412 Precondition Failed
+Evidencia actual: Caso documentado; ejecución final pendiente
+Regla: no marcar como aprobado sin evidencia reproducible.",High,"qa-testing,resiliencia"
+[TC-015] Solicitar corte estructurado,Task,"ID: TC-015
+Estado QA: PASS
+Prioridad: P0
+Precondición: OT válida
+Pasos: Emitir streetClosureRequested
+Resultado esperado: Envelope y data v1.0 válidos
+Evidencia actual: TrafficEventsTests + schemas
+Regla: no marcar como aprobado sin evidencia reproducible.",Highest,"qa-testing,integracion"
+[TC-016] Consumir corte rechazado,Task,"ID: TC-016
+Estado QA: PASS
+Prioridad: P0
+Precondición: Solicitud emitida
+Pasos: Consumir streetClosureRejected
+Resultado esperado: Estado rechazado y motivo persistido
+Evidencia actual: TrafficEventsTests
+Regla: no marcar como aprobado sin evidencia reproducible.",Highest,"qa-testing,integracion,qa-negativo"
+[TC-017] Vencimiento de corte,Task,"ID: TC-017
+Estado QA: PREPARADO
+Prioridad: P1
+Precondición: Corte ACTIVE o APPROVED
+Pasos: Superar endDate
+Resultado esperado: ACTIVE finaliza; APPROVED pasa a EXPIRED
+Evidencia actual: Requiere prueba bilateral M7
+Regla: no marcar como aprobado sin evidencia reproducible.",High,"qa-testing,integracion,qa-tiempo"
+[TC-018] Ignorar ticketUpdated de otra área,Task,"ID: TC-018
+Estado QA: PASS
+Prioridad: P0
+Precondición: Consumidor activo
+Pasos: Recibir responsibleAreaId distinto de M3
+Resultado esperado: ACK sin mutación
+Evidencia actual: TicketUpdatedHandlerTests
+Regla: no marcar como aprobado sin evidencia reproducible.",Highest,"qa-testing,integracion,qa-negativo"
+[TC-019] STARTED antes de PROGRESS,Task,"ID: TC-019
+Estado QA: PREPARADO
+Prioridad: P0
+Precondición: Ticket ROUTED
+Pasos: Publicar STARTED y luego PROGRESS
+Resultado esperado: M2 acepta ambos
+Evidencia actual: Requiere Core/M2 compartido
+Regla: no marcar como aprobado sin evidencia reproducible.",Highest,"qa-testing,integracion"
+[TC-020] PROGRESS fuera de orden,Task,"ID: TC-020
+Estado QA: PREPARADO
+Prioridad: P0
+Precondición: Ticket ROUTED
+Pasos: Publicar PROGRESS
+Resultado esperado: NACK y política Core sin inconsistencia
+Evidencia actual: Requiere Core/M2 compartido
+Regla: no marcar como aprobado sin evidencia reproducible.",Highest,"qa-testing,integracion,qa-negativo"
+[TC-021] requestId a sourceRequestId,Task,"ID: TC-021
+Estado QA: PREPARADO
+Prioridad: P0
+Precondición: M6 y Core activos
+Pasos: Consumir solicitud y emitir schedule/completed
+Resultado esperado: Correlación UUID preservada
+Evidencia actual: Requiere Core/M6 compartido
+Regla: no marcar como aprobado sin evidencia reproducible.",Highest,"qa-testing,integracion"
+[TC-022] Envelope sin data,Task,"ID: TC-022
+Estado QA: PREPARADO
+Prioridad: P0
+Precondición: Core disponible
+Pasos: Publicar envelope omitiendo data
+Resultado esperado: 422 y no entra al hub
+Evidencia actual: Contrato implementado; E2E Core pendiente
+Regla: no marcar como aprobado sin evidencia reproducible.",Highest,"qa-testing,contrato,qa-negativo"
+[TC-023] Evento duplicado exacto,Task,"ID: TC-023
+Estado QA: PASS
+Prioridad: P0
+Precondición: Inbox activa
+Pasos: Entregar dos veces el mismo eventId
+Resultado esperado: Una mutación y deduplicación
+Evidencia actual: TicketUpdatedHandlerTests/TrafficEventsTests
+Regla: no marcar como aprobado sin evidencia reproducible.",Highest,"qa-testing,resiliencia"
+[TC-024] Broker caído y recuperación,Task,"ID: TC-024
+Estado QA: PREPARADO
+Prioridad: P0
+Precondición: Stack completo
+Pasos: Detener broker, operar y restaurar
+Resultado esperado: Outbox conserva y reintenta sin pérdida
+Evidencia actual: Requiere Docker/Core en prueba final
+Regla: no marcar como aprobado sin evidencia reproducible.",Highest,"qa-testing,resiliencia"
+[SEC-01] BOLA entre proyectos u órdenes,Task,"ID: SEC-01
+Estado QA: PREPARADO
+Prioridad: P0
+Precondición: Dos identidades
+Pasos: Cambiar UUID ajeno
+Resultado esperado: 403 o 404 sin filtración
+Evidencia actual: Ejecución DAST final pendiente
+Regla: no marcar como aprobado sin evidencia reproducible.",Highest,"qa-testing,seguridad"
+[SEC-02] BFLA de aprobación,Task,"ID: SEC-02
+Estado QA: PASS
+Prioridad: P0
+Precondición: Usuario OPERARIO
+Pasos: Intentar aprobar o rechazar
+Resultado esperado: 403 y sin mutación
+Evidencia actual: WorkOrderFlowTests/AuthApprovalReviewTests
+Regla: no marcar como aprobado sin evidencia reproducible.",Highest,"qa-testing,seguridad"
+[SEC-03] Validación JWT,Task,"ID: SEC-03
+Estado QA: PASS
+Prioridad: P0
+Precondición: Endpoint protegido
+Pasos: Usar expirado, firma alterada, alg none e issuer incorrecto
+Resultado esperado: 401 uniforme
+Evidencia actual: AuthApprovalReviewTests
+Regla: no marcar como aprobado sin evidencia reproducible.",Highest,"qa-testing,seguridad"
+[SEC-04] Mass assignment,Task,"ID: SEC-04
+Estado QA: PREPARADO
+Prioridad: P0
+Precondición: Payload con campos internos
+Pasos: Enviar role, status y owner
+Resultado esperado: 400 o campos ignorados
+Evidencia actual: ZAP/manual pendiente
+Regla: no marcar como aprobado sin evidencia reproducible.",Highest,"qa-testing,seguridad,qa-negativo"
+[SEC-05] Injection y XSS,Task,"ID: SEC-05
+Estado QA: PREPARADO
+Prioridad: P0
+Precondición: Campos de texto
+Pasos: Enviar SQL/meta y scripts
+Resultado esperado: Sin ejecución ni reflejo inseguro
+Evidencia actual: ZAP/manual pendiente
+Regla: no marcar como aprobado sin evidencia reproducible.",Highest,"qa-testing,seguridad,qa-negativo"
+[SEC-06] XXE,Task,"ID: SEC-06
+Estado QA: NO_APLICA
+Prioridad: P2
+Precondición: API JSON
+Pasos: Confirmar ausencia de parser XML expuesto
+Resultado esperado: No aplicable justificado
+Evidencia actual: La API expuesta usa JSON
+Regla: no marcar como aprobado sin evidencia reproducible.",Medium,"qa-testing,seguridad"
+[SEC-07] Brute force de login,Task,"ID: SEC-07
+Estado QA: PREPARADO
+Prioridad: P1
+Precondición: Login disponible
+Pasos: Ejecutar intentos repetidos
+Resultado esperado: 429 o política documentada
+Evidencia actual: Prueba final pendiente
+Regla: no marcar como aprobado sin evidencia reproducible.",High,"qa-testing,seguridad"
+[SEC-08] Headers y CORS,Task,"ID: SEC-08
+Estado QA: PREPARADO
+Prioridad: P1
+Precondición: Front y Back levantados
+Pasos: Revisar origins y headers
+Resultado esperado: CORS restrictivo y headers seguros
+Evidencia actual: ZAP final pendiente
+Regla: no marcar como aprobado sin evidencia reproducible.",High,"qa-testing,seguridad"
+[SEC-09] Secretos en repositorios y logs,Task,"ID: SEC-09
+Estado QA: PASS
+Prioridad: P0
+Precondición: Historia Git completa
+Pasos: Ejecutar Gitleaks y revisar logs
+Resultado esperado: 0 secretos
+Evidencia actual: Gitleaks 8.30.1: 0 hallazgos en Front, Back y TPO
+Regla: no marcar como aprobado sin evidencia reproducible.",Highest,"qa-testing,seguridad"
+[SEC-10] SCA y DAST,Task,"ID: SEC-10
+Estado QA: PASS
+Prioridad: P0
+Precondición: Stack limpio
+Pasos: Ejecutar auditorías y ZAP
+Resultado esperado: 0 High/Critical
+Evidencia actual: Back CI #41638341162: Trivy aprobado; TPO CI #41640508507: ZAP 0 High/Critical
+Regla: no marcar como aprobado sin evidencia reproducible.",Highest,"qa-testing,seguridad"
+[OPS-01] Arranque limpio con un comando,Task,"ID: OPS-01
+Estado QA: PASS
+Prioridad: P0
+Precondición: Secrets efímeros de CI
+Pasos: Ejecutar docker compose up --build -d --wait
+Resultado esperado: Frontend, backend y PostgreSQL saludables
+Evidencia actual: TPO CI #41640508507: stack saludable en 135 s
+Regla: no marcar como aprobado sin evidencia reproducible.",Highest,"qa-testing,operacion,qa-resiliencia"
+[PERF-01] Carga sostenida de API,Task,"ID: PERF-01
+Estado QA: PASS
+Prioridad: P0
+Precondición: Stack limpio y usuario de prueba
+Pasos: Ejecutar k6 sobre login, health y proyectos
+Resultado esperado: p95 < 500 ms; error < 1%; checks > 99%
+Evidencia actual: TPO CI #41640508507: p95 184,68 ms; error 0%; 226/226 checks
+Regla: no marcar como aprobado sin evidencia reproducible.",Highest,"qa-testing,performance"

@@ -27,6 +27,12 @@ work/
 tmp/
 outputs/
 output/testing/rendered/
+output/testing/ia-rendered/
+output/testing/qa-page-*.png
+gitleaks-full-history.json
+/.chart-data-*/
+/.pptx-build/*
+!/.pptx-build/build_qa_deck.mjs
 
 # Sistema operativo y editores
 .DS_Store
