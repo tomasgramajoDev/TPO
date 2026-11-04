@@ -10,6 +10,11 @@ on:
         description: Tag de la release aprobada que se desplegará en test.
         required: true
         type: string
+      enable_core_messaging:
+        description: Habilitar AMQPS con Core (requiere el secreto RABBITMQ_PASSWORD).
+        required: true
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -29,6 +34,8 @@ env:
   TF_INPUT: false
   TF_VAR_application_demo_password: ${{ secrets.TEST_DEMO_PASSWORD }}
   TF_VAR_application_bootstrap_users_json: ${{ secrets.TEST_BOOTSTRAP_USERS }}
+  TF_VAR_application_messaging_enabled: ${{ inputs.enable_core_messaging || 'false' }}
+  TF_VAR_application_rabbitmq_password: ${{ secrets.RABBITMQ_PASSWORD }}
 
 jobs:
   plan:

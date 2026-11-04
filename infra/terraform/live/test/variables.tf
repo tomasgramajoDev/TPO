@@ -109,3 +109,16 @@ variable "application_bootstrap_users_json" {
   nullable    = true
   sensitive   = true
 }
+
+variable "application_messaging_enabled" {
+  description = "Habilita la conexion AMQPS del backend Test con Core."
+  type        = bool
+  default     = false
+}
+
+variable "application_rabbitmq_password" {
+  description = "Contrasena AMQPS de module_obras recibida mediante GitHub Environment secret."
+  type        = string
+  default     = ""
+  sensitive   = true
+}
