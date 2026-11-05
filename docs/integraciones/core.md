@@ -48,7 +48,7 @@ Estas definiciones son compatibles con el rol técnico de Core, pero no se consi
 
 ## Evidencia operativa M6 → M3 → M6 — 2026-11-05
 
-**Estado de transporte:** `CONFIRMED` para conexión AMQPS, consumo en M3 y publicación de respuestas; `PENDING` para la confirmación final de recepción y aplicación por M6.
+**Estado de transporte y prueba funcional M6–M3–Core:** `CONFIRMED`.
 
 Esta evidencia sustituye únicamente las pendientes de disponibilidad de infraestructura. No resuelve por sí sola las definiciones contractuales históricas listadas arriba.
 
@@ -59,7 +59,9 @@ Esta evidencia sustituye únicamente las pendientes de disponibilidad de infraes
 - M3 creó, programó, inició y completó la orden interna `id=5` con `sourceRequestId=6fdddb92-78fe-4220-a9c2-0c5395623f6a`.
 - M3 publicó `workOrderScheduled` con `eventId=8d109cc9-1802-4b30-89ea-0dd9df8b1843` y `workOrderCompleted` con `eventId=916449bf-9cfb-4449-ae74-65b9825f7693`; ambos conservaron la correlación original y registraron `result=published`.
 - Las cuentas técnicas usadas para respetar la separación de roles quedaron únicamente en secretos protegidos de Azure Test y GitHub Environment `test`; no se almacenaron contraseñas en Git.
-- Falta que M6/Core confirme la recepción y aplicación de ambas respuestas en `q.ambiente`.
+- A las 16:10 de Argentina, M6 confirmó que el pedido `6fdddb92-78fe-4220-a9c2-0c5395623f6a` quedó `Cerrado` y que las métricas de Core mostraban recibidos `workOrderScheduled` y `workOrderCompleted`.
+- A las 16:14 de Argentina, Core confirmó en sus registros de AWS que `infrastructureRepairRequested`, `workOrderScheduled` y `workOrderCompleted` quedaron `ROUTED` y compartieron el mismo `correlationId`.
+- Core verificó además `q.obras` y `q.ambiente` sin mensajes pendientes y la DLQ vacía. Con la confirmación funcional de M6, la prueba M6 → M3 → M6 queda cerrada satisfactoriamente.
 
 ## Contexto
 
