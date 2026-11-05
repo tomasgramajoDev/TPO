@@ -46,6 +46,21 @@ Estas definiciones son compatibles con el rol técnico de Core, pero no se consi
 - Alcance técnico de Core como hub frente a su no participación como consumidor funcional.
 - Estrategia común de reintentos, idempotencia, auditoría y DLQ.
 
+## Evidencia operativa M6 → M3 → M6 — 2026-11-05
+
+**Estado de transporte:** `CONFIRMED` para conexión AMQPS, consumo en M3 y publicación de respuestas; `PENDING` para la confirmación final de recepción y aplicación por M6.
+
+Esta evidencia sustituye únicamente las pendientes de disponibilidad de infraestructura. No resuelve por sí sola las definiciones contractuales históricas listadas arriba.
+
+- Core informó `infrastructureRepairRequested` con `eventId=a53fc8ee-5200-4949-b333-480f21be7e5d`, un mensaje pendiente en `q.obras` y ausencia de consumidores y de la conexión `module_obras`.
+- Se comprobó que Azure Test había escalado el backend a cero porque Terraform declaraba `min_replicas=0`. Al despertar la aplicación, M3 abrió la conexión AMQPS y procesó el evento con `correlationId=84cd1a26-c21b-4d57-a292-d4fb7daff878`.
+- El PR `#54` cambió la regla a `min_replicas = application_messaging_enabled ? 1 : 0`, pasó todos los controles, se fusionó y se desplegó con el tag `v1.0-testing.2` mediante el workflow `42087566180`.
+- La verificación posterior confirmó `minReplicas=1`, `maxReplicas=1`, una réplica activa, mensajería habilitada, health `ok`, PostgreSQL `up` y `module_obras` conectado al vhost `core`.
+- M3 creó, programó, inició y completó la orden interna `id=5` con `sourceRequestId=6fdddb92-78fe-4220-a9c2-0c5395623f6a`.
+- M3 publicó `workOrderScheduled` con `eventId=8d109cc9-1802-4b30-89ea-0dd9df8b1843` y `workOrderCompleted` con `eventId=916449bf-9cfb-4449-ae74-65b9825f7693`; ambos conservaron la correlación original y registraron `result=published`.
+- Las cuentas técnicas usadas para respetar la separación de roles quedaron únicamente en secretos protegidos de Azure Test y GitHub Environment `test`; no se almacenaron contraseñas en Git.
+- Falta que M6/Core confirme la recepción y aplicación de ambas respuestas en `q.ambiente`.
+
 ## Contexto
 
 La consigna original describe a Core como hub técnico de eventos. La instrucción vigente aclara que esa función no autoriza a tratarlo como consumidor funcional de todos los hechos. La separación exacta entre enrutamiento técnico y consumo de negocio queda pendiente de confirmación con M9.
