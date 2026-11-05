@@ -224,7 +224,8 @@ resource "azurerm_container_app" "backend" {
   }
 
   template {
-    min_replicas = 0
+    # El consumidor AMQP no puede recibir eventos si la aplicación escala a cero.
+    min_replicas = var.application_messaging_enabled ? 1 : 0
     max_replicas = 1
 
     container {
