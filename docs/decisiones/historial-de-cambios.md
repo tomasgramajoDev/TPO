@@ -9,7 +9,9 @@
 - Para `sourceRequestId=6fdddb92-78fe-4220-a9c2-0c5395623f6a`, M3 creó la orden `id=5`, la programó, inició y completó.
 - M3 publicó `workOrderScheduled` (`eventId=8d109cc9-1802-4b30-89ea-0dd9df8b1843`) y `workOrderCompleted` (`eventId=916449bf-9cfb-4449-ae74-65b9825f7693`) con la correlación original y resultado `published`.
 - Las credenciales técnicas quedaron en secretos protegidos de Azure Test y GitHub Environment `test`, sin incorporarse a Git.
-- Falta la confirmación externa de M6/Core sobre recepción y aplicación en `q.ambiente`.
+- M6 confirmó a las 16:10 que el pedido quedó `Cerrado` y que Core registró ambos eventos de respuesta de M3.
+- Core confirmó a las 16:14 que los tres eventos quedaron `ROUTED`, compartieron el mismo `correlationId`, `q.obras` y `q.ambiente` estaban sin pendientes y la DLQ estaba vacía.
+- La prueba funcional M6 → M3 → M6 queda cerrada como `CONFIRMED` de punta a punta.
 
 ## 2026-11-03 — Actividad integradora de IA y controles de uso responsable
 
