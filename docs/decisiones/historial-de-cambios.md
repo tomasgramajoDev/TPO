@@ -1,5 +1,16 @@
 # Historial de cambios
 
+## 2026-11-05 — Listener AMQP permanente y prueba M6 → M3 → M6
+
+- Core informó un nuevo `infrastructureRepairRequested` con `eventId=a53fc8ee-5200-4949-b333-480f21be7e5d`, pendiente en `q.obras`, sin consumidor ni conexión de `module_obras`.
+- Se diagnosticó escala a cero del backend. Al despertar Azure Test, M3 se reconectó y procesó el evento con `correlationId=84cd1a26-c21b-4d57-a292-d4fb7daff878`.
+- El PR `#54` mantiene una réplica del backend cuando la mensajería está habilitada. Pasó CI, se fusionó, se etiquetó como `v1.0-testing.2` y se desplegó mediante el workflow `42087566180`.
+- Azure quedó con `minReplicas=1`, una réplica activa, health `ok`, PostgreSQL `up` y `module_obras` conectado.
+- Para `sourceRequestId=6fdddb92-78fe-4220-a9c2-0c5395623f6a`, M3 creó la orden `id=5`, la programó, inició y completó.
+- M3 publicó `workOrderScheduled` (`eventId=8d109cc9-1802-4b30-89ea-0dd9df8b1843`) y `workOrderCompleted` (`eventId=916449bf-9cfb-4449-ae74-65b9825f7693`) con la correlación original y resultado `published`.
+- Las credenciales técnicas quedaron en secretos protegidos de Azure Test y GitHub Environment `test`, sin incorporarse a Git.
+- Falta la confirmación externa de M6/Core sobre recepción y aplicación en `q.ambiente`.
+
 ## 2026-11-03 — Actividad integradora de IA y controles de uso responsable
 
 - Se diseñó como `PROPOSED` un copiloto de clasificación de incidencias, deshabilitado por defecto y con confirmación humana obligatoria.
