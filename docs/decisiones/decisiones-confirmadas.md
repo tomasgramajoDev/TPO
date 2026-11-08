@@ -56,6 +56,11 @@ Esta página contiene decisiones internas o acuerdos explícitos. Un evento incl
 - Core no se presume consumidor funcional de todos los eventos.
 - Atributos, funciones y eventos se expresan en inglés y `camelCase`; endpoints, entidades y errores técnicos, en inglés.
 
+## Integraciones verificadas
+
+- El escenario `approved` del circuito M3 → Core → M1 → Core → M3 quedó confirmado el 2026-11-08 mediante `publicWorksProjectApproved` y `caseFileResolved` v1.0, con correlación conservada, entrega en un intento, sin DLQ y procesamiento funcional confirmado por ambos módulos.
+- Esta confirmación no alcanza a la variante `rejected`, que permanece pendiente como prueba independiente.
+
 ## Decisiones internas sobre M6
 
 - Obras acepta consumir `infrastructureRepairRequested`.

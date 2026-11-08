@@ -63,6 +63,16 @@ Esta evidencia sustituye únicamente las pendientes de disponibilidad de infraes
 - A las 16:14 de Argentina, Core confirmó en sus registros de AWS que `infrastructureRepairRequested`, `workOrderScheduled` y `workOrderCompleted` quedaron `ROUTED` y compartieron el mismo `correlationId`.
 - Core verificó además `q.obras` y `q.ambiente` sin mensajes pendientes y la DLQ vacía. Con la confirmación funcional de M6, la prueba M6 → M3 → M6 queda cerrada satisfactoriamente.
 
+## Evidencia operativa M3 → M1 → M3 — 2026-11-08
+
+**Estado del escenario `approved`:** `CONFIRMED`.
+
+Core (M9) informó en Discord que `publicWorksProjectApproved` (`eventId=ce10dbfb-fa87-45a8-921f-adf8689ac1dc`) y `caseFileResolved` (`eventId=ad03a26a-12d8-414f-808a-63527e6417b6`) fueron validados, registrados como `ROUTED` y entregados en un intento a `q.ciudadanos` y `q.obras`, respectivamente. No hubo rechazos registrados ni mensajes asociados en DLQ.
+
+Los dos eventos conservaron `correlationId=223653b4-4d6b-4d59-9e75-a8ecc66d27ef`. M1 confirmó la creación del expediente y la publicación de la resolución; M3 confirmó el procesamiento y la asociación de `caseFileId=2567331e-d718-4e24-9870-2366f1c43059` con `publicWorksProjectId=42807c4d-ff24-438f-aaa2-d025e8c27980` en su base de datos.
+
+Esta evidencia confirma únicamente la variante `approved`. La variante `rejected` continúa pendiente de ejecución.
+
 ## Contexto
 
 La consigna original describe a Core como hub técnico de eventos. La instrucción vigente aclara que esa función no autoriza a tratarlo como consumidor funcional de todos los hechos. La separación exacta entre enrutamiento técnico y consumo de negocio queda pendiente de confirmación con M9.
