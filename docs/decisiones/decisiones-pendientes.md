@@ -56,11 +56,9 @@
 
 ## Ciudadanos y Expedientes Digitales
 
-1. Confirmar `caseFileResolved`, su payload y resultados que habilitan o bloquean una obra.
-2. Definir qué eventos del ciclo de la obra necesita realmente M1.
-3. Acordar correlación y manejo de documentación administrativa.
-4. Confirmar si M1 consume `publicWorksExtensionRequested`, `publicWorksExtensionApproved` y `publicWorksExtensionRejected`, agregados por la matriz del PO.
-5. Definir si `publicWorksProgressRegistered` usa `stageId`, `milestoneId` o ambos.
+1. Ejecutar y documentar la variante `rejected` del circuito `publicWorksProjectApproved` → `caseFileResolved`; la variante `approved` quedó confirmada E2E el 2026-11-08.
+2. Confirmar si M1 consume `publicWorksExtensionRequested`, `publicWorksExtensionApproved` y `publicWorksExtensionRejected`, agregados por la matriz del PO.
+3. Definir si `publicWorksProgressRegistered` usa `stageId`, `milestoneId` o ambos.
 
 ## Dominio interno aún no cerrado
 

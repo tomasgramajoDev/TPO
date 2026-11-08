@@ -1,5 +1,14 @@
 # Historial de cambios
 
+## 2026-11-08 — Frontend integrado y circuito aprobado con M1
+
+- El PR de Frontend `#17` incorporó el panel de eventos de integración respaldado por el backend, eliminando el contenido estático fuera de alcance y conservando las mejoras vigentes de autenticación, validación y testing.
+- El pipeline de Frontend aprobó lint, cobertura, 60 pruebas, build, Playwright E2E, accesibilidad y construcción del contenedor antes del merge a `develop`.
+- La imagen inmutable de Frontend promovida a Azure Test corresponde al commit `0518388672aa9e936db1dab8f470a8697994a0fd`.
+- Core confirmó la prueba E2E asincrónica `publicWorksProjectApproved` → `caseFileResolved` para el resultado `approved`: ambos eventos quedaron `ROUTED`, se entregaron en un intento, conservaron el mismo `correlationId` y no registraron entradas en DLQ.
+- M1 confirmó la creación del expediente y M3 confirmó su recepción, procesamiento y asociación con el proyecto en PostgreSQL.
+- La variante `rejected` queda registrada como prueba pendiente independiente.
+
 ## 2026-11-05 — Listener AMQP permanente y prueba M6 → M3 → M6
 
 - Core informó un nuevo `infrastructureRepairRequested` con `eventId=a53fc8ee-5200-4949-b333-480f21be7e5d`, pendiente en `q.obras`, sin consumidor ni conexión de `module_obras`.
