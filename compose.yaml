@@ -34,7 +34,7 @@ services:
 
   backend:
     build:
-      context: https://github.com/ignacionogue/DesarrolloDeAplicacionesIIBack.git#78247d56b10d8a5826cd1dae85cd0633c0ac411a
+      context: https://github.com/ignacionogue/DesarrolloDeAplicacionesIIBack.git#0430a4d45af1f94d909c09230ee5df8c2966f238
     environment:
       DB_URL: jdbc:postgresql://postgres:5432/obras_publicas
       DB_USERNAME: obras

@@ -73,7 +73,7 @@ variable "container_registry_identity_id" {
 variable "backend_image" {
   description = "Imagen inmutable del backend promovida a test."
   type        = string
-  default     = "acrobraspublica302ceba6.azurecr.io/obras-publicas-backend:78247d56b10d8a5826cd1dae85cd0633c0ac411a"
+  default     = "acrobraspublica302ceba6.azurecr.io/obras-publicas-backend:0430a4d45af1f94d909c09230ee5df8c2966f238"
 }
 
 variable "frontend_image" {
