@@ -14,7 +14,7 @@ Requisitos: Git y Docker Desktop con Docker Compose. Desde un clon limpio:
 docker compose up --build
 ```
 
-El comando construye Front y Back desde las ramas `develop`, inicia PostgreSQL y RabbitMQ y espera sus health checks. Si falta una variable obligatoria, Compose corta antes de crear recursos con un mensaje que identifica la variable. Las credenciales no se imprimen ni se almacenan en Git.
+El comando construye Front y Back desde los commits inmutables registrados en `compose.yaml`, inicia PostgreSQL y RabbitMQ y espera sus health checks. Si falta una variable obligatoria, Compose corta antes de crear recursos con un mensaje que identifica la variable. Las credenciales no se imprimen ni se almacenan en Git.
 
 Accesos de verificación:
 
