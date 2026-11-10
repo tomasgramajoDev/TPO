@@ -6,7 +6,7 @@ on:
     branches: [main]
   push:
     branches: [main]
-    tags: [v1.0-testing]
+    tags: [v1.0-testing, v2.0-entrega4]
 
 permissions:
   contents: read
@@ -104,7 +104,7 @@ jobs:
       - name: Run performance gate
         shell: bash
         run: |
-          if [[ "$GITHUB_REF" == "refs/tags/v1.0-testing" ]]; then
+          if [[ "$GITHUB_REF" == "refs/tags/v1.0-testing" || "$GITHUB_REF" == "refs/tags/v2.0-entrega4" ]]; then
             export K6_VUS=50 K6_DURATION=5m
           else
             export K6_VUS=5 K6_DURATION=15s

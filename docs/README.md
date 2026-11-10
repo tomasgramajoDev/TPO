@@ -26,6 +26,12 @@ Este repositorio conserva el alcance funcional, las reglas, los ciclos de vida, 
 - [Diagramas](diagramas/README.md): secuencia propuesta y casos de uso del módulo.
 - [Defensa, demo y arquitectura de órdenes](entrega/defensa-demo-arquitectura.md): estado real frente a los criterios de la entrega, guion por rol, demo ejecutable y trabajo pendiente de Front y Back.
 - [Plan de testing de la release v0.2.0](entrega/plan-testing-release-v0.2.0.md): casos por rol, resultados esperados, brechas conocidas y formato de evidencia para el equipo de Testing.
+- [BRD de Entrega 4](entrega/brd-entrega4.md): objetivo, actores, capacidades y aceptación del candidato.
+- [Historias de usuario en Gherkin](entrega/historias-usuario-gherkin-entrega4.md): escenarios funcionales, resiliencia, seguridad e IA.
+- [Manual de usuario](entrega/manual-usuario-entrega4.md): tareas por rol y recuperación básica.
+- [Matriz de trazabilidad](entrega/matriz-trazabilidad-entrega4.md): requisito, implementación, prueba y estado comprobado.
+- [Informe de ejecución](entrega/informe-ejecucion-entrega4.md): resultados reales, defectos corregidos y bloqueos pendientes.
+- [API, OpenAPI y SOAP](entrega/api-openapi-soap-entrega4.md): ubicación del contrato REST y justificación de WSDL no aplicable.
 - [Ejecución exploratoria de Test](entrega/ejecucion-testing-manual-2026-09-21.md): resultados reales desde el navegador, incidencias y cobertura pendiente.
 - [Guion de video de un minuto](entrega/guion-video-demo-1-minuto.md): recorrido cronometrado para mostrar el caso de uso a los profesores.
 - [Actividad integradora de IA — Clase 14](../output/pdf/Clase14_Grupo5_ObrasPublicas_IA.pdf): diseño del copiloto de clasificación de incidencias, arquitectura con gateway, contrato JSON, 20 casos de evaluación, gobernanza, riesgos y backlog con etiqueta `ia`.
