@@ -1,5 +1,13 @@
 # Historial de cambios
 
+## 2026-11-10 — Release, gates y despliegue de la Entrega 4
+
+- Front `#19`, Back `#21` e infraestructura `#58` quedaron integrados a sus ramas estables con CI verde.
+- Se publicó `v2.0-entrega4` y su pipeline aprobó arranque limpio en 138 segundos, Gitleaks, ZAP sin High/Critical y k6 con 50 usuarios durante 5 minutos; p95 6,35 ms y 0% de errores.
+- Terraform actualizó Azure Test sin destruir recursos. El pipeline verificó health de Front/Back/PostgreSQL y seis logins.
+- La imagen Back desplegada es `f45e6daf2893dbf98837eba56ac4730b275ef7cf`; la imagen Front es `7c57e3c57a8b48848eb944d8288dd6e61a627d06`.
+- La mensajería quedó habilitada con una réplica mínima, pero la salida efectiva de Azure cambió a `57.156.67.226`; Core solo había permitido `57.156.67.234/32`. Se registra el timeout AMQPS como bloqueo externo y no se declara E2E vigente hasta revalidarlo.
+
 ## 2026-11-10 — Preparación verificable de la Entrega 4
 
 - Se preparó el PR Back `#19` con patrón State, ADR de State/Strategy/Inbox-Outbox, ETag/If-Match, Idempotency-Key persistente, Problem Details, 429 y gateway de IA con timeout/fallback.

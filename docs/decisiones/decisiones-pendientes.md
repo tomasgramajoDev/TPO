@@ -2,6 +2,8 @@
 
 ## DevOps y cloud
 
+0. Resolver la salida AMQPS de Azure Test. Para la ventana inmediata, Core debe permitir `57.156.67.226/32`. Para evitar nuevas rotaciones, evaluar VNet y NAT Gateway con IP pública estática mediante Terraform, incluyendo costo y eventual recreación del Container Apps Environment.
+
 1. Definir la estrategia de migraciones, la red privada y el dimensionamiento de PostgreSQL para `test`/producción.
 2. Event Grid queda elegido para distribuir eventos discretos en `development`. Reevaluar Service Bus para `test`/producción si los contratos confirmados requieren orden estricto, transacciones o detección de duplicados.
 3. Definir IAM de usuarios de aplicación, certificados, copias de seguridad y recuperación. Los secretos técnicos de `development` ya se entregan mediante Container Apps y Terraform.
