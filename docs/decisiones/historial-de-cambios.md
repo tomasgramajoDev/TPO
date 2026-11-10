@@ -1,5 +1,13 @@
 # Historial de cambios
 
+## 2026-11-10 — Preparación verificable de la Entrega 4
+
+- Se preparó el PR Back `#19` con patrón State, ADR de State/Strategy/Inbox-Outbox, ETag/If-Match, Idempotency-Key persistente, Problem Details, 429 y gateway de IA con timeout/fallback.
+- La validación local del Back aprobó 117 pruebas, JaCoCo 90,43% de líneas y 71,10% de ramas, y PIT 60% con test strength 82%. El CI remoto todavía debe aprobar el commit corregido para PostgreSQL/Testcontainers.
+- Se habilitó el tag `v2.0-entrega4` en el workflow de gates mediante el PR de infraestructura `#58`; el tag todavía no fue creado.
+- Se agregó el paquete documental de Entrega 4: BRD, Gherkin, manual, matriz, informe y nota OpenAPI/SOAP.
+- Se mantienen explícitos como pendientes externos los E2E con M2/M7, la variante M1 `rejected`, el gateway real de IA, Jira, Teams, pruebas de seguridad/carga sobre el tag y la demo en vivo.
+
 ## 2026-11-08 — Frontend integrado y circuito aprobado con M1
 
 - El PR de Frontend `#17` incorporó el panel de eventos de integración respaldado por el backend, eliminando el contenido estático fuera de alcance y conservando las mejoras vigentes de autenticación, validación y testing.
