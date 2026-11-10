@@ -21,7 +21,7 @@
 | Carga 50 usuarios | k6 en tag `v2.0-entrega4` | 5 min; p95 6,35 ms; errores 0%; checks 100% | PASS |
 | ZAP/secretos | workflow release | 0 High/Critical + Gitleaks historial completo | PASS |
 | Azure Test | Terraform + imágenes por SHA | 2 cambios in-place; 0 destrucciones; 6 logins | PASS HTTP/DB |
-| RabbitMQ Core | listener AMQPS y `minReplicas=1` | salida Azure `57.156.67.226`; timeout TCP 5671 | BLOQUEADO por allowlist externa |
+| RabbitMQ Core | listener AMQPS y `minReplicas=1` | allowlist `57.156.67.226/32`; conexión `module_obras` creada | PASS conectividad |
 | Jira al día | tablero externo | revisión humana | NO VERIFICADO |
 | Teams | PDF y presentación | carga antes de clase | PENDIENTE humana |
 | Demo en vivo | ambiente accesible | recorrido docente | PENDIENTE de clase |
