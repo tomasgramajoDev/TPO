@@ -22,6 +22,8 @@
 | ZAP/secretos | workflow release | 0 High/Critical + Gitleaks historial completo | PASS |
 | Azure Test | Terraform + imágenes por SHA | 2 cambios in-place; 0 destrucciones; 6 logins | PASS HTTP/DB |
 | RabbitMQ Core | listener AMQPS y `minReplicas=1` | allowlist `57.156.67.226/32`; conexión `module_obras` creada | PASS conectividad |
+| OpenAPI y Swagger | contrato REST + `api-openapi-soap-entrega4.md` presentes en el tag | `/v3/api-docs` 200 y `/swagger-ui/index.html` 200 en Azure Test | PASS; WSDL no aplica porque M3 no usa SOAP |
+| Manual de usuario | `manual-usuario-entrega4.md` presente en el tag | tareas por rol y recuperación básica | DOCUMENTADO; recorrido al azar pendiente de clase |
 | Jira al día | tablero externo | revisión humana | NO VERIFICADO |
 | Teams | PDF y presentación | carga antes de clase | PENDIENTE humana |
 | Demo en vivo | ambiente accesible | recorrido docente | PENDIENTE de clase |

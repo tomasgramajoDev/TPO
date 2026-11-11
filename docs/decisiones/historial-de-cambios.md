@@ -1,5 +1,11 @@
 # Historial de cambios
 
+## 2026-11-10 — Preparación de pruebas externas pendientes
+
+- Se incorporó un runbook ejecutable para M1 `rejected`, M2 y M7, con precondiciones, secuencias, criterios, evidencia y mensajes listos para coordinar.
+- La inspección de Azure confirmó que `cae-obras-publicas-tst` no está integrado a una VNet. Una salida NAT estática se mantiene como decisión de arquitectura y costo, no como cambio inmediato.
+- Se comprobó que el tag contiene el manual y la justificación OpenAPI/SOAP; en Azure Test, `/v3/api-docs` y Swagger UI responden HTTP 200. WSDL no aplica porque M3 no usa SOAP.
+
 ## 2026-11-10 — Release, gates y despliegue de la Entrega 4
 
 - Front `#19`, Back `#21` e infraestructura `#58` quedaron integrados a sus ramas estables con CI verde.

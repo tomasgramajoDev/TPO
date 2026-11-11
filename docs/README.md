@@ -25,6 +25,8 @@ Este repositorio conserva el alcance funcional, las reglas, los ciclos de vida, 
 - [Backlog, ciclos y prototipos del 2026-08-25](fuentes/backlog-y-ciclos-2026-08-25.md): nueva evidencia recibida y diferencias contractuales detectadas.
 - [Diagramas](diagramas/README.md): secuencia propuesta y casos de uso del módulo.
 - [Defensa, demo y arquitectura de órdenes](entrega/defensa-demo-arquitectura.md): estado real frente a los criterios de la entrega, guion por rol, demo ejecutable y trabajo pendiente de Front y Back.
+- [Runbook de pruebas de integración pendientes](entrega/runbook-pruebas-integracion-pendientes.md): pasos simples, criterios y mensajes listos para ejecutar M1 `rejected`, M2 y M7 sin inventar contratos.
+- [`demo-security-live.ps1`](../scripts/demo-security-live.ps1): smoke seguro para health, OpenAPI, autenticación, BFLA, fuerza bruta e inyección sin guardar credenciales.
 - [Plan de testing de la release v0.2.0](entrega/plan-testing-release-v0.2.0.md): casos por rol, resultados esperados, brechas conocidas y formato de evidencia para el equipo de Testing.
 - [BRD de Entrega 4](entrega/brd-entrega4.md): objetivo, actores, capacidades y aceptación del candidato.
 - [Historias de usuario en Gherkin](entrega/historias-usuario-gherkin-entrega4.md): escenarios funcionales, resiliencia, seguridad e IA.
