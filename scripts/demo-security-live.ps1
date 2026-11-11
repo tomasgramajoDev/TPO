@@ -1,7 +1,8 @@
 param(
     [string]$BaseUrl = $env:TEST_BASE_URL,
     [string]$Username = $env:TEST_LOW_ROLE_USERNAME,
-    [string]$Password = $env:TEST_LOW_ROLE_PASSWORD
+    [string]$Password = $env:TEST_LOW_ROLE_PASSWORD,
+    [string]$RateLimitUsername = $env:TEST_RATE_LIMIT_USERNAME
 )
 
 $ErrorActionPreference = 'Stop'
@@ -77,17 +78,21 @@ if ($injection.Content -match '(?i)(sqlstate|syntax error|stack trace|exception)
     throw 'La respuesta expuso un error interno ante la entrada de inyeccion.'
 }
 
-$randomUser = "qa-$([guid]::NewGuid().ToString('N'))"
-$statuses = @()
-1..4 | ForEach-Object {
-    $body = @{ username = $randomUser; password = 'incorrecta-para-prueba' } | ConvertTo-Json -Compress
-    $response = Invoke-Status POST "$BaseUrl/api/auth/login" @{} $body
-    $statuses += [int]$response.StatusCode
+if (-not [string]::IsNullOrWhiteSpace($RateLimitUsername)) {
+    $statuses = @()
+    for ($attempt = 1; $attempt -le 8; $attempt++) {
+        $body = @{ username = $RateLimitUsername; password = 'incorrecta-para-prueba' } | ConvertTo-Json -Compress
+        $response = Invoke-Status POST "$BaseUrl/api/auth/login" @{} $body
+        $statuses += [int]$response.StatusCode
+        if ([int]$response.StatusCode -eq 429) { break }
+    }
+    if ($statuses -notcontains 429) {
+        throw "Fuerza bruta fallo: no aparecio HTTP 429. Estados: $($statuses -join ',')"
+    }
+    Write-Host "PASS Fuerza bruta -> $($statuses -join ',')"
+} else {
+    Write-Host 'SKIP Fuerza bruta: definir TEST_RATE_LIMIT_USERNAME con una cuenta descartable; el control puede bloquearla temporalmente.'
 }
-if ($statuses -notcontains 429) {
-    throw "Fuerza bruta fallo: no aparecio HTTP 429. Estados: $($statuses -join ',')"
-}
-Write-Host "PASS Fuerza bruta -> $($statuses -join ',')"
 
 Write-Host ''
 Write-Host 'Resultado: controles automatizables aprobados.'

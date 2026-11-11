@@ -15,7 +15,7 @@ Este documento no agrega endpoints ni contratos. Usa únicamente los eventos aco
 5. Usar datos ficticios. No publicar contraseñas, tokens, DNI ni secretos.
 6. Para cada evento guardar `eventId`, `correlationId`, identificador de negocio, hora y resultado del consumidor.
 
-Para los controles HTTP no destructivos se puede ejecutar `scripts/demo-security-live.ps1`. El script exige `TEST_BASE_URL`, `TEST_LOW_ROLE_USERNAME` y `TEST_LOW_ROLE_PASSWORD` como variables de entorno; nunca contiene ni imprime las credenciales.
+Para los controles HTTP no destructivos se puede ejecutar `scripts/demo-security-live.ps1`. El script exige `TEST_BASE_URL`, `TEST_LOW_ROLE_USERNAME` y `TEST_LOW_ROLE_PASSWORD` como variables de entorno; nunca contiene ni imprime las credenciales. La fuerza bruta solo se activa si se define `TEST_RATE_LIMIT_USERNAME` con una cuenta descartable, porque puede bloquearla temporalmente.
 
 ## Prueba 1 — M1 `rejected`
 
