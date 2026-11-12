@@ -73,13 +73,13 @@ variable "container_registry_identity_id" {
 variable "backend_image" {
   description = "Imagen inmutable del backend promovida a test."
   type        = string
-  default     = "acrobraspublica302ceba6.azurecr.io/obras-publicas-backend:f45e6daf2893dbf98837eba56ac4730b275ef7cf"
+  default     = "acrobraspublica302ceba6.azurecr.io/obras-publicas-backend:44e1f00ecb4de6f697dae460da91b1b58592faf1"
 }
 
 variable "frontend_image" {
   description = "Imagen inmutable del frontend promovida a test."
   type        = string
-  default     = "acrobraspublica302ceba6.azurecr.io/obras-publicas-frontend:307f3eec55358be7b10f57878304c4996312fdf2"
+  default     = "acrobraspublica302ceba6.azurecr.io/obras-publicas-frontend:d472da55fa5dca8f6c351a01805d35495f611486"
 }
 
 variable "application_auth_username" {
@@ -114,6 +114,12 @@ variable "application_messaging_enabled" {
   description = "Habilita la conexion AMQPS del backend Test con Core."
   type        = bool
   default     = false
+}
+
+variable "application_ai_triage_enabled" {
+  description = "Habilita el asistente de triaje de incidentes en Test."
+  type        = bool
+  default     = true
 }
 
 variable "application_rabbitmq_password" {

@@ -279,6 +279,11 @@ resource "azurerm_container_app" "backend" {
         value = tostring(var.application_messaging_enabled)
       }
 
+      env {
+        name  = "AI_TRIAGE_ENABLED"
+        value = tostring(var.application_ai_triage_enabled)
+      }
+
       dynamic "env" {
         for_each = var.application_messaging_enabled ? [1] : []
 

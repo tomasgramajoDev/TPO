@@ -28,6 +28,7 @@ module "platform" {
   application_demo_password        = var.application_demo_password
   application_bootstrap_users_json = var.application_bootstrap_users_json
   application_messaging_enabled    = var.application_messaging_enabled
+  application_ai_triage_enabled    = var.application_ai_triage_enabled
   application_rabbitmq_password    = var.application_rabbitmq_password
   # El backend no puede depender del FQDN del frontend: este ya depende del backend.
   # Mantener este origen exacto sincronizado con la URL publica de Test.
