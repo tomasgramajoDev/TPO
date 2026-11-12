@@ -31,6 +31,8 @@ La mensajería de `development` utiliza un tópico personalizado de Azure Event 
 
 El adaptador RabbitMQ/Core se configura por Terraform y permanece deshabilitado por defecto. Para habilitarlo, DevOps debe cargar `RABBITMQ_PASSWORD` como secreto del environment `development` y ejecutar `deploy-development.yml` con `enable_core_messaging=true`. Terraform entrega `MESSAGING_ENABLED`, host, puerto 5671, usuario `module_obras`, vhost `core`, exchange `muni.inbox` y cola `q.obras`; la contraseña nunca se guarda en Git.
 
+El asistente de clasificación usa `mock` por defecto. Test puede activar Gemini con `AI_PROVIDER=gemini`; Terraform exige `GEMINI_API_KEY`, la almacena como secreto de Container Apps y configura `GEMINI_MODEL`. La clave debe cargarse como secreto protegido del environment GitHub `test` y nunca se escribe en Git, planes publicados ni documentación.
+
 El mismo adaptador puede habilitarse temporalmente en `test` para las pruebas bilaterales. DevOps debe cargar `RABBITMQ_PASSWORD` en el environment `test` y ejecutar `deploy-test.yml` con una referencia de release y `enable_core_messaging=true`. Finalizada la ventana, se vuelve a ejecutar con `false` para desconectar el consumidor y limitar la exposicion operativa.
 
 URLs vigentes de desarrollo:

@@ -122,6 +122,25 @@ variable "application_ai_triage_enabled" {
   default     = true
 }
 
+variable "application_ai_provider" {
+  description = "Proveedor de IA activo en Test."
+  type        = string
+  default     = "gemini"
+}
+
+variable "application_gemini_model" {
+  description = "Alias de Gemini verificado para la clasificacion asistida."
+  type        = string
+  default     = "gemini-3.5-flash"
+}
+
+variable "application_gemini_api_key" {
+  description = "API key de Gemini recibida mediante GitHub Environment secret."
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
 variable "application_rabbitmq_password" {
   description = "Contrasena AMQPS de module_obras recibida mediante GitHub Environment secret."
   type        = string
