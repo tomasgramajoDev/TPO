@@ -7,7 +7,7 @@
 
 El tag académico histórico `v1.0-testing` se conserva sin reescribir. Como la aplicación evolucionó después de su creación, se agregó `v1.0-testing-final` en cada repositorio para identificar los commits finales efectivamente usados por la entrega.
 
-La cátedra exige además `v2.0-entrega4` en `main` y no considera commits posteriores. Ese tag existe desde el 10/11, pero quedó anterior a Gemini y a correcciones posteriores. Por lo tanto, la referencia académica todavía debe reconciliarse antes de declarar cerrada la entrega.
+La cátedra exige además `v2.0-entrega4` en `main` y no considera commits posteriores. El 12/11 se actualizó esa referencia al cierre vigente, antes de la clase. El destino anterior no se perdió: quedó preservado como `v2.0-entrega4-original-2026-11-10`.
 
 | Repositorio | Rama estable | Tag final | Commit |
 | --- | --- | --- | --- |
@@ -45,7 +45,6 @@ No se movió ni eliminó ningún tag anterior. Esto conserva la auditoría y evi
 - TC-022 y TC-024 coordinados con Core.
 - BOLA/IDOR en vivo o aclaración pública de la cátedra.
 - JWT firmado/validado con M1 y catálogo final de eventos de Core.
-- Reconciliación del tag obligatorio `v2.0-entrega4`.
 - Carga en Teams y demo/defensa en vivo.
 
 El detalle vigente está en `docs/decisiones/decisiones-pendientes.md`.

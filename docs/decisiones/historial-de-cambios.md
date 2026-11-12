@@ -1,5 +1,11 @@
 # Historial de cambios
 
+## 2026-11-12 — Reconciliación del tag obligatorio de Entrega 4
+
+- El tag `v2.0-entrega4` se actualizó al cierre vigente de `main` antes de la clase del 17/11, de modo que Gemini, las imágenes inmutables y la auditoría queden dentro de la referencia evaluable.
+- El destino anterior no se eliminó: se preservó como `v2.0-entrega4-original-2026-11-10` para mantener trazabilidad.
+- La actualización del tag disparó automáticamente el gate completo de arranque limpio, Gitleaks, ZAP y k6 con 50 usuarios durante 5 minutos.
+
 ## 2026-11-12 — Cierre Git y depuración de pendientes
 
 - Se conservaron los tags históricos `v1.0-testing` y se publicaron tags adicionales `v1.0-testing-final` sobre los commits finales de Backend, Frontend e Infraestructura; ningún tag anterior fue reescrito.
