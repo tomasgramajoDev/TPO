@@ -14,6 +14,8 @@ Este repositorio conserva el alcance funcional, las reglas, los ciclos de vida, 
 - [Decisiones confirmadas](decisiones/decisiones-confirmadas.md): acuerdos e instrucciones con evidencia suficiente.
 - [Decisiones pendientes](decisiones/decisiones-pendientes.md): contradicciones y definiciones aún abiertas.
 - [Historial de cambios](decisiones/historial-de-cambios.md): evolución sin pérdida de contexto.
+- [Cierre Git de la Entrega 4](entrega/cierre-git-entrega4-2026-11-12.md): tags finales inmutables de Front, Back e infraestructura, release desplegada, controles aprobados y pendientes externos/manuales.
+- [Auditoría contra la consigna del profesor](entrega/auditoria-entrega4-profesor-2026-11-12.md): control requisito por requisito de admisión y ejes A-E, incluyendo brechas de integración, seguridad, JWT M1, tag obligatorio y Teams.
 - [Decisión de cloud y CI/CD](arquitectura/adr-001-cloud-y-cicd.md): elección de Azure, Terraform y GitHub Actions.
 - [Operación DevOps](arquitectura/operacion-devops.md): ambientes, despliegues y configuración requerida.
 - [Pipeline de aplicaciones](arquitectura/pipeline-aplicaciones.md): contrato que deberán cumplir frontend y backend para construir, promover y desplegar imágenes.
