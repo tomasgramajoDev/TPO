@@ -6,15 +6,15 @@
 
 ## Resumen honesto
 
-La aplicación, infraestructura, base de datos, CI, patrones, controles REST, cobertura, seguridad automatizada e IA están implementados. La entrega completa todavía no está cerrada: faltan integración bilateral con M2 y M7, variante M1 `rejected`, pruebas de resiliencia coordinadas con Core, JWT central de M1, pruebas de seguridad manuales y el cierre formal de QA/Teams. El tag obligatorio `v2.0-entrega4` quedó anterior a cambios que se pretenden presentar.
+La aplicación, infraestructura, base de datos, CI, patrones, controles REST, cobertura, seguridad automatizada e IA están implementados. La entrega completa todavía no está cerrada: faltan integración bilateral con M2 y M7, variante M1 `rejected`, pruebas de resiliencia coordinadas con Core, JWT central de M1, pruebas de seguridad manuales y el cierre formal de QA/Teams. El tag obligatorio `v2.0-entrega4` ya fue actualizado al cierre vigente y conserva su destino anterior en un tag histórico separado.
 
 ## Condiciones de admisión
 
 | Condición | Estado | Evidencia o acción faltante |
 | --- | --- | --- |
 | Arranque con un comando y README, menos de 15 minutos | CUMPLE | Gate de clean start aprobado; tiempo registrado muy por debajo de 15 minutos. |
-| Tag `v2.0-entrega4` en `main` | BLOQUEANTE | Existe desde el 10/11, pero no contiene Gemini ni cambios posteriores. Los commits posteriores no cuentan según la cátedra. |
-| CI verde sobre la versión evaluada | PARCIAL | Los CI actuales están verdes; debe reconciliarse la referencia final con el tag obligatorio. |
+| Tag `v2.0-entrega4` en `main` | CUMPLE | Actualizado el 12/11 al cierre vigente. El destino anterior se preservó como `v2.0-entrega4-original-2026-11-10`. |
+| CI verde sobre la versión evaluada | EN EJECUCIÓN | El movimiento del tag disparó el gate específico con 50 usuarios durante 5 minutos; conservar su resultado final. |
 | Jira al día | PARCIAL | Actualizado al 11/11; falta incorporar Gemini, auditoría final e integraciones pendientes. |
 | Sin secretos en el historial | CUMPLE | Gitleaks y scans aprobados; claves entregadas como secretos de GitHub/Azure. |
 | Demo en vivo E2E | PENDIENTE | Aplicación accesible; falta ensayo y seleccionar el circuito definitivo. |
@@ -89,7 +89,7 @@ La aplicación, infraestructura, base de datos, CI, patrones, controles REST, co
 | Fuga de datos | CUMPLE | Entrada con PII no la devolvió en la salida. |
 | Caída del proveedor | CUMPLE EN TEST | Timeout, circuit breaker y fallback; preparar evidencia/demo. |
 | Declaración de herramientas | PARCIAL | Codex, Claude y Gemini documentados; faltan autores y firma/revisión del equipo. |
-| Incluida en `v2.0-entrega4` | NO | Fue incorporada después del tag obligatorio actual. |
+| Incluida en `v2.0-entrega4` | CUMPLE | El tag vigente contiene la infraestructura y la imagen inmutable del backend con Gemini. |
 
 ## Requisitos propios de la comisión
 
@@ -104,9 +104,8 @@ La aplicación, infraestructura, base de datos, CI, patrones, controles REST, co
 
 ## Orden de cierre recomendado
 
-1. Resolver la referencia `v2.0-entrega4` antes de seguir agregando commits.
-2. Cerrar matriz de historias y defectos con Testing.
-3. Coordinar M2, M7, M1 `rejected`, TC-022 y TC-024.
-4. Resolver BOLA/IDOR y JWT M1.
-5. Regenerar paquete final, actualizar Jira y subir PDF/presentación/documentos a Teams.
-6. Ensayar demo y defensa individual.
+1. Cerrar matriz de historias y defectos con Testing.
+2. Coordinar M2, M7, M1 `rejected`, TC-022 y TC-024.
+3. Resolver BOLA/IDOR y JWT M1.
+4. Regenerar paquete final, actualizar Jira y subir PDF/presentación/documentos a Teams.
+5. Ensayar demo y defensa individual.

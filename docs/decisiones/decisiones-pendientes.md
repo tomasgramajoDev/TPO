@@ -4,14 +4,14 @@
 
 ## Entrega académica y QA
 
-1. El tag exigido por la cátedra es `v2.0-entrega4` en `main`. Actualmente existe, pero antecede a Gemini y a correcciones posteriores. Como los commits posteriores no serán considerados, se debe publicar una referencia final antes de la clase sin perder el commit histórico original.
-2. Testing debe cerrar las evidencias manuales y los entregables requeridos: plan, matriz de trazabilidad, informe de ejecución, registro de defectos, informe de seguridad y declaración nominal de uso de IA.
-3. Ejecutar la prueba guiada por el manual, la exploratoria y las comprobaciones pendientes de API, JWT, responsive y Lighthouse.
-4. Reconciliar todos los defectos: cero Bloqueantes/Críticos abiertos y, como máximo, tres Mayores con workaround documentado.
-5. Confirmar con la matriz de trazabilidad que todas las historias comprometidas el 03/11 están implementadas o registrar explícitamente la brecha y el plan de corrección.
-6. Actualizar Jira con el cierre real de Gemini, las integraciones confirmadas y los bloqueos externos restantes.
-7. Subir PDF, presentación y documentos QA a Teams antes del inicio de la clase; luego ensayar la demo y defensa individual.
-8. Mantener los tags históricos `v1.0-testing` sin reescribirlos. Los commits finales están identificados adicionalmente con `v1.0-testing-final` en Frontend, Backend e Infraestructura.
+1. Testing debe cerrar las evidencias manuales y los entregables requeridos: plan, matriz de trazabilidad, informe de ejecución, registro de defectos, informe de seguridad y declaración nominal de uso de IA.
+2. Ejecutar la prueba guiada por el manual, la exploratoria y las comprobaciones pendientes de API, JWT, responsive y Lighthouse.
+3. Reconciliar todos los defectos: cero Bloqueantes/Críticos abiertos y, como máximo, tres Mayores con workaround documentado.
+4. Confirmar con la matriz de trazabilidad que todas las historias comprometidas el 03/11 están implementadas o registrar explícitamente la brecha y el plan de corrección.
+5. Actualizar Jira con el cierre real de Gemini, las integraciones confirmadas y los bloqueos externos restantes.
+6. Subir PDF, presentación y documentos QA a Teams antes del inicio de la clase; luego ensayar la demo y defensa individual.
+7. El tag exigido `v2.0-entrega4` fue actualizado el 12/11/2026 al cierre vigente de `main`. El destino anterior quedó preservado como `v2.0-entrega4-original-2026-11-10`. Falta conservar el resultado verde del gate disparado por el tag dentro del paquete final.
+8. Los tags históricos `v1.0-testing` no se reescribieron. Los commits finales están identificados adicionalmente con `v1.0-testing-final` en Frontend, Backend e Infraestructura.
 
 ## DevOps y cloud
 
