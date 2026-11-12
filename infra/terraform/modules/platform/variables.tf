@@ -189,6 +189,12 @@ variable "application_messaging_enabled" {
   default     = false
 }
 
+variable "application_ai_triage_enabled" {
+  description = "Habilita el asistente de triaje de incidentes del modulo de Obras Publicas."
+  type        = bool
+  default     = false
+}
+
 variable "application_rabbitmq_password" {
   description = "Contraseña privada del usuario AMQPS module_obras."
   type        = string
