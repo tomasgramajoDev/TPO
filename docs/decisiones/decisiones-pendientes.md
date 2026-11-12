@@ -1,94 +1,98 @@
 # Decisiones pendientes
 
+**Corte de estado:** 12/11/2026. Este archivo enumera solo decisiones o pruebas realmente abiertas. Los acuerdos y pruebas cerrados se conservan en `decisiones-confirmadas.md` y en el historial de Git.
+
+## Entrega académica y QA
+
+1. El tag exigido por la cátedra es `v2.0-entrega4` en `main`. Actualmente existe, pero antecede a Gemini y a correcciones posteriores. Como los commits posteriores no serán considerados, se debe publicar una referencia final antes de la clase sin perder el commit histórico original.
+2. Testing debe cerrar las evidencias manuales y los entregables requeridos: plan, matriz de trazabilidad, informe de ejecución, registro de defectos, informe de seguridad y declaración nominal de uso de IA.
+3. Ejecutar la prueba guiada por el manual, la exploratoria y las comprobaciones pendientes de API, JWT, responsive y Lighthouse.
+4. Reconciliar todos los defectos: cero Bloqueantes/Críticos abiertos y, como máximo, tres Mayores con workaround documentado.
+5. Confirmar con la matriz de trazabilidad que todas las historias comprometidas el 03/11 están implementadas o registrar explícitamente la brecha y el plan de corrección.
+6. Actualizar Jira con el cierre real de Gemini, las integraciones confirmadas y los bloqueos externos restantes.
+7. Subir PDF, presentación y documentos QA a Teams antes del inicio de la clase; luego ensayar la demo y defensa individual.
+8. Mantener los tags históricos `v1.0-testing` sin reescribirlos. Los commits finales están identificados adicionalmente con `v1.0-testing-final` en Frontend, Backend e Infraestructura.
+
 ## DevOps y cloud
 
-0. Evaluar una salida estática para Azure Test. La allowlist inmediata quedó corregida con `57.156.67.226/32`. La revisión de solo lectura del 2026-11-10 confirmó que `cae-obras-publicas-tst` no tiene VNet ni subnet de infraestructura; incorporar NAT Gateway exige diseñar una nueva topología y puede requerir recrear el Container Apps Environment. Se debe aprobar costo y ventana antes de modificar Terraform.
-
-1. Definir la estrategia de migraciones, la red privada y el dimensionamiento de PostgreSQL para `test`/producción.
-2. Event Grid queda elegido para distribuir eventos discretos en `development`. Reevaluar Service Bus para `test`/producción si los contratos confirmados requieren orden estricto, transacciones o detección de duplicados.
-3. Definir IAM de usuarios de aplicación, certificados, copias de seguridad y recuperación. Los secretos técnicos de `development` ya se entregan mediante Container Apps y Terraform.
-4. Confirmar si existirá ambiente de producción y, en ese caso, su flujo de promoción y aprobación.
-5. Definir estrategia de rollback funcional y tratamiento de migraciones. El versionado actual de imágenes por SHA ya es inmutable.
-6. Establecer el presupuesto mensual y los umbrales de alertas.
-7. Adoptar formalmente una Definition of Done del equipo y decidir qué controles serán bloqueantes en CI/CD.
-8. Decidir si el futuro ambiente de producción utilizará feature flags y si una historia puede considerarse terminada estando desplegada pero desactivada.
-9. Definir cómo se generan, revisan y publican las release notes.
-10. Confirmar la herramienta y dinámica de coordinación entre equipos; Nexus, SAFe y el modelo Spotify aparecen como material docente, no como elección del proyecto.
-11. Mantener sincronizados Front, Back e infraestructura después de la incorporación de los PR de la primera release; ya no se depende del fork para publicar Front.
-12. Completar los casos funcionales aún ausentes del backend: vínculo proyecto–orden, creación por eventos externos confirmados y cobertura integral de reglas del backlog.
+1. Aprobar costo y ventana antes de diseñar una salida IP estática con VNet/NAT Gateway. Azure Test funciona con allowlist de la salida observada, pero el Container Apps Environment actual no está integrado a una VNet.
+2. Definir si existirá Producción y, en ese caso, su promoción, dimensionamiento, red privada, backups, recuperación, presupuesto y alertas.
+3. Definir rollback de migraciones. Las imágenes ya son inmutables y la función de IA puede apagarse con feature flag o volver al proveedor `mock`.
+4. Definir una política permanente de rotación de secretos técnicos y credenciales de módulos.
 
 ## Core Municipal
 
-1. Confirmar nombres, tipos y obligatoriedad del envelope común.
-2. Definir zona horaria, formato de fechas, versiones, correlación y causalidad.
-3. Precisar el rol de Core como hub técnico sin convertirlo en consumidor funcional de todos los eventos.
-4. Acordar idempotencia, reintentos, auditoría y DLQ.
-5. Confirmar casing de entidades, endpoints y errores técnicos.
-6. Confirmar con M9 las referencias a UUID, ISO 8601, versión y JSON Schema incluidas en la matriz del PO.
+1. Ejecutar TC-022: publicar por HTTP un envelope sin `data`; el resultado esperado es HTTP 422 sin ingreso al hub ni a la DLQ.
+2. Ejecutar TC-024: coordinar una caída real de RabbitMQ y verificar persistencia en Outbox, recuperación sin pérdida y deduplicación por `eventId`.
+3. Mantener `maxAttempts=4` mientras no exista un acuerdo global diferente. La topología efectiva consultable en Core prevalece sobre documentos históricos.
+4. Completar la migración del nombre histórico `streetClousureEnded` al nombre acordado `streetClosureEnded` sin cortar consumidores existentes.
+5. Confirmar el catálogo final de publicaciones/suscripciones de M3 contra el mapa de Miro y adjuntar evidencia del ambiente compartido.
 
-## Atención Ciudadana
+## Atención Ciudadana - M2
 
-1. Confirmar `complaintRouted` y `complaintEscalated` o sus nombres definitivos.
-2. Acordar payloads y campos obligatorios/opcionales.
-3. Definir si la correlación usa `ticketId` u otro identificador.
-4. Elegir qué estados de `WorkOrder` consume M2.
-5. Definir si el reclamo se cierra con `workOrderCompleted` o `workOrderValidated` y cómo se trata una reapertura.
-6. Confirmar si M2 consume `workOrderPaused`, agregado por la matriz del PO.
+1. Ejecutar TC-019: `ticketUpdated` provoca `updateTicketStatus/STARTED` y luego `PROGRESS`; M2 debe confirmar ambas transiciones.
+2. Ejecutar TC-020: enviar `PROGRESS` mientras el ticket continúa `ROUTED`; M2/Core deben confirmar rechazo, reintentos y resultado final.
+3. Conservar la autoridad de M2 sobre estado, prioridad y categoría. M3 solo informa hechos mediante `updateTicketStatus`.
 
-## Ambiente, Higiene y Servicios Urbanos
+## Ambiente - M6
 
-1. Confirmar nombres definitivos y casing de `infrastructureRepairRequested`, `containerDamaged` y `treeRiskDetected`.
-2. Confirmar payloads tentativos, tipos, enums y estructura de `location`.
-3. Definir correlación de órdenes originadas por `containerDamaged`.
-4. Definir correlación de órdenes originadas por `treeRiskDetected` (`treeId`, `surveyCode` u otro ID).
-5. Aclarar si `treeRiskDetected` solo se emite para `HIGH`/`CRITICAL` o si esos niveles son únicamente prioridad de consumo.
-6. Confirmar si M6 cierra con `workOrderCompleted` o espera `workOrderValidated`.
-7. Resolver `outcome` vs `result` y `attachments[]` vs `evidence` en el payload de respuesta.
-8. Confirmar respuesta esperada para `containerDamaged` y `treeRiskDetected`.
-9. Resolver con el PO y M6 la reaparición de `urbanRiskDetected` y `urbanServiceRepairRequested` frente a los eventos específicos comunicados directamente por M6.
+No quedan pendientes contractuales para el circuito probado. La integración `infrastructureRepairRequested` -> `workOrderScheduled` -> `workOrderCompleted` está `CONFIRMED` por M3, M6 y Core, con correlación preservada, colas vacías y DLQ vacía.
 
-## Tránsito
+## Tránsito - M7
 
-1. Confirmar nombres y payloads de `trafficIncidentRegistered`, `streetClosureRequested`, `streetClosureAuthorized` y `streetClosureRejected`.
-2. Acordar modelo de calles, tramos y ubicación.
-3. Definir identificadores, períodos, condiciones, desvíos, extensiones y vencimientos.
-4. Precisar qué ocurre con una orden ante rechazo, vencimiento o cambio de autorización.
-5. Definir cómo se representan los desvíos mencionados en la descripción de `streetClosureRequested` pero ausentes de su payload explícito.
-6. Confirmar si `workOrderCreated.publicWorksProjectId` es obligatorio para órdenes originadas por incidentes viales.
+1. Ejecutar la prueba bilateral del circuito `streetClosureRequested` -> `streetClosureApproved`/`streetClosureRejected` -> `streetClosureEnded`.
+2. Ejecutar TC-017: un corte `ACTIVE` debe finalizar al vencer y emitir `streetClosureEnded`; uno `APPROVED` que nunca se activó debe pasar a `EXPIRED`.
+3. Registrar evidencia de `eventId`, `correlationId`, estados, entrega y DLQ. El contrato v1.0 y el nombre correcto `streetClosureEnded` ya están acordados.
 
-## Ciudadanos y Expedientes Digitales
+## Ciudadanos y Expedientes - M1
 
-1. Ejecutar y documentar la variante `rejected` del circuito `publicWorksProjectApproved` → `caseFileResolved`; la variante `approved` quedó confirmada E2E el 2026-11-08.
-2. Confirmar si M1 consume `publicWorksExtensionRequested`, `publicWorksExtensionApproved` y `publicWorksExtensionRejected`, agregados por la matriz del PO.
-3. Definir si `publicWorksProgressRegistered` usa `stageId`, `milestoneId` o ambos.
+1. Ejecutar la variante `rejected` del circuito `publicWorksProjectApproved` -> `caseFileResolved`.
+2. La variante `approved` está `CONFIRMED`: Core verificó `ROUTED`/`DELIVERED`, M1 creó y resolvió el expediente, y M3 registró su asociación con el proyecto.
+3. La migración futura al login central de M1, el mapeo de roles y la estrategia de firma/verificación de tokens quedan fuera del cierre funcional actual y requieren un acuerdo de arquitectura posterior.
 
-## Dominio interno aún no cerrado
+## IA aplicada
 
-1. Completar la matriz exhaustiva de transiciones de `WorkOrder`, especialmente `PAUSED`, `DELAYED`, `REOPENED` y reprogramaciones.
-2. Definir si `sourceRequestId` es un campo universal o si se requieren identificadores de origen tipados por integración.
-3. Confirmar consumidores de `publicWorksExtensionRequested`, `publicWorksExtensionApproved` y `publicWorksExtensionRejected`.
-4. Aclarar con la cátedra si “no aplicación monolítica” exige microservicios desplegables de manera independiente o si se acepta un monolito modular con separación MVC. El backend actual cumple separación por capas, pero se despliega como un único servicio Spring Boot.
-5. Definir y acordar el vínculo entre `WorkOrder` y `PublicWorksProject`: cardinalidad, obligatoriedad de `projectId`, comportamiento de órdenes independientes y migración de datos.
+1. La implementación ya no está pendiente: Gemini está activo en Azure Test detrás de `IncidentTriageGateway`, con salida estructurada, sanitización, revisión humana, timeout, circuit breaker, rate limit, feature flag y fallback manual.
+2. Falta únicamente incorporar al paquete final y a los entregables de QA la evidencia del despliegue `v2.0-entrega4.3-gemini` y la declaración nominal de uso de Codex, Claude y Gemini.
+3. Antes de promover la función a Producción se debe aprobar presupuesto, privacidad, límites de cuota y repetir el eval set contra la versión efectiva del modelo.
 
-## Contradicciones y diferencias detectadas
+## Seguridad requerida en vivo
 
-| Tema | Versiones en tensión | Tratamiento actual |
-| --- | --- | --- |
-| Eventos de M6 | El alcance anterior usa `urbanRiskDetected` y `urbanServiceRepairRequested`; M6 comunica `treeRiskDetected`, `infrastructureRepairRequested` y además `containerDamaged`. | Se actualiza el catálogo activo con lo recibido y se conserva el reemplazo en el historial. |
-| Matriz del PO vs comunicación de M6 | La nueva matriz del PO vuelve a listar `urbanRiskDetected` y `urbanServiceRepairRequested`, y omite los tres eventos específicos de la comunicación directa de M6. | Conservar ambas fuentes como `RECEIVED`; la línea interna sigue usando los eventos específicos, pero la definición externa queda pendiente. |
-| Naming de M6 | El PDF de M6 muestra nombres en PascalCase; el acuerdo general exige eventos en `camelCase`. | Se documentan en `camelCase` como convención vigente, pero el contrato sigue `RECEIVED`. |
-| Cierre para M6 | El alcance asigna cierre definitivo a `workOrderValidated`; M6 pide `workOrderCompleted` para cerrar automáticamente. | No se elige; decisión externa pendiente. |
-| Payload de finalización | Alcance: `result`/`evidence`; M6: `outcome`/`attachments[]`. | Mantener ambas propuestas hasta acordar el contrato. |
-| Rol de Core | El TPO lo llama hub que recibe eventos; el acuerdo vigente dice que no es consumidor funcional por defecto. | Distinguir enrutamiento técnico de consumo funcional y confirmar con M9. |
-| Riesgo de arbolado | M6 indica disparo `HIGH`/`CRITICAL`; la instrucción vigente agrega procesamiento solo si `requiresPublicWorks = true`. | Documentar ambas condiciones y pedir precisión sobre emisión vs consumo. |
-| Eventos originales | El TPO usa nombres funcionales en español y PascalCase; el catálogo actual usa inglés y `camelCase`. | Tratar los nombres originales como antecedente, no como contrato técnico vigente. |
-| Cierre de reclamo M2 | La matriz del PO afirma que `workOrderValidated` concluye definitivamente el reclamo; antes se mantenía abierto entre `workOrderCompleted` y `workOrderValidated`. | Registrar la definición como `RECEIVED` y pedir confirmación a M2. |
-| Eventos de ampliación hacia M1 | La matriz del PO incluye los tres `publicWorksExtension*`; la lista anterior para Expedientes no los incluía. | Mantenerlos `RECEIVED` para esa ruta y confirmar con M1. |
-| Payload de progreso | La documentación anterior expresaba `stageId` o `milestoneId`; la matriz del PO lista ambos. | Confirmar cardinalidad y obligatoriedad con M1/Core. |
-| Convenciones Core | La matriz del PO menciona UUID, ISO 8601, versión y JSON Schema; las convenciones exactas seguían pendientes de Core. | Registrar como `RECEIVED`, sin fijarlas como definitivas hasta confirmación de M9. |
-| Evento al crear borrador | El backlog recibido indica que no se publica un evento al crear el borrador; la matriz del PO y el catálogo `RECEIVED` incluyen `publicWorksProjectCreated`. | No publicar ni retirar el evento por inferencia; confirmar con PO, M1 y Core. |
-| Ingreso desde M2 | Un ciclo usa `ticketCreated`; el catálogo vigente usa `complaintRouted`. | Mantener `complaintRouted` como nombre documentado y pedir a M2 el contrato definitivo. |
-| Respuesta de corte de calle | Un ciclo usa `streetClosureApproved`; el catálogo vigente usa `streetClosureAuthorized`. | Mantener ambas variantes registradas y confirmar con M7/Core. |
-| Actualización de reclamo | El ciclo de órdenes invoca `updateTicketStatus`, pero ese identificador no figura en el catálogo vigente. | Tratarlo como operación ilustrativa, no como contrato implementable, hasta definir API o evento con M2. |
-| Finalización e inspección de orden | El backlog ubica el `workOrderCompleted` definitivo después de la inspección; el ciclo y catálogo separan finalización operativa, `workOrderValidated` y `workOrderReopened`. | No unificar los hechos. Confirmar quién emite cada evento y cuál cierra el proceso externo. |
-| Aplicación móvil | El backlog menciona “App Móvil”; el alcance confirmado excluye una aplicación móvil independiente y define portal web responsive. | Mantener portal responsive como alcance vigente; pedir autorización explícita si se requiere una app independiente. |
+1. Ejecutar BOLA/IDOR sobre un recurso asociado a identidades diferentes o conseguir confirmación explícita de la cátedra de que no aplica al dominio. La justificación interna de “sin ownership” no reemplaza la prueba exigida por el profesor.
+2. Ejecutar BFLA con un rol sin permiso y conservar el HTTP 403 y la ausencia de cambio de estado.
+3. Ejecutar los cuatro JWT inválidos: vencido, firma alterada, `alg=none` y emisor incorrecto; todos deben devolver 401.
+4. Preparar evidencia en vivo de mass assignment, inyección/XSS y rate limiting 429 sin bloquear las cuentas de demo.
+5. Adjuntar el ZAP sin alertas High y el análisis de dependencias sin CVE críticas sin mitigar a la versión evaluada.
+
+## Integración completa de la comisión
+
+La entrega exige integración con Core y con los demás módulos del mapa de Miro, no solo que existan handlers locales.
+
+1. M6: el flujo principal está confirmado, pero deben quedar trazados también los eventos secundarios comprometidos (`containerDamaged` y `treeRiskDetected`) mediante contrato y pruebas de consumidor.
+2. M1: `approved` está confirmado; faltan `rejected` y la evidencia de los demás eventos comprometidos, incluido `publicWorksProjectCompleted` si figura en la matriz del 03/11.
+3. M2: faltan pruebas bilaterales de `ticketUpdated` y `updateTicketStatus`, incluida transición válida y rechazo fuera de orden.
+4. M7: falta el circuito bilateral completo de cortes, rechazo, vencimiento y `streetClosureEnded`; también debe quedar verificado `roadAccidentRegistered` si continúa en el mapa.
+5. Core: faltan las pruebas de envelope inválido y caída/recuperación del broker, además de reconciliar catálogo y nombre histórico del evento de cierre.
+6. Dependencias del tercer checkpoint: confirmar JWT firmado/validado con M1. El login propio de M3 no demuestra esta dependencia; ambiente de Test y catálogo de Core deben quedar evidenciados.
+
+## Testing y documentación exigidos
+
+1. El código cumple actualmente 3 patrones con ADR (Strategy, State e Inbox/Outbox), 409 para transición inválida, Idempotency-Key, ETag y Problem Details; falta incorporar la evidencia final al paquete que se subirá.
+2. Backend tiene más de 85% de líneas y más de 70% de ramas; Front alcanzó 85,66% de líneas. Deben adjuntarse los reportes de la versión evaluada.
+3. Mutation score alcanzó 60%, Sonar Quality Gate está aprobado, Testcontainers ejecutó PostgreSQL en CI y la suite se repitió para detectar inestabilidad. Debe conservarse esa evidencia junto al tag evaluado.
+4. BRD, documentación funcional, Gherkin, ADR, OpenAPI, justificación de SOAP no aplicable y manual existen; falta ejecutar una tarea al azar usando solamente el manual.
+5. Regenerar el paquete final para incorporar Gemini, la evidencia del despliegue, los reportes actuales y esta auditoría; el ZIP del 11/11 quedó anterior a esos cambios.
+
+## Dominio interno no bloqueante para esta entrega
+
+1. Completar la matriz exhaustiva de transiciones menos frecuentes de `WorkOrder`, especialmente demoras y reprogramaciones.
+2. Definir el tratamiento futuro de ampliaciones de obra y sus consumidores externos.
+3. Aclarar con la cátedra si la exigencia de no monolito requiere microservicios desplegables o acepta el monolito modular actual con separación MVC y por capas.
+
+## Cierres que no deben reabrirse sin evidencia nueva
+
+- M6-M3-Core E2E: `CONFIRMED`.
+- M1-M3-Core escenario `approved`: `CONFIRMED`.
+- Envelope de Core, UUID, ISO 8601 con offset, correlación/causalidad y RabbitMQ compartido: implementados según los contratos vigentes.
+- PostgreSQL, Flyway, CI/CD, Terraform, Azure Test, HSTS, CORS, análisis de secretos y SonarCloud: verificados.
+- IA con Gemini: implementada y verificada en Azure Test; la clave no se versiona.

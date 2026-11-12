@@ -1,5 +1,12 @@
 # Historial de cambios
 
+## 2026-11-12 — Cierre Git y depuración de pendientes
+
+- Se conservaron los tags históricos `v1.0-testing` y se publicaron tags adicionales `v1.0-testing-final` sobre los commits finales de Backend, Frontend e Infraestructura; ningún tag anterior fue reescrito.
+- Se agregó una ficha de cierre con SHAs, release, workflow desplegado, controles aprobados y trabajo externo/manual pendiente.
+- `decisiones-pendientes.md` se depuró contra la evidencia vigente: M6 y M1 `approved` quedaron cerrados y Gemini dejó de figurar como desarrollo pendiente.
+- Tras recibir la consigna completa del profesor, se incorporó una auditoría requisito por requisito. Además de Testing, M1 `rejected`, M2, M7 y TC-022/TC-024, se registraron como brechas la integración completa del mapa, BOLA/IDOR en vivo, JWT M1, catálogo Core, cierre de historias/defectos, Teams y el desfase del tag obligatorio `v2.0-entrega4`.
+
 ## 2026-11-12 — Gemini activado y verificado en Azure Test
 
 - El backend `#24` y la infraestructura `#65` quedaron fusionados con CI, SonarCloud, análisis de secretos, pruebas de mutación, construcción de contenedor y validaciones Terraform aprobadas.
