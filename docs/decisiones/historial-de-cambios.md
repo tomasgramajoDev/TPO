@@ -1,10 +1,18 @@
 # Historial de cambios
 
+## 2026-11-12 — Gemini activado y verificado en Azure Test
+
+- El backend `#24` y la infraestructura `#65` quedaron fusionados con CI, SonarCloud, análisis de secretos, pruebas de mutación, construcción de contenedor y validaciones Terraform aprobadas.
+- Se publicó la release `v2.0-entrega4.3-gemini` y el workflow de despliegue `43146512964` aplicó Terraform con `0` altas, `2` cambios en sitio y `0` bajas. La API key se entregó mediante el secreto protegido `GEMINI_API_KEY` del environment `test`; no se versionó ni se imprimió.
+- Azure Test quedó ejecutando la imagen inmutable del backend `89524a530b946590c490e2d0d5d001f74a4f2d6e`, con `AI_PROVIDER=gemini`, alias `gemini-3.5-flash` y prompt `incident-triage.v1`.
+- La verificación live obtuvo HTTP 200 con `PAVEMENT/HIGH/ROAD_CREW`, revisión humana obligatoria y cabeceras de proveedor, modelo y versión de prompt. Un rol sin permiso obtuvo 403 y una entrada adversarial no devolvió nombre, DNI ni teléfono.
+- Después del despliegue, el listener AMQPS volvió a conectarse a Core como `module_obras` sobre el vhost `/core`; la activación de Gemini no deshabilitó la mensajería.
+
 ## 2026-11-11 — Proveedor Gemini para clasificación asistida
 
 - Se validó una API key de Gemini sin imprimirla ni versionarla y se comprobó una respuesta JSON estructurada para el caso de bache de alto riesgo, con revisión humana obligatoria.
 - El backend incorporó un adaptador Gemini desacoplado y conservó `mock-v1` para CI, timeout, circuit breaker y fallback manual. La suite local aprobó 124 pruebas y los umbrales JaCoCo.
-- Terraform quedó preparado para entregar `GEMINI_API_KEY` como secreto de Azure Container Apps y configurar `AI_PROVIDER` y `GEMINI_MODEL`. Test usa Gemini; local/CI mantienen mock. La activación queda sujeta a PR, CI, plan, despliegue y smoke test remoto.
+- Terraform quedó preparado para entregar `GEMINI_API_KEY` como secreto de Azure Container Apps y configurar `AI_PROVIDER` y `GEMINI_MODEL`. Test usa Gemini; local/CI mantienen mock. La activación se completó y quedó registrada en la entrada del 12/11/2026.
 
 ## 2026-11-11 — Módulo de IA asistida implementado y desplegado
 
