@@ -1,5 +1,14 @@
 # Historial de cambios
 
+## 2026-11-11 — Módulo de IA asistida implementado y desplegado
+
+- El diseño documental recibido en `Clase14_Grupo5_ObrasPublicas_IA.pdf` se convirtió en una implementación verificable: triaje estructurado de incidencias, revisión humana obligatoria, sanitización, JSON Schema, prompt versionado, timeout, circuit breaker, fallback, métricas, cuota y feature flag.
+- Backend `#23` y Frontend `#22` quedaron fusionados a `develop` con sus CI aprobados. El PR documental previo del Backend `#22` se tomó como base, pero no se presentó como implementación.
+- El baseline de la entrega es `mock-v1`, determinista y reemplazable detrás del gateway. No se afirma uso de un LLM comercial ni se agregan credenciales de proveedor.
+- El PR de infraestructura `#63` fijó imágenes inmutables y configuró `AI_TRIAGE_ENABLED` mediante Terraform. Pasó Terraform CI y los gates de arranque limpio, secretos, smoke, ZAP y rendimiento.
+- La release técnica `v2.0-entrega4.2-ia` se desplegó en Azure Test mediante el workflow `43133590226`, con mensajería de Core habilitada y seis logins verificados.
+- La verificación live obtuvo HTTP 200 con `PAVEMENT/HIGH/ROAD_CREW`, revisión humana obligatoria y metadatos `mock-v1`/`incident-triage.v1`. Un rol operativo recibió 403 y el caso adversarial no devolvió nombre, DNI ni teléfono.
+
 ## 2026-11-10 — Preparación de pruebas externas pendientes
 
 - Se incorporó un runbook ejecutable para M1 `rejected`, M2 y M7, con precondiciones, secuencias, criterios, evidencia y mensajes listos para coordinar.
