@@ -204,6 +204,15 @@ resource "azurerm_container_app" "backend" {
   }
 
   dynamic "secret" {
+    for_each = var.application_ai_triage_enabled && var.application_ai_provider == "gemini" ? [1] : []
+
+    content {
+      name  = "gemini-api-key"
+      value = var.application_gemini_api_key
+    }
+  }
+
+  dynamic "secret" {
     for_each = var.enable_event_grid ? [1] : []
 
     content {
@@ -282,6 +291,25 @@ resource "azurerm_container_app" "backend" {
       env {
         name  = "AI_TRIAGE_ENABLED"
         value = tostring(var.application_ai_triage_enabled)
+      }
+
+      env {
+        name  = "AI_PROVIDER"
+        value = var.application_ai_provider
+      }
+
+      env {
+        name  = "GEMINI_MODEL"
+        value = var.application_gemini_model
+      }
+
+      dynamic "env" {
+        for_each = var.application_ai_triage_enabled && var.application_ai_provider == "gemini" ? [1] : []
+
+        content {
+          name        = "GEMINI_API_KEY"
+          secret_name = "gemini-api-key"
+        }
       }
 
       dynamic "env" {

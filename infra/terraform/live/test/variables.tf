@@ -73,7 +73,7 @@ variable "container_registry_identity_id" {
 variable "backend_image" {
   description = "Imagen inmutable del backend promovida a test."
   type        = string
-  default     = "acrobraspublica302ceba6.azurecr.io/obras-publicas-backend:44e1f00ecb4de6f697dae460da91b1b58592faf1"
+  default     = "acrobraspublica302ceba6.azurecr.io/obras-publicas-backend:89524a530b946590c490e2d0d5d001f74a4f2d6e"
 }
 
 variable "frontend_image" {
@@ -120,6 +120,25 @@ variable "application_ai_triage_enabled" {
   description = "Habilita el asistente de triaje de incidentes en Test."
   type        = bool
   default     = true
+}
+
+variable "application_ai_provider" {
+  description = "Proveedor de IA activo en Test."
+  type        = string
+  default     = "gemini"
+}
+
+variable "application_gemini_model" {
+  description = "Alias de Gemini verificado para la clasificacion asistida."
+  type        = string
+  default     = "gemini-3.5-flash"
+}
+
+variable "application_gemini_api_key" {
+  description = "API key de Gemini recibida mediante GitHub Environment secret."
+  type        = string
+  default     = ""
+  sensitive   = true
 }
 
 variable "application_rabbitmq_password" {

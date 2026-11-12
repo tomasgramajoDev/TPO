@@ -36,6 +36,7 @@ env:
   TF_VAR_application_bootstrap_users_json: ${{ secrets.TEST_BOOTSTRAP_USERS }}
   TF_VAR_application_messaging_enabled: ${{ inputs.enable_core_messaging || 'false' }}
   TF_VAR_application_rabbitmq_password: ${{ secrets.RABBITMQ_PASSWORD }}
+  TF_VAR_application_gemini_api_key: ${{ secrets.GEMINI_API_KEY }}
 
 jobs:
   plan:

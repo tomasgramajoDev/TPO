@@ -195,6 +195,37 @@ variable "application_ai_triage_enabled" {
   default     = false
 }
 
+variable "application_ai_provider" {
+  description = "Proveedor del asistente: mock para CI/local o gemini para un modelo externo."
+  type        = string
+  default     = "mock"
+
+  validation {
+    condition     = contains(["mock", "gemini"], var.application_ai_provider)
+    error_message = "application_ai_provider debe ser mock o gemini."
+  }
+}
+
+variable "application_gemini_model" {
+  description = "Alias de modelo Gemini utilizado por el backend."
+  type        = string
+  default     = "gemini-3.5-flash"
+}
+
+variable "application_gemini_api_key" {
+  description = "API key de Gemini entregada al backend exclusivamente como secreto."
+  type        = string
+  default     = ""
+  sensitive   = true
+
+  validation {
+    condition = !(
+      var.application_ai_triage_enabled && var.application_ai_provider == "gemini"
+    ) || length(trimspace(var.application_gemini_api_key)) > 0
+    error_message = "application_gemini_api_key es obligatoria cuando IA esta habilitada con Gemini."
+  }
+}
+
 variable "application_rabbitmq_password" {
   description = "Contraseña privada del usuario AMQPS module_obras."
   type        = string

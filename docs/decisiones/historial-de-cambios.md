@@ -1,5 +1,11 @@
 # Historial de cambios
 
+## 2026-11-11 — Proveedor Gemini para clasificación asistida
+
+- Se validó una API key de Gemini sin imprimirla ni versionarla y se comprobó una respuesta JSON estructurada para el caso de bache de alto riesgo, con revisión humana obligatoria.
+- El backend incorporó un adaptador Gemini desacoplado y conservó `mock-v1` para CI, timeout, circuit breaker y fallback manual. La suite local aprobó 124 pruebas y los umbrales JaCoCo.
+- Terraform quedó preparado para entregar `GEMINI_API_KEY` como secreto de Azure Container Apps y configurar `AI_PROVIDER` y `GEMINI_MODEL`. Test usa Gemini; local/CI mantienen mock. La activación queda sujeta a PR, CI, plan, despliegue y smoke test remoto.
+
 ## 2026-11-11 — Módulo de IA asistida implementado y desplegado
 
 - El diseño documental recibido en `Clase14_Grupo5_ObrasPublicas_IA.pdf` se convirtió en una implementación verificable: triaje estructurado de incidencias, revisión humana obligatoria, sanitización, JSON Schema, prompt versionado, timeout, circuit breaker, fallback, métricas, cuota y feature flag.
