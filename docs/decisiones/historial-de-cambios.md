@@ -1,5 +1,14 @@
 # Historial de cambios
 
+## 2026-11-13 - Consolidacion de historias y trazabilidad de la Entrega 4
+
+- Se unificaron las numeraciones parciales de historias en un catalogo vigente de trece historias funcionales y seis requisitos no funcionales.
+- Cada historia incluye formato Como/Quiero/Para, prioridad, estimacion propuesta y criterios Dado/Cuando/Entonces.
+- Se genero una matriz nueva con 55 criterios y 46 casos, vinculando requisito, caso, resultado, evidencia, pendiente y responsable.
+- Se conservaron como pendientes externos las pruebas bilaterales M2 y M7, M1 rejected y los escenarios de contrato/resiliencia coordinados con Core.
+- Se confirmo que Trello puede usarse como tablero operativo, pero no sustituye Jira mientras la condicion G5 de la catedra exija Jira actualizado.
+- Se preparo un paquete de entrega sin credenciales, tokens ni secretos.
+
 ## 2026-08-13 — Adopción de GitFlow simplificado para aplicaciones
 
 - El usuario confirmó que frontend y backend seguirán el esquema docente `feature/*` → `develop` → `release/vX.Y.Z` → `main`.

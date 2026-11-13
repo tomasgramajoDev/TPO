@@ -28,6 +28,8 @@ Este repositorio conserva el alcance funcional, las reglas, los ciclos de vida, 
 - [Plan de testing de la release v0.2.0](entrega/plan-testing-release-v0.2.0.md): casos por rol, resultados esperados, brechas conocidas y formato de evidencia para el equipo de Testing.
 - [Ejecución exploratoria de Test](entrega/ejecucion-testing-manual-2026-09-21.md): resultados reales desde el navegador, incidencias y cobertura pendiente.
 - [Guion de video de un minuto](entrega/guion-video-demo-1-minuto.md): recorrido cronometrado para mostrar el caso de uso a los profesores.
+- [Historias de usuario y requisitos trazables - Entrega 4](entrega/historias-usuario-entrega4.md): catálogo consolidado con formato Como/Quiero/Para, criterios Dado/Cuando/Entonces, prioridades, estimaciones propuestas y estado QA.
+- [Trazabilidad QA - Entrega 4](entrega/trazabilidad-qa-entrega4.md): estado consolidado, regla de evidencia y pendientes externos sin convertirlos en resultados aprobados.
 
 ## Dónde guardar información nueva
 
