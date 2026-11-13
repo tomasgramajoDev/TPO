@@ -1,5 +1,11 @@
 # Historial de cambios
 
+## 2026-11-13 — Correcciones de demo y seguridad promovidas a Test
+
+- El PR de Backend `#25` se fusionó en `develop` después de aprobar tests, SonarCloud, repetición anti-flakiness, mutation testing, Gitleaks, Trivy y construcción Docker.
+- Se publicó la imagen inmutable `obras-publicas-backend:1f2606e216ca6d9c59507b110a8f0647eee6e8a2` y se la seleccionó para Azure Test mediante Terraform.
+- El cambio incluye correcciones del endpoint de Integraciones, consultas SQL, ETag, permisos de finalización de proyectos e idempotencia transaccional. No modifica la imagen del Frontend ni almacena secretos en Git.
+
 ## 2026-11-12 — Reconciliación del tag obligatorio de Entrega 4
 
 - El tag `v2.0-entrega4` se actualizó al cierre vigente de `main` antes de la clase del 17/11, de modo que Gemini, las imágenes inmutables y la auditoría queden dentro de la referencia evaluable.
