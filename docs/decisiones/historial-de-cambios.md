@@ -10,6 +10,7 @@
 
 - Fuente técnica: logs de Azure Container Apps y endpoint operativo de Azure Test, revisados el 2026-11-15.
 - M3 registró `streetClosureApproved` (`eventId=6f521edf-177f-43c4-b3ec-0a3eb1245fd5`) y `streetClosureEnded` (`eventId=c8479b39-4741-49f3-a3ea-f255d16416c2`) como `PROCESSED`; ambos conservaron `correlationId=afca371d-ddfd-497c-a437-f9152bef52bf`.
+- La consulta funcional confirmó que la solicitud `44555606-a4b7-4a0b-984b-94255b49faa8` quedó `ENDED` y vinculada al corte `c5941b88-1caa-4e6f-bc3d-439879f31408`.
 - La confirmación funcional M7 → M3 queda comprobada. El circuito completo conserva estado `AGREED` hasta que Core confirme entrega, intentos y DLQ de ambas respuestas.
 - `roadAccidentRegistered` (`eventId=9d7b06ec-dfa3-4ca6-9d28-acc17ed82523`, `correlationId=dca92b7c-b533-438e-99de-cebc6446d4ef`) fue recibido y rechazado por M3 en cuatro entregas. No ingresó al Inbox ni produjo un efecto funcional.
 - Se mantiene abierta la incompatibilidad del payload del accidente; no se atribuye una causa de campo concreta sin obtener y cruzar el sobre exacto emitido por M7.

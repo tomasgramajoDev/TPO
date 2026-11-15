@@ -10,6 +10,7 @@ Solicitar cortes de calle y recibir su autorización o rechazo; evaluar incident
 - Core confirmó aceptación, estado `ROUTED`, entrega `DELIVERED` a `q.transito` en el primer intento, sin reintentos ni DLQ. M7 confirmó recepción, persistencia del corte y sus tramos, y procesamiento funcional.
 - El 2026-11-15 M3 recibió y procesó `streetClosureApproved` con `eventId=6f521edf-177f-43c4-b3ec-0a3eb1245fd5` y el mismo `correlationId`.
 - M3 recibió y procesó luego `streetClosureEnded` con `eventId=c8479b39-4741-49f3-a3ea-f255d16416c2` y el mismo `correlationId`.
+- La consulta funcional confirmó `closureRequestId=44555606-a4b7-4a0b-984b-94255b49faa8`, `streetClosureId=c5941b88-1caa-4e6f-bc3d-439879f31408` y estado final `ENDED`.
 - La evidencia del consumidor M3 prueba el recorrido funcional M7 → Core → M3. Falta la verificación de Core sobre `ROUTED`/`DELIVERED`, intentos y DLQ de las dos respuestas para elevar el circuito completo a `CONFIRMED` según el criterio documental del equipo.
 
 **Estado:** solicitud M3 → Core → M7 `CONFIRMED`; aprobación y cierre M7 → M3 comprobados funcionalmente y pendientes únicamente de la constancia operativa de Core.
