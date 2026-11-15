@@ -160,13 +160,13 @@ Resultado esperado: NACK y política Core sin inconsistencia
 Evidencia actual: Requiere Core/M2 compartido
 Regla: no marcar como aprobado sin evidencia reproducible.",QA - Preparados para ejecutar,"P0,Integración,Negativo"
 [TC-021] requestId a sourceRequestId,"ID: TC-021
-Estado QA: PREPARADO
+Estado QA: PASS
 Prioridad: P0
 Precondición: M6 y Core activos
 Pasos: Consumir solicitud y emitir schedule/completed
 Resultado esperado: Correlación UUID preservada
-Evidencia actual: Requiere Core/M6 compartido
-Regla: no marcar como aprobado sin evidencia reproducible.",QA - Preparados para ejecutar,"P0,Integración"
+Evidencia actual: E2E M6-M3-Core confirmado: requestId correlacionado, schedule/completed recibidos y solicitud cerrada
+Regla: no marcar como aprobado sin evidencia reproducible.",QA - Aprobados,"P0,Integración"
 [TC-022] Envelope sin data,"ID: TC-022
 Estado QA: PREPARADO
 Prioridad: P0

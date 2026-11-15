@@ -1,6 +1,6 @@
 # Matriz de trazabilidad — Entrega 4
 
-| Requisito | Implementación/evidencia | Prueba | Estado al 10/11 |
+| Requisito | Implementación/evidencia | Prueba | Estado al 15/11 |
 | --- | --- | --- | --- |
 | State y transiciones 409 | `WorkOrderState`, `WorkOrderStates`, ADR-002 Back | `DeliveryFourCriteriaTests`, flujo de órdenes | PASS CI |
 | Tres patrones con ADR | State, Strategy de creación, Inbox/Outbox | ADR-001/002/003 Back | DOCUMENTADO |
@@ -21,7 +21,7 @@
 | Build único | `docker compose up --build` | candidata corregida con SHAs finales | GATE REMOTO A REPETIR |
 | Carga 50 usuarios | k6 en tag `v2.0-entrega4` | 5 min; p95 6,35 ms; errores 0%; checks 100% | PASS |
 | ZAP/secretos | workflow release | 0 High/Critical + Gitleaks historial completo | PASS |
-| Azure Test | Terraform + imágenes por SHA | 2 cambios in-place; 0 destrucciones; 6 logins | PASS HTTP/DB |
+| Azure Test | Terraform + imágenes por SHA y digests ACR | revisiones finales con 100% del tráfico; HTTP 200 en Front y Back | PASS live 15/11 |
 | RabbitMQ Core | listener AMQPS y `minReplicas=1` | allowlist `57.156.67.226/32`; conexión `module_obras` creada | PASS conectividad |
 | OpenAPI y Swagger | contrato REST + `api-openapi-soap-entrega4.md` presentes en el tag | `/v3/api-docs` 200 y `/swagger-ui/index.html` 200 en Azure Test | PASS; WSDL no aplica porque M3 no usa SOAP |
 | Manual de usuario | `manual-usuario-entrega4.md` presente en el tag | tareas por rol y recuperación básica | DOCUMENTADO; recorrido al azar pendiente de clase |

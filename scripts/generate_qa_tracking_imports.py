@@ -28,7 +28,7 @@ cases = [
     ("TC-018", "Ignorar ticketUpdated de otra área", "PASS", "P0", "Integración,Negativo", "Consumidor activo", "Recibir responsibleAreaId distinto de M3", "ACK sin mutación", "TicketUpdatedHandlerTests"),
     ("TC-019", "STARTED antes de PROGRESS", "PREPARADO", "P0", "Integración", "Ticket ROUTED", "Publicar STARTED y luego PROGRESS", "M2 acepta ambos", "Requiere Core/M2 compartido"),
     ("TC-020", "PROGRESS fuera de orden", "PREPARADO", "P0", "Integración,Negativo", "Ticket ROUTED", "Publicar PROGRESS", "NACK y política Core sin inconsistencia", "Requiere Core/M2 compartido"),
-    ("TC-021", "requestId a sourceRequestId", "PREPARADO", "P0", "Integración", "M6 y Core activos", "Consumir solicitud y emitir schedule/completed", "Correlación UUID preservada", "Requiere Core/M6 compartido"),
+    ("TC-021", "requestId a sourceRequestId", "PASS", "P0", "Integración", "M6 y Core activos", "Consumir solicitud y emitir schedule/completed", "Correlación UUID preservada", "E2E M6-M3-Core confirmado: requestId correlacionado, schedule/completed recibidos y solicitud cerrada"),
     ("TC-022", "Envelope sin data", "PREPARADO", "P0", "Contrato,Negativo", "Core disponible", "Publicar envelope omitiendo data", "422 y no entra al hub", "Contrato implementado; E2E Core pendiente"),
     ("TC-023", "Evento duplicado exacto", "PASS", "P0", "Resiliencia", "Inbox activa", "Entregar dos veces el mismo eventId", "Una mutación y deduplicación", "TicketUpdatedHandlerTests/TrafficEventsTests"),
     ("TC-024", "Broker caído y recuperación", "PREPARADO", "P0", "Resiliencia", "Stack completo", "Detener broker, operar y restaurar", "Outbox conserva y reintenta sin pérdida", "Requiere Docker/Core en prueba final"),

@@ -1,6 +1,6 @@
 # Informe de ejecución — candidato Entrega 4
 
-**Corte:** 15 de noviembre de 2026.  
+**Corte:** 15 de noviembre de 2026.
 **Regla:** solo se marca PASS con evidencia observada; pendiente no significa aprobado.
 
 ## Resultados comprobados
@@ -14,11 +14,12 @@
 - M1–M3–Core: escenario `approved` confirmado con correlación conservada y entrega en un intento.
 - M1–M3–Core: escenario `rejected` confirmado, entregado a `q.obras` en un intento, sin DLQ y procesado por M3.
 - M3–M7–Core: solicitud `streetClosureRequested` entregada y procesada por M7; respuesta y finalización pendientes por reconexión AMQPS de M7.
-- CI Back: 117 pruebas, repetición anti-flakiness, Testcontainers PostgreSQL, PIT, SonarCloud, Gitleaks, Trivy y construcción de contenedor aprobados en los dos jobs del PR `#21`.
+- CI Back final `43415380427` sobre `1f2606e216ca6d9c59507b110a8f0647eee6e8a2`: Maven, SonarCloud, repetición anti-flakiness, PIT, Gitleaks, Trivy y construcción de contenedor aprobados.
 - Front local sobre `d472da55fa5dca8f6c351a01805d35495f611486`: 63 pruebas, 85,55% de líneas, 75,84% de ramas y build de producción aprobado. `npm audit` informa tres vulnerabilidades moderadas y ninguna crítica; deben quedar registradas como riesgo y no bloquean el umbral docente de CVE críticas.
 - Release `v2.0-entrega4`: arranque limpio en 138 segundos, ZAP con 0 hallazgos High/Critical y Gitleaks sobre el historial completo.
 - k6: 50 usuarios durante 5 minutos, 14.911 iteraciones, p95 de 6,35 ms, 0% de solicitudes fallidas y 100% de checks.
-- Azure Test: Terraform aplicó 2 actualizaciones in-place y 0 destrucciones; health público correcto y seis logins aprobados.
+- CI Front final `43130876805` sobre `d472da55fa5dca8f6c351a01805d35495f611486`: auditoría, lint, cobertura, repetición, build, Playwright, accesibilidad y contenedor aprobados.
+- Azure Test: Backend y Frontend responden HTTP 200, ejecutan las imágenes finales y reciben 100% del tráfico. Digests ACR: Back `sha256:86462cd76e05bcd4b9479e235e90045b0bd336b1b2cf188bfa16ec0e05d7a5f2`; Front `sha256:03d3d87ab84081a64a14ed45f1b655cfa890c7e988244b5f91342337d7e35247`.
 
 ## Defectos encontrados durante esta preparación
 

@@ -1,8 +1,8 @@
 # BRD — M3 Obras Públicas — Entrega 4
 
 **Versión:** candidata `v2.0-entrega4`  
-**Fecha de corte:** 10 de noviembre de 2026  
-**Estado:** candidato; el tag y la aceptación docente siguen pendientes.
+**Fecha de corte:** 15 de noviembre de 2026
+**Estado:** candidata final en preparación; la recongelación del tag y la aceptación docente siguen pendientes.
 
 ## Objetivo de negocio
 
@@ -41,8 +41,9 @@ Centralizar la planificación, aprobación, ejecución, control y cierre de obra
 ## Integraciones confirmadas y pendientes
 
 - M6–M3–Core: flujo `infrastructureRepairRequested` → `workOrderScheduled` → `workOrderCompleted` confirmado E2E.
-- M1–M3–Core: escenario `approved` de `publicWorksProjectApproved` → `caseFileResolved` confirmado E2E.
-- Pendientes externos: variante M1 `rejected` y pruebas E2E de M2 y M7.
+- M1–M3–Core: escenarios `approved` y `rejected` de `publicWorksProjectApproved` → `caseFileResolved` confirmados E2E.
+- M7–M3–Core: `streetClosureRequested` fue entregado y procesado; la respuesta y el cierre siguen pendientes por la conectividad AMQPS de M7.
+- Pendientes externos: prueba E2E de M2, respuesta/cierre M7, confirmación de eventos secundarios de M6 y `publicWorksProjectCompleted` hacia M1.
 
 ## Criterio de aceptación de la entrega
 

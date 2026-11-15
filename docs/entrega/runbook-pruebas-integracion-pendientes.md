@@ -1,6 +1,6 @@
 # Runbook simple de pruebas de integración pendientes
 
-Fecha de corte: 2026-11-10  
+Fecha de corte: 2026-11-15
 Ambiente: Azure Test + Core AWS  
 Responsable M3: DevOps coordina; cada módulo confirma su procesamiento funcional.
 
@@ -17,9 +17,11 @@ Este documento no agrega endpoints ni contratos. Usa únicamente los eventos aco
 
 Para los controles HTTP no destructivos se puede ejecutar `scripts/demo-security-live.ps1`. El script exige `TEST_BASE_URL`, `TEST_LOW_ROLE_USERNAME` y `TEST_LOW_ROLE_PASSWORD` como variables de entorno; nunca contiene ni imprime las credenciales. La fuerza bruta solo se activa si se define `TEST_RATE_LIMIT_USERNAME` con una cuenta descartable, porque puede bloquearla temporalmente.
 
-## Prueba 1 — M1 `rejected`
+## Prueba 1 — M1 `rejected` — COMPLETADA
 
-Objetivo: comprobar la variante que falta del circuito ya aprobado con M1.
+Objetivo: comprobar la variante del circuito ya aprobado con M1.
+
+Resultado confirmado: evento inicial `57f75122-d874-489a-9745-5de4bc694ff3`, respuesta `44fd8a17-fc0b-4638-8fdf-046117b8a00e`, correlación `f38eeb5c-7430-49d3-ac05-a639d1b59487`, entrega a `q.obras` en un intento, sin DLQ y procesamiento funcional asociado a `OBRA-16`.
 
 ### Secuencia
 
