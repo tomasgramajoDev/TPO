@@ -4,6 +4,15 @@
 
 Solicitar cortes de calle y recibir su autorización o rechazo; evaluar incidentes viales que puedan requerir Obras.
 
+## Evidencia parcial E2E — 2026-11-13/14
+
+- M3 publicó `streetClosureRequested` con `eventId=2d6893aa-9482-4dfd-98c3-85607f36bdab` y `correlationId=afca371d-ddfd-497c-a437-f9152bef52bf`.
+- Core confirmó aceptación, estado `ROUTED`, entrega `DELIVERED` a `q.transito` en el primer intento, sin reintentos y sin DLQ.
+- M7 confirmó recepción, persistencia del corte y sus tramos, y procesamiento sin errores.
+- El circuito completo permanece abierto porque M7 perdió conectividad AMQPS después de un redeploy. Debe publicar `streetClosureApproved` o `streetClosureRejected`, y luego ejecutar `streetClosureEnded`.
+
+**Estado:** `CONFIRMED` únicamente para la solicitud M3 → Core → M7; respuesta y cierre todavía `PENDING`.
+
 ## Eventos recibidos comunicados por el PO
 
 ### `trafficIncidentRegistered`

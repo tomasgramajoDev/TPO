@@ -1,5 +1,12 @@
 # Historial de cambios
 
+## 2026-11-15 — Candidata final y evidencia de integraciones
+
+- Se detectó que el tag remoto `v2.0-entrega4` tenía gate verde pero su `compose.yaml` fijaba revisiones anteriores a las desplegadas en Azure Test.
+- Se actualizó la candidata reproducible a Back `1f2606e216ca6d9c59507b110a8f0647eee6e8a2` y Front `d472da55fa5dca8f6c351a01805d35495f611486`, con IA habilitada mediante el proveedor local determinista `mock` y sin secretos externos.
+- Se incorporó la evidencia confirmada del escenario M1 `rejected` y la evidencia parcial M3 → M7; no se presentó la respuesta de M7 como completada.
+- Se mantuvieron abiertos M2, la respuesta/cierre M7, los eventos secundarios de M6, `publicWorksProjectCompleted`, seguridad manual, resiliencia y tareas humanas.
+
 ## 2026-11-13 — Correcciones de demo y seguridad promovidas a Test
 
 - El PR de Backend `#25` se fusionó en `develop` después de aprobar tests, SonarCloud, repetición anti-flakiness, mutation testing, Gitleaks, Trivy y construcción Docker.

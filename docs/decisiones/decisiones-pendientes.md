@@ -1,6 +1,6 @@
 # Decisiones pendientes
 
-**Corte de estado:** 12/11/2026. Este archivo enumera solo decisiones o pruebas realmente abiertas. Los acuerdos y pruebas cerrados se conservan en `decisiones-confirmadas.md` y en el historial de Git.
+**Corte de estado:** 15/11/2026. Este archivo enumera solo decisiones o pruebas realmente abiertas. Los acuerdos y pruebas cerrados se conservan en `decisiones-confirmadas.md` y en el historial de Git.
 
 ## Entrega académica y QA
 
@@ -10,7 +10,7 @@
 4. Confirmar con la matriz de trazabilidad que todas las historias comprometidas el 03/11 están implementadas o registrar explícitamente la brecha y el plan de corrección.
 5. Actualizar Jira con el cierre real de Gemini, las integraciones confirmadas y los bloqueos externos restantes.
 6. Subir PDF, presentación y documentos QA a Teams antes del inicio de la clase; luego ensayar la demo y defensa individual.
-7. El tag exigido `v2.0-entrega4` fue actualizado el 12/11/2026 al cierre vigente de `main`. El destino anterior quedó preservado como `v2.0-entrega4-original-2026-11-10`. Falta conservar el resultado verde del gate disparado por el tag dentro del paquete final.
+7. El tag remoto `v2.0-entrega4` tiene gate verde, pero al auditarlo el 15/11 se comprobó que su `compose.yaml` todavía fijaba revisiones anteriores de Front y Back. Debe reemplazarse por una candidata que fije Back `1f2606e216ca6d9c59507b110a8f0647eee6e8a2` y Front `d472da55fa5dca8f6c351a01805d35495f611486`, y conservar el nuevo resultado verde.
 8. Los tags históricos `v1.0-testing` no se reescribieron. Los commits finales están identificados adicionalmente con `v1.0-testing-final` en Frontend, Backend e Infraestructura.
 
 ## DevOps y cloud
@@ -36,18 +36,22 @@
 
 ## Ambiente - M6
 
-No quedan pendientes contractuales para el circuito probado. La integración `infrastructureRepairRequested` -> `workOrderScheduled` -> `workOrderCompleted` está `CONFIRMED` por M3, M6 y Core, con correlación preservada, colas vacías y DLQ vacía.
+No quedan pendientes contractuales para el circuito principal probado. La integración `infrastructureRepairRequested` -> `workOrderScheduled` -> `workOrderCompleted` está `CONFIRMED` por M3, M6 y Core, con correlación preservada, colas vacías y DLQ vacía.
+
+Queda obtener la confirmación de M3/Core para `containerDamaged` (`eventId=748caf0e-6b47-4f35-998c-d1b77b8a1556`) y `treeRiskDetected` (`eventId=1ca257a6-9cc6-4686-82d6-ee23c194dcde`). M6 reenvió `containerDamaged` con el mismo `eventId`; falta evidencia de que Inbox lo deduplicó sin producir un segundo efecto.
 
 ## Tránsito - M7
 
-1. Ejecutar la prueba bilateral del circuito `streetClosureRequested` -> `streetClosureApproved`/`streetClosureRejected` -> `streetClosureEnded`.
-2. Ejecutar TC-017: un corte `ACTIVE` debe finalizar al vencer y emitir `streetClosureEnded`; uno `APPROVED` que nunca se activó debe pasar a `EXPIRED`.
-3. Registrar evidencia de `eventId`, `correlationId`, estados, entrega y DLQ. El contrato v1.0 y el nombre correcto `streetClosureEnded` ya están acordados.
+1. La primera mitad quedó verificada: Core entregó `streetClosureRequested` (`eventId=2d6893aa-9482-4dfd-98c3-85607f36bdab`, `correlationId=afca371d-ddfd-497c-a437-f9152bef52bf`) en un intento, sin DLQ, y M7 confirmó recepción y persistencia.
+2. M7 debe recuperar su conexión AMQPS posterior al redeploy y publicar `streetClosureApproved` o `streetClosureRejected`; M3 y Core deben confirmar entrega y procesamiento.
+3. Ejecutar TC-017: un corte `ACTIVE` debe finalizar al vencer y emitir `streetClosureEnded`; uno `APPROVED` que nunca se activó debe pasar a `EXPIRED`.
+4. Ejecutar `roadAccidentRegistered` con daño de infraestructura si continúa en el mapa comprometido.
+5. Registrar evidencia de `eventId`, `correlationId`, estados, entrega y DLQ. El contrato v1.0 y el nombre correcto `streetClosureEnded` ya están acordados.
 
 ## Ciudadanos y Expedientes - M1
 
-1. Ejecutar la variante `rejected` del circuito `publicWorksProjectApproved` -> `caseFileResolved`.
-2. La variante `approved` está `CONFIRMED`: Core verificó `ROUTED`/`DELIVERED`, M1 creó y resolvió el expediente, y M3 registró su asociación con el proyecto.
+1. Las variantes `approved` y `rejected` están `CONFIRMED`: Core verificó `ROUTED`/`DELIVERED`, M1 creó y resolvió los expedientes, y M3 registró ambas resoluciones.
+2. Falta la prueba adicional de `publicWorksProjectCompleted` sobre el expediente existente de `OBRA-3` si ese evento continúa comprometido en el mapa del 03/11.
 3. La migración futura al login central de M1, el mapeo de roles y la estrategia de firma/verificación de tokens quedan fuera del cierre funcional actual y requieren un acuerdo de arquitectura posterior.
 
 ## IA aplicada
@@ -69,7 +73,7 @@ No quedan pendientes contractuales para el circuito probado. La integración `in
 La entrega exige integración con Core y con los demás módulos del mapa de Miro, no solo que existan handlers locales.
 
 1. M6: el flujo principal está confirmado, pero deben quedar trazados también los eventos secundarios comprometidos (`containerDamaged` y `treeRiskDetected`) mediante contrato y pruebas de consumidor.
-2. M1: `approved` está confirmado; faltan `rejected` y la evidencia de los demás eventos comprometidos, incluido `publicWorksProjectCompleted` si figura en la matriz del 03/11.
+2. M1: `approved` y `rejected` están confirmados; falta `publicWorksProjectCompleted` si figura en la matriz comprometida del 03/11.
 3. M2: faltan pruebas bilaterales de `ticketUpdated` y `updateTicketStatus`, incluida transición válida y rechazo fuera de orden.
 4. M7: falta el circuito bilateral completo de cortes, rechazo, vencimiento y `streetClosureEnded`; también debe quedar verificado `roadAccidentRegistered` si continúa en el mapa.
 5. Core: faltan las pruebas de envelope inválido y caída/recuperación del broker, además de reconciliar catálogo y nombre histórico del evento de cierre.

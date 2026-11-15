@@ -4,6 +4,12 @@
 
 Recibir reclamos de infraestructura derivados o escalados y publicar los estados que Atención Ciudadana confirme necesitar para el seguimiento del ciudadano.
 
+## Contrato vigente y prueba pendiente
+
+El contrato vigente recibido de M2 es Eventos v1.78. M3 consume `ticketUpdated`, filtra `responsibleAreaId="M3"` e ignora los mensajes que no le corresponden; `ticketCreated` no forma parte del contrato operativo de Obras. M3 informa hechos mediante `updateTicketStatus` y M2 conserva la autoridad sobre estado, prioridad y categoría.
+
+M2 comunicó que derivó un ticket de prueba, pero todavía no existe evidencia suficiente de `eventId`, `ticketId`, `correlationId`, consumo por M3, respuesta `STARTED`/`PROGRESS`/`RESOLVED` y aplicación funcional en M2. El circuito permanece `PENDING` hasta obtener esas confirmaciones y la verificación de Core.
+
 ## Eventos recibidos comunicados por el PO
 
 ### `complaintRouted`

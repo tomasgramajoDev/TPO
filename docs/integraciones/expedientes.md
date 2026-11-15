@@ -14,7 +14,16 @@
 - El circuito relacionó `publicWorksProjectId=42807c4d-ff24-438f-aaa2-d025e8c27980` con `caseFileId=2567331e-d718-4e24-9870-2366f1c43059`.
 - M3 confirmó el procesamiento funcional y la asociación del expediente con el proyecto en su base de datos.
 
-La variante `rejected` no queda cubierta por esta evidencia y continúa pendiente como prueba independiente.
+## Evidencia E2E del escenario rechazado — 2026-11-14
+
+**Estado contractual y funcional del escenario `rejected`:** `CONFIRMED`.
+
+- M1 recibió `publicWorksProjectApproved` con `eventId=57f75122-d874-489a-9745-5de4bc694ff3` y creó el expediente institucional de `OBRA-16`.
+- M1 publicó `caseFileResolved` v1.0 con `eventId=44fd8a17-fc0b-4638-8fdf-046117b8a00e`, `correlationId=f38eeb5c-7430-49d3-ac05-a639d1b59487`, `caseFileId=d0d81527-b2df-45a5-be06-387743a9209d` y `resolution=rejected`.
+- Core verificó estado `ROUTED`, entrega `DELIVERED` a `q.obras` en un intento, sin error y sin registro asociado en `dead_letters`.
+- M3 confirmó procesamiento `PROCESSED` y asociación de la resolución administrativa con `OBRA-16`.
+
+Con esta evidencia quedan confirmadas ambas variantes de resolución. Continúa pendiente únicamente la prueba adicional de `publicWorksProjectCompleted` si forma parte del alcance comprometido.
 
 ## Evento recibido comunicado por el PO
 
