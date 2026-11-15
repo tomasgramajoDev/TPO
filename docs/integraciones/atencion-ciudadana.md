@@ -4,11 +4,13 @@
 
 Recibir reclamos de infraestructura derivados o escalados y publicar los estados que Atención Ciudadana confirme necesitar para el seguimiento del ciudadano.
 
-## Contrato vigente y prueba pendiente
+## Contrato vigente y prueba parcial
 
 El contrato vigente recibido de M2 es Eventos v1.78. M3 consume `ticketUpdated`, filtra `responsibleAreaId="M3"` e ignora los mensajes que no le corresponden; `ticketCreated` no forma parte del contrato operativo de Obras. M3 informa hechos mediante `updateTicketStatus` y M2 conserva la autoridad sobre estado, prioridad y categoría.
 
-M2 comunicó que derivó un ticket de prueba, pero todavía no existe evidencia suficiente de `eventId`, `ticketId`, `correlationId`, consumo por M3, respuesta `STARTED`/`PROGRESS`/`RESOLVED` y aplicación funcional en M2. El circuito permanece `PENDING` hasta obtener esas confirmaciones y la verificación de Core.
+El 2026-11-14 Azure Test recibió `ticketUpdated` con `eventId=b99c2981-d7a5-476e-b748-23e31ed75647`, `correlationId=fd8aa7f3-c7e0-43c1-be5a-6d6c49511239` y `sourceModule=atencion-ciudadana`. Los logs y el endpoint operativo de M3 lo registran como `PROCESSED`.
+
+La prueba acredita recepción, validación y persistencia de la proyección del lado M3. No se registró todavía una publicación `updateTicketStatus` asociada a ese hilo ni la aplicación funcional en M2. El circuito completo permanece `PENDING` hasta ejecutar una acción `STARTED`/`PROGRESS` o `RESOLVED`, compartir su `eventId` y obtener la confirmación de M2/Core.
 
 ## Eventos recibidos comunicados por el PO
 
@@ -50,3 +52,4 @@ Todos quedan `RECEIVED` como información del PO y pendientes de confirmación b
 - Confirmar si M2 consume también `workOrderPaused`, incorporado por la matriz del PO pero ausente en la lista anterior.
 - Manejo de duplicados, reaperturas y conformidad del ciudadano.
 - Convenciones de Core.
+- Completar la vuelta del evento ya recibido: M2 debe compartir o confirmar el `ticketId` del caso `b99c2981-d7a5-476e-b748-23e31ed75647`; M3 publica la actualización y M2/Core verifican aceptación, transición y DLQ.
