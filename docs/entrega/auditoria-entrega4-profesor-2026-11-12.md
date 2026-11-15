@@ -1,20 +1,20 @@
 # Auditoría contra la 4.ª Entrega Obligatoria
 
-**Fecha de control:** 12/11/2026  
+**Fecha de control:** 15/11/2026
 **Clase:** martes 17/11/2026  
 **Criterio:** se distingue `CUMPLE`, `PARCIAL`, `PENDIENTE` y `BLOQUEANTE`. Ningún “CUMPLE” se basa solamente en una afirmación generada por IA.
 
 ## Resumen honesto
 
-La aplicación, infraestructura, base de datos, CI, patrones, controles REST, cobertura, seguridad automatizada e IA están implementados. La entrega completa todavía no está cerrada: faltan integración bilateral con M2 y M7, variante M1 `rejected`, pruebas de resiliencia coordinadas con Core, JWT central de M1, pruebas de seguridad manuales y el cierre formal de QA/Teams. El tag obligatorio `v2.0-entrega4` ya fue actualizado al cierre vigente y conserva su destino anterior en un tag histórico separado.
+La aplicación, infraestructura, base de datos, CI, patrones, controles REST, cobertura, seguridad automatizada e IA están implementados. M1 `approved` y `rejected`, y el flujo principal M6–M3, tienen evidencia E2E. La entrega completa todavía no está cerrada: faltan M2, respuesta/cierre M7, pruebas de resiliencia coordinadas con Core, JWT central de M1, pruebas de seguridad manuales y el cierre formal de QA/Teams. El tag obligatorio debe recongelarse porque el gate verde anterior usó imágenes anteriores a las que hoy ejecuta Azure Test.
 
 ## Condiciones de admisión
 
 | Condición | Estado | Evidencia o acción faltante |
 | --- | --- | --- |
 | Arranque con un comando y README, menos de 15 minutos | CUMPLE | Gate de clean start aprobado; tiempo registrado muy por debajo de 15 minutos. |
-| Tag `v2.0-entrega4` en `main` | CUMPLE | Actualizado el 12/11 al cierre vigente. El destino anterior se preservó como `v2.0-entrega4-original-2026-11-10`. |
-| CI verde sobre la versión evaluada | EN EJECUCIÓN | El movimiento del tag disparó el gate específico con 50 usuarios durante 5 minutos; conservar su resultado final. |
+| Tag `v2.0-entrega4` en `main` | PENDIENTE RECONGELAR | El tag actual tiene gate verde, pero su Compose fija imágenes anteriores. Se preservará el destino actual antes de moverlo a la candidata final. |
+| CI verde sobre la versión evaluada | PARCIAL | CI final de Back y Front verde; falta repetir `Testing release gates` después de recongelar el tag. |
 | Jira al día | PARCIAL | Actualizado al 11/11; falta incorporar Gemini, auditoría final e integraciones pendientes. |
 | Sin secretos en el historial | CUMPLE | Gitleaks y scans aprobados; claves entregadas como secretos de GitHub/Azure. |
 | Demo en vivo E2E | PENDIENTE | Aplicación accesible; falta ensayo y seleccionar el circuito definitivo. |
@@ -26,7 +26,7 @@ La aplicación, infraestructura, base de datos, CI, patrones, controles REST, co
 
 | Requisito | Estado | Observación |
 | --- | --- | --- |
-| Historias comprometidas el 03/11 | NO VERIFICABLE | Requiere matriz HU -> criterio -> caso -> resultado -> evidencia sin huecos. |
+| Historias comprometidas el 03/11 | CUMPLE DOCUMENTAL | Catálogo consolidado y matriz HU → criterio → caso → resultado → evidencia versionados. Los casos pendientes continúan visibles. |
 | BRD y documentación funcional | CUMPLE | Versionados en `docs/entrega`. |
 | Historias en Gherkin | CUMPLE | Incluyen dominio, REST, resiliencia e IA. |
 | Tres ADR y State | CUMPLE | Strategy, State, Inbox/Outbox y ADR de IA. |
@@ -39,14 +39,14 @@ La aplicación, infraestructura, base de datos, CI, patrones, controles REST, co
 
 | Requisito | Estado | Evidencia |
 | --- | --- | --- |
-| Backend >=85% líneas | CUMPLE | 90,04% de líneas en el control vigente. |
-| Backend >=70% ramas | CUMPLE | 71,64% de ramas. |
-| Front >=85% | CUMPLE | 85,66% de líneas; 85,41% statements. |
+| Backend >=85% líneas | CUMPLE | 90,56% de líneas sobre la revisión final. |
+| Backend >=70% ramas | CUMPLE | 72,24% de ramas. |
+| Front >=85% | CUMPLE | 85,55% de líneas; 85,34% de sentencias. |
 | Mutation score >=60% | CUMPLE | 32/53 mutaciones, 60%; test strength 82%. |
 | Sonar Quality Gate | CUMPLE | Pipeline actual aprobado. |
 | Testcontainers | CUMPLE | PostgreSQL 17 ejecutó 2 pruebas sin skips en el paso principal de CI. |
 | API y contratos | CUMPLE | Suites REST, schemas y handlers ejecutadas. |
-| Sin flaky tests | CUMPLE CON EVIDENCIA | La suite de 127 tests se repitió dos veces en CI, sin fallos ni skips. |
+| Sin flaky tests | CUMPLE CON EVIDENCIA | El CI final repitió la suite para detectar flakiness y terminó correctamente; la ejecución local final aprobó 132 pruebas con 2 Testcontainers omitidas solo por falta de Docker local. |
 
 ## Eje C - Integración y resiliencia
 
@@ -61,9 +61,9 @@ La aplicación, infraestructura, base de datos, CI, patrones, controles REST, co
 | Problem Details | CUMPLE | Errores REST normalizados. |
 | Carga 50 usuarios, p95 <500 ms | CUMPLE | k6: p95 6,35 ms y 0% errores en la evidencia vigente. |
 | M6-M3-Core | CUMPLE PARCIAL DEL MAPA | Flujo principal confirmado; revisar eventos secundarios comprometidos. |
-| M1-M3-Core | PARCIAL | `approved` confirmado; faltan `rejected` y eventos restantes del mapa. |
+| M1-M3-Core | CUMPLE EN ESCENARIOS RESUELTOS | `approved` y `rejected` confirmados con correlación, entrega en un intento y sin DLQ. `publicWorksProjectCompleted` continúa como cobertura adicional. |
 | M2-M3-Core | PENDIENTE | No existe prueba bilateral cerrada. |
-| M7-M3-Core | PENDIENTE | No existe prueba bilateral cerrada. |
+| M7-M3-Core | PARCIAL | `streetClosureRequested` fue entregado y procesado por M7; falta respuesta y finalización por reconexión AMQPS de M7. |
 | Envelope sin `data` | PENDIENTE | TC-022 con Core. |
 
 ## Eje D - Seguridad
@@ -95,7 +95,7 @@ La aplicación, infraestructura, base de datos, CI, patrones, controles REST, co
 
 | Requisito | Estado | Acción |
 | --- | --- | --- |
-| Integración con Core y módulos del Miro | PENDIENTE | Cerrar M2, M7, M1 `rejected`, eventos secundarios y resiliencia Core. |
+| Integración con Core y módulos del Miro | PARCIAL | M6 principal y M1 `approved/rejected` cerrados. Faltan M2, respuesta/cierre M7, eventos secundarios y resiliencia Core. |
 | Despliegue accesible | CUMPLE | Azure Test y seis logins QA responden 200. |
 | 85% Front y Back | CUMPLE | Front 85,66%; Back 90,04% líneas. |
 | JWT firmado en M1 | PENDIENTE | M3 continúa con autenticación propia; falta integración central o acuerdo verificable. |
@@ -105,7 +105,7 @@ La aplicación, infraestructura, base de datos, CI, patrones, controles REST, co
 ## Orden de cierre recomendado
 
 1. Cerrar matriz de historias y defectos con Testing.
-2. Coordinar M2, M7, M1 `rejected`, TC-022 y TC-024.
+2. Coordinar M2, respuesta/cierre M7, TC-022 y TC-024.
 3. Resolver BOLA/IDOR y JWT M1.
 4. Regenerar paquete final, actualizar Jira y subir PDF/presentación/documentos a Teams.
 5. Ensayar demo y defensa individual.

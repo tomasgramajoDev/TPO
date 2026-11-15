@@ -28,6 +28,7 @@ Este repositorio conserva el alcance funcional, las reglas, los ciclos de vida, 
 - [Diagramas](diagramas/README.md): secuencia propuesta y casos de uso del módulo.
 - [Defensa, demo y arquitectura de órdenes](entrega/defensa-demo-arquitectura.md): estado real frente a los criterios de la entrega, guion por rol, demo ejecutable y trabajo pendiente de Front y Back.
 - [Runbook de pruebas de integración pendientes](entrega/runbook-pruebas-integracion-pendientes.md): pasos simples, criterios y mensajes listos para ejecutar M1 `rejected`, M2 y M7 sin inventar contratos.
+- [Runbook de seguridad y resiliencia](entrega/runbook-seguridad-resiliencia-demo.md): controles automatizables, BOLA/IDOR, mass assignment, JWT y prueba coordinada de broker caído, sin secretos.
 - [`demo-security-live.ps1`](../scripts/demo-security-live.ps1): smoke seguro para health, OpenAPI, autenticación, BFLA, fuerza bruta e inyección sin guardar credenciales.
 - [Plan de testing de la release v0.2.0](entrega/plan-testing-release-v0.2.0.md): casos por rol, resultados esperados, brechas conocidas y formato de evidencia para el equipo de Testing.
 - [BRD de Entrega 4](entrega/brd-entrega4.md): objetivo, actores, capacidades y aceptación del candidato.
@@ -39,6 +40,8 @@ Este repositorio conserva el alcance funcional, las reglas, los ciclos de vida, 
 - [Ejecución exploratoria de Test](entrega/ejecucion-testing-manual-2026-09-21.md): resultados reales desde el navegador, incidencias y cobertura pendiente.
 - [Guion de video de un minuto](entrega/guion-video-demo-1-minuto.md): recorrido cronometrado para mostrar el caso de uso a los profesores.
 - [Actividad integradora de IA — Clase 14](../output/pdf/Clase14_Grupo5_ObrasPublicas_IA.pdf): diseño del copiloto de clasificación de incidencias, arquitectura con gateway, contrato JSON, 20 casos de evaluación, gobernanza, riesgos y backlog con etiqueta `ia`.
+- [Historias de usuario y requisitos trazables - Entrega 4](entrega/historias-usuario-entrega4.md): catálogo consolidado con formato Como/Quiero/Para, criterios Dado/Cuando/Entonces, prioridades, estimaciones propuestas y estado QA.
+- [Trazabilidad QA - Entrega 4](entrega/trazabilidad-qa-entrega4.md): estado consolidado, regla de evidencia y pendientes externos sin convertirlos en resultados aprobados.
 
 ## Dónde guardar información nueva
 

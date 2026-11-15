@@ -14,7 +14,7 @@ Requisitos: Git y Docker Desktop con Docker Compose. Desde un clon limpio:
 docker compose up --build
 ```
 
-El comando construye Front y Back desde los commits inmutables registrados en `compose.yaml`, inicia PostgreSQL y RabbitMQ y espera sus health checks. Si falta una variable obligatoria, Compose corta antes de crear recursos con un mensaje que identifica la variable. Las credenciales no se imprimen ni se almacenan en Git.
+El comando construye Front y Back desde los commits inmutables registrados en `compose.yaml`, inicia PostgreSQL y RabbitMQ y espera sus health checks. La candidata de la cuarta entrega fija Back `1f2606e216ca6d9c59507b110a8f0647eee6e8a2` y Front `d472da55fa5dca8f6c351a01805d35495f611486`. Si falta una variable obligatoria, Compose corta antes de crear recursos con un mensaje que identifica la variable. Las credenciales no se imprimen ni se almacenan en Git.
 
 Accesos de verificación:
 
@@ -23,7 +23,7 @@ Accesos de verificación:
 - Salud del Back: `http://localhost:8081/api/health`
 - RabbitMQ local: `http://localhost:15672`
 
-Las seis cuentas usan la contraseña local de `DEMO_PASSWORD`: `personal.obras`, `responsable.autorizado`, `jefe.cuadrilla`, `operario.contratista`, `inspector.obra` e `ingeniero.arquitecto`. El broker local se incluye para disponibilidad y pruebas controladas; la mensajería del Back queda deshabilitada por defecto para no confundirla con el Core compartido, que requiere credenciales AMQPS privadas.
+Las seis cuentas usan la contraseña local de `DEMO_PASSWORD`: `personal.obras`, `responsable.autorizado`, `jefe.cuadrilla`, `operario.contratista`, `inspector.obra` e `ingeniero.arquitecto`. El broker local se incluye para disponibilidad y pruebas controladas; la mensajería del Back queda deshabilitada por defecto para no confundirla con el Core compartido, que requiere credenciales AMQPS privadas. El asistente de IA queda habilitado con el proveedor determinista `mock`, de modo que el arranque reproducible no necesita una API key externa; Azure Test usa Gemini mediante un secreto administrado fuera del repositorio.
 
 Para detener el stack sin borrar datos: `docker compose down`. Para una repetición desde base vacía: `docker compose down --volumes` y luego el comando de inicio.
 
@@ -35,8 +35,8 @@ Para detener el stack sin borrar datos: `docker compose down`. Para una repetici
 - CI/CD: GitHub Actions con autorización de DevOps y autenticación OIDC.
 - Bootstrap Azure desplegado: estado remoto, Container Registry, identidad OIDC, permisos y resource groups.
 - Plataforma `development` desplegada: Log Analytics y Azure Container Apps Environment en `Chile Central`.
-- Plataforma `test`: pendiente de una release aprobada y de la autorización DevOps.
-- Aplicaciones frontend/backend: repositorios separados, integrados por el `compose.yaml` local de Testing.
+- Plataforma `test`: desplegada en Azure Container Apps mediante Terraform y GitHub Actions.
+- Aplicaciones frontend/backend: repositorios separados, integrados por el `compose.yaml` local de Testing y desplegados mediante imágenes inmutables por SHA.
 
 ## Accesos rápidos
 
@@ -48,10 +48,9 @@ Para detener el stack sin borrar datos: `docker compose down`. Para una repetici
 - [Despliegue de development](.github/workflows/deploy-development.yml)
 - [Despliegue de test](.github/workflows/deploy-test.yml)
 
-## Próxima activación
+## Cierre de la cuarta entrega
 
-1. Conectar los repositorios o artefactos de frontend y backend cuando el equipo defina sus stacks.
-2. Incorporar al pipeline la construcción y publicación de imágenes en Azure Container Registry.
-3. Crear una release aprobada cuando exista una versión candidata para desplegar en `test`.
-
-El bootstrap y la plataforma de `development` ya están activos. `test` no se crea hasta que DevOps apruebe su plan y su despliegue.
+1. Ejecutar el gate del tag `v2.0-entrega4` desde un clon limpio.
+2. Conservar los artefactos de arranque, ZAP, Gitleaks y k6 producidos por GitHub Actions.
+3. Verificar que Azure Test ejecute las mismas revisiones inmutables fijadas en esta candidata.
+4. Mantener credenciales, tokens y API keys únicamente en GitHub Environments y secretos de Azure.

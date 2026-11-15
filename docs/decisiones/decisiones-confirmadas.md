@@ -59,7 +59,8 @@ Esta página contiene decisiones internas o acuerdos explícitos. Un evento incl
 ## Integraciones verificadas
 
 - El escenario `approved` del circuito M3 → Core → M1 → Core → M3 quedó confirmado el 2026-11-08 mediante `publicWorksProjectApproved` y `caseFileResolved` v1.0, con correlación conservada, entrega en un intento, sin DLQ y procesamiento funcional confirmado por ambos módulos.
-- Esta confirmación no alcanza a la variante `rejected`, que permanece pendiente como prueba independiente.
+- El escenario `rejected` del mismo circuito quedó confirmado el 2026-11-14. Core registró `caseFileResolved` con `eventId=44fd8a17-fc0b-4638-8fdf-046117b8a00e`, `correlationId=f38eeb5c-7430-49d3-ac05-a639d1b59487`, estado `ROUTED`, entrega `DELIVERED` a `q.obras` en un intento y sin registros en DLQ. M3 confirmó `PROCESSED` y la asociación de la resolución con `OBRA-16`.
+- El ingreso M3 → M7 de `streetClosureRequested` quedó confirmado para `eventId=2d6893aa-9482-4dfd-98c3-85607f36bdab`: Core lo entregó a `q.transito` en un intento, sin reintentos ni DLQ, y M7 confirmó recepción y persistencia funcional. La respuesta de M7 continúa pendiente y no se declara cerrado el circuito completo.
 
 ## Decisiones internas sobre M6
 

@@ -1,13 +1,14 @@
 # Declaración de uso de inteligencia artificial
 
 **Proyecto:** M3 Obras Públicas  
-**Fecha:** 3 de noviembre de 2026  
-**Herramientas utilizadas:** Claude y Codex.
+**Fecha:** 15 de noviembre de 2026
+**Herramientas utilizadas:** Claude, Codex y Gemini.
 
 ## Uso realizado
 
 - Claude se utilizó como apoyo para analizar alternativas, explicar conceptos y proponer código o documentación.
 - Codex se utilizó para inspeccionar repositorios, preparar pruebas, automatizar CI, redactar documentación y ejecutar verificaciones reproducibles.
+- Gemini se integró detrás del gateway de clasificación asistida de incidencias en Azure Test. Su salida es una recomendación estructurada y siempre requiere revisión humana.
 - Las herramientas no tuvieron autoridad para aprobar entregas, aceptar resultados, fusionar cambios ni desplegar por sí solas.
 
 ## Controles para evitar cambios incorrectos o peligrosos
@@ -20,6 +21,7 @@
 6. Los contratos externos se comparan con la documentación de cada equipo. Una propuesta de IA no se registra como acuerdo.
 7. Los resultados se declaran como PASS, FAIL, BLOQUEADO o NO EJECUTADO según evidencia. La IA no puede convertir una prueba pendiente en aprobada.
 8. Los despliegues y la creación del tag final requieren aprobación de DevOps.
+9. Gemini tiene timeout, circuit breaker, fallback manual, cuota, sanitización y prompt versionado; una respuesta del modelo nunca modifica por sí sola el estado de una obra u orden.
 
 ## Ejemplo de corrección humana
 
