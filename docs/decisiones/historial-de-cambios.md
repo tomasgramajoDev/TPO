@@ -1,5 +1,13 @@
 # Historial de cambios
 
+## 2026-11-15 — Arranque local Docker confirmado
+
+- Se instaló Ubuntu 24.04 LTS sobre WSL 2 y Docker Desktop quedó operativo.
+- La candidata final inició Front, Back, PostgreSQL y RabbitMQ mediante `docker compose up --build -d --wait`; los cuatro servicios quedaron saludables.
+- Front y Back respondieron HTTP 200, PostgreSQL quedó disponible y un login real devolvió usuario, rol y token.
+- La repetición directa del Backend ejecutó 132 pruebas con 0 fallos, 0 errores y 0 omitidas; Testcontainers levantó PostgreSQL 17 y aplicó las 12 migraciones Flyway.
+- El `.env` de la ejecución es local, está ignorado por Git y no contiene secretos de ambientes compartidos.
+
 ## 2026-11-15 — Candidata final y evidencia de integraciones
 
 - Se detectó que el tag remoto `v2.0-entrega4` tenía gate verde pero su `compose.yaml` fijaba revisiones anteriores a las desplegadas en Azure Test.
