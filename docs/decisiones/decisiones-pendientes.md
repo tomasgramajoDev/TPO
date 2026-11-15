@@ -30,7 +30,7 @@
 
 ## Atención Ciudadana - M2
 
-1. Ejecutar TC-019: `ticketUpdated` provoca `updateTicketStatus/STARTED` y luego `PROGRESS`; M2 debe confirmar ambas transiciones.
+1. La entrada de TC-019 ya ocurrió: M3 procesó `ticketUpdated` con `eventId=b99c2981-d7a5-476e-b748-23e31ed75647` y `correlationId=fd8aa7f3-c7e0-43c1-be5a-6d6c49511239`. Falta identificar/confirmar el `ticketId`, publicar `updateTicketStatus/STARTED` y luego `PROGRESS`, y obtener la confirmación de M2/Core.
 2. Ejecutar TC-020: enviar `PROGRESS` mientras el ticket continúa `ROUTED`; M2/Core deben confirmar rechazo, reintentos y resultado final.
 3. Conservar la autoridad de M2 sobre estado, prioridad y categoría. M3 solo informa hechos mediante `updateTicketStatus`.
 
@@ -42,11 +42,10 @@ Queda obtener la confirmación de M3/Core para `containerDamaged` (`eventId=748c
 
 ## Tránsito - M7
 
-1. La primera mitad quedó verificada: Core entregó `streetClosureRequested` (`eventId=2d6893aa-9482-4dfd-98c3-85607f36bdab`, `correlationId=afca371d-ddfd-497c-a437-f9152bef52bf`) en un intento, sin DLQ, y M7 confirmó recepción y persistencia.
-2. M7 debe recuperar su conexión AMQPS posterior al redeploy y publicar `streetClosureApproved` o `streetClosureRejected`; M3 y Core deben confirmar entrega y procesamiento.
-3. Ejecutar TC-017: un corte `ACTIVE` debe finalizar al vencer y emitir `streetClosureEnded`; uno `APPROVED` que nunca se activó debe pasar a `EXPIRED`.
-4. Ejecutar `roadAccidentRegistered` con daño de infraestructura si continúa en el mapa comprometido.
-5. Registrar evidencia de `eventId`, `correlationId`, estados, entrega y DLQ. El contrato v1.0 y el nombre correcto `streetClosureEnded` ya están acordados.
+1. El circuito funcional de corte ya llegó a M3: la solicitud `2d6893aa-9482-4dfd-98c3-85607f36bdab`, la aprobación `6f521edf-177f-43c4-b3ec-0a3eb1245fd5` y el cierre `c8479b39-4741-49f3-a3ea-f255d16416c2` conservaron `correlationId=afca371d-ddfd-497c-a437-f9152bef52bf`; Azure Test registró las dos respuestas como `PROCESSED`.
+2. Core debe aportar la verificación de `ROUTED`/`DELIVERED`, intentos y DLQ para la aprobación y el cierre antes de elevar el circuito completo a `CONFIRMED`.
+3. Ejecutar TC-017 de forma específica: un corte `ACTIVE` debe finalizar al vencer y emitir `streetClosureEnded`; uno `APPROVED` que nunca se activó debe pasar a `EXPIRED`. La prueba recibida no demuestra por sí sola cuál de esos disparadores produjo el cierre.
+4. `roadAccidentRegistered` llegó con `eventId=9d7b06ec-dfa3-4ca6-9d28-acc17ed82523` y `correlationId=dca92b7c-b533-438e-99de-cebc6446d4ef`, pero M3 lo rechazó antes de Inbox en las cuatro entregas (5 s, 30 s y 2 min entre intentos). M7 y M3 deben cruzar el payload exacto con el contrato, corregir la incompatibilidad y repetir la prueba; Core debe confirmar el estado final y la DLQ.
 
 ## Ciudadanos y Expedientes - M1
 
