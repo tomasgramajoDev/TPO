@@ -1,45 +1,51 @@
 # Informe de ejecución — candidato Entrega 4
 
-**Corte:** 15 de noviembre de 2026.
+**Corte:** 15 de noviembre de 2026.  
 **Regla:** solo se marca PASS con evidencia observada; pendiente no significa aprobado.
 
 ## Resultados comprobados
 
-- Back local sobre `1f2606e216ca6d9c59507b110a8f0647eee6e8a2`: 132 pruebas, 0 fallos, 0 errores y 2 omitidas porque Docker/WSL no está disponible en esta PC.
-- JaCoCo Back: 90,56% de líneas y 72,24% de ramas; todos los umbrales del `pom.xml` aprobados.
-- PIT: 53 mutaciones, mutation score 60% y test strength 82%.
-- JAR de Back generado.
-- Pruebas específicas: State, 409/412, idempotencia, Problem Details, 429, seguridad y fallback de IA aprobadas.
-- M6–M3–Core: circuito funcional confirmado, colas sin pendientes y DLQ vacía al cierre observado.
-- M1–M3–Core: escenario `approved` confirmado con correlación conservada y entrega en un intento.
-- M1–M3–Core: escenario `rejected` confirmado, entregado a `q.obras` en un intento, sin DLQ y procesado por M3.
-- M3–M7–Core: solicitud `streetClosureRequested` entregada y procesada por M7; respuesta y finalización pendientes por reconexión AMQPS de M7.
-- CI Back final `43415380427` sobre `1f2606e216ca6d9c59507b110a8f0647eee6e8a2`: Maven, SonarCloud, repetición anti-flakiness, PIT, Gitleaks, Trivy y construcción de contenedor aprobados.
-- Front local sobre `d472da55fa5dca8f6c351a01805d35495f611486`: 63 pruebas, 85,55% de líneas, 75,84% de ramas y build de producción aprobado. `npm audit` informa tres vulnerabilidades moderadas y ninguna crítica; deben quedar registradas como riesgo y no bloquean el umbral docente de CVE críticas.
-- Release `v2.0-entrega4`: arranque limpio en 138 segundos, ZAP con 0 hallazgos High/Critical y Gitleaks sobre el historial completo.
-- k6: 50 usuarios durante 5 minutos, 14.911 iteraciones, p95 de 6,35 ms, 0% de solicitudes fallidas y 100% de checks.
-- CI Front final `43130876805` sobre `d472da55fa5dca8f6c351a01805d35495f611486`: auditoría, lint, cobertura, repetición, build, Playwright, accesibilidad y contenedor aprobados.
-- Azure Test: Backend y Frontend responden HTTP 200, ejecutan las imágenes finales y reciben 100% del tráfico. Digests ACR: Back `sha256:86462cd76e05bcd4b9479e235e90045b0bd336b1b2cf188bfa16ec0e05d7a5f2`; Front `sha256:03d3d87ab84081a64a14ed45f1b655cfa890c7e988244b5f91342337d7e35247`.
+- Back `a33873a56e25fb3406c1fcc11dfae5be71c8b0eb`: CI `43768127963`, 133 pruebas repetidas tres veces, 0 fallos, 0 errores y 0 omitidas.
+- SonarCloud: Quality Gate `OK`, coverage 85,4%, líneas 90,7%, ramas 72,8%, 0 vulnerabilidades y 0 hotspots.
+- PIT: 53 mutaciones, 32 eliminadas, mutation score 60% y test strength 82%.
+- Trivy Backend: 0 vulnerabilidades; Gitleaks: sin secretos.
+- Front `918ce5d9a3b35f8fec091fe1fbbd0ccfa9af5dc0`: CI `43750629674`, 63 pruebas repetidas tres veces, 6 E2E, 85,55% de líneas y 75,84% de ramas.
+- `npm audit`: 0 Critical/High y tres Moderate en dependencias de desarrollo de Vitest.
+- PR TPO #77: gate `43779877210` verde con clean start, health/login, Gitleaks, ZAP y k6 sobre las mismas revisiones de Azure Test.
+- QA-14 Azure: ocho respuestas API por `/api` en el mismo origen, cero llamadas al Back directo, cero localhost y cero 4xx/5xx.
+- Seguridad en vivo: JWT ausente, `alg=none` y firma alterada respondieron 401; CORS rechazó un origen ajeno con 403.
+- Headers Front: CSP, HSTS, `nosniff`, `DENY`, COOP/COEP/CORP, Permissions-Policy y Referrer-Policy presentes.
+- Última muestra de 69 líneas de logs Azure: cero tokens JWT, headers Authorization, passwords, DNI, stack traces o nivel ERROR detectados.
+- M6–M3–Core: circuito principal, `containerDamaged` y `treeRiskDetected` confirmados.
+- M1–M3–Core: `approved`, `rejected` y `publicWorksProjectCompleted` confirmados.
+- M3–M7–Core: `roadAccidentRegistered` y circuito de cortes v1.1 hasta `ENDED` confirmados.
+- M2–M3: `ticketUpdated` y dos `PROGRESS` aplicados; el cierre completo continúa pendiente.
 
-## Defectos encontrados durante esta preparación
+## Candidata desplegada
 
-| ID | Severidad | Hallazgo | Resolución |
+| Componente | Imagen | Digest ACR |
+| --- | --- | --- |
+| Backend | `obras-publicas-backend:a33873a56e25fb3406c1fcc11dfae5be71c8b0eb` | `sha256:b58d6fe7cfe3a678a280aef92e093b0bff32fe6bcfbbfc901f1ef9fb85a2a5dd` |
+| Frontend | `obras-publicas-frontend:918ce5d9a3b35f8fec091fe1fbbd0ccfa9af5dc0` | `sha256:3b84fbb1bc07f87562b77dc33659f14dd76cc0c727c2caab7a3d65d3e11adfb6` |
+
+## Riesgos y pendientes reales
+
+| ID | Severidad | Hallazgo | Estado/acción |
 | --- | --- | --- | --- |
-| E4-01 | Bloqueante CI | tests de migración esperaban Flyway V10 tras agregar V11/V12 | corregido; suite local verde |
-| E4-02 | Mayor | cobertura de ramas cayó a 69% por rutas nuevas | se agregaron pruebas; quedó 71,10% |
-| E4-03 | Bloqueante CI | test Testcontainers de PostgreSQL seguía esperando V10 | corregido; CI y Testcontainers aprobados |
-| E4-04 | Bloqueante integración | Sonar detectó una ruta nula en `EventDispatcher` | precondición explícita y prueba agregadas; SonarCloud verde |
-| E4-05 | Bloqueante externo | Azure cambió la salida de `57.156.67.234` a `57.156.67.226`; AWS Core rechazaba AMQPS | resuelto al actualizar la allowlist; conexión `module_obras` observada en Azure |
+| E4-01 | Mayor | Sonar mantiene un bug Major en `EventDispatcher.java:27` por posible `NullPointerException`; reliability rating C. | Abierto. Backend debe analizar y corregir o justificar con evidencia. |
+| E4-02 | Menor | ZAP reporta cuatro warnings: versión de servidor, cache, `style-src 'unsafe-inline'` y aplicación moderna. | Riesgo documentado; 0 High/Critical. |
+| E4-03 | Menor | Tres vulnerabilidades Moderate en herramientas Vitest de desarrollo. | Riesgo documentado; 0 High/Critical y sin dependencia productiva afectada observada. |
+| E4-04 | Mayor si la cátedra lo exige | El JWT no emite ni valida claim `iss`. | No declarar issuer incorrecto como PASS; decidir con Backend si se incorpora. |
+| E4-05 | Externo | M2 aún debe confirmar `RESOLVED` y Core debe confirmar entrega/DLQ del hilo M2. | Esperar evidencia externa, sin inventar cierre. |
+| E4-06 | Operativo | La IP saliente de Azure no es estática y puede exigir cambios de allowlist en Core. | Evaluar VNet/NAT solo con aprobación de costo. |
 
-## Pendientes de aceptación
+## Actividades humanas pendientes
 
-1. Ejecutar en vivo los casos manuales BOLA/IDOR, BFLA, JWT inválido, mass assignment e inyecciones que el docente seleccione.
-2. Incorporar al paquete la evidencia de Gemini activo y repetir los casos adversariales sobre la candidata final.
-3. Completar E2E M2 y la respuesta/finalización de M7; obtener confirmación de los eventos secundarios de M6 y, si corresponde, `publicWorksProjectCompleted` de M1.
-4. Verificar Jira y subir PDF/presentación a Teams.
-5. Realizar la demo en vivo.
-6. Evaluar salida estática de Azure para evitar depender de cambios de allowlist.
+1. TC-030, TC-031, carga de Jira y prueba de usabilidad, asignadas a QA.
+2. Ensayo manual y exposición en vivo.
+3. Confirmación externa restante del circuito M2.
+4. Subida final de evidencias a Teams y firma nominal de la declaración de IA.
 
 ## Conclusión
 
-Azure Test ejecuta Front `d472da55fa5dca8f6c351a01805d35495f611486` y Back `1f2606e216ca6d9c59507b110a8f0647eee6e8a2`. La auditoría del 15/11 detectó que el `compose.yaml` del tag remoto todavía fijaba revisiones anteriores; se prepara una candidata corregida y el gate debe repetirse antes de considerar congelada la entrega. La aceptación integral continúa condicionada por las actividades externas o presenciales listadas arriba.
+Azure Test y el `compose.yaml` reproducible quedaron alineados a las mismas revisiones inmutables mediante PR #77, con gate verde antes del merge. La candidata técnica es reproducible y presentable, pero no se declara “perfecta”: conserva el bug Major de Sonar, el issuer JWT no implementado y actividades QA/humanas pendientes.

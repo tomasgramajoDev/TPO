@@ -1,5 +1,14 @@
 # Historial de cambios
 
+## 2026-11-15 — Alineación y evidencia DevOps de la candidata vigente
+
+- PR #77 alineó el arranque reproducible con las revisiones desplegadas: Back `a33873a56e25fb3406c1fcc11dfae5be71c8b0eb` y Front `918ce5d9a3b35f8fec091fe1fbbd0ccfa9af5dc0`. El gate `43779877210` aprobó clean start, health/login, Gitleaks, ZAP y k6 antes del merge.
+- Se verificaron tags exactos `v1.0-testing` en Back, Front y TPO, creados el 03/11/2026 y con CI verde asociado.
+- Backend CI `43768127963`: 133 pruebas repetidas tres veces, Sonar Quality Gate aprobado, PIT 60%/test strength 82%, Trivy sin vulnerabilidades y Gitleaks sin secretos.
+- Frontend CI `43750629674`: 63 pruebas repetidas tres veces, 6 E2E y cobertura de líneas 85,55%. `npm audit` mantiene tres vulnerabilidades moderadas en herramientas de desarrollo, sin High/Critical.
+- QA-14 en Azure observó ocho respuestas API por el proxy del mismo origen, sin llamadas directas al Back, localhost ni respuestas 4xx/5xx. La evidencia fue sanitizada para excluir tokens, contraseñas, headers y bodies.
+- JWT ausente, `alg=none` y firma alterada respondieron 401. El vencimiento está cubierto por prueba automatizada. No se declara una prueba de issuer incorrecto porque el Backend no emite ni valida el claim `iss`.
+
 ## 2026-11-15 — Entrada M2 procesada por M3
 
 - Fuente técnica: logs de Azure Container Apps y endpoint operativo de Azure Test.
