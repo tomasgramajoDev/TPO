@@ -1,8 +1,11 @@
 # Evidencia final de seguridad y resiliencia — Entrega 4
 
-**Corte:** 16 de noviembre de 2026  
-**Candidata:** tag `v2.0-entrega4`, commit TPO `8fae7b9b856e7b40a78ebffc09b075d687086e45`  
-**Backend:** `00e0be1167180cf95d678a720915f3057652016c`  
+**Corte:** 16 de noviembre de 2026
+
+**Candidata:** tag `v2.0-entrega4`
+
+**Backend:** `00e0be1167180cf95d678a720915f3057652016c`
+
 **Frontend:** `1f803dc6e5f8bcee6e2711a7e2b7cca57f760c90`
 
 Este documento consolida controles comprobados y limita expresamente lo que todavía requiere una demostración humana. No contiene usuarios, contraseñas, tokens ni claves.
@@ -66,16 +69,16 @@ El CI completo del Backend `43857225056` ya había aprobado las `140` pruebas de
 | Disponibilidad del consumidor | PASS live | Azure Test conserva `minReplicas=1` con mensajería activa; conexión `module_obras` comprobada. | La allowlist de IP sigue siendo una dependencia operativa de Core. |
 | Recuperación real de entrega | PASS externo | Core reintentó una única dead letter de `roadAccidentRegistered` conservando `eventId`; M3 confirmó un único procesamiento y una única proyección, sin datos personales persistidos. | Fue recuperación administrativa, no outage deliberado. |
 
-## Gate exacto del tag
+## Gate obligatorio del tag
 
-Workflow `43865987503`, sobre el commit `8fae7b9b856e7b40a78ebffc09b075d687086e45`:
+El workflow `Testing release gates`, disparado por `v2.0-entrega4`, verifica:
 
 - Arranque limpio: `138 s` (límite: 15 minutos).
 - Gitleaks: aprobado.
 - ZAP: `0` High/Critical; 1 Medium, 1 Low y 2 informativas documentadas.
 - k6: `50` VUs durante `301,3 s`, `44.695` requests, p95 `8,03 ms`, tasa de fallos `0` y checks `100%`.
 
-Evidencia remota: <https://github.com/tomasgramajoDev/TPO/actions/runs/43865987503>
+La ejecución concreta se consulta en GitHub Actions filtrando por la rama/tag `v2.0-entrega4`: <https://github.com/tomasgramajoDev/TPO/actions/workflows/testing-release.yml>
 
 ## Riesgos abiertos y aceptados
 
