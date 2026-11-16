@@ -79,7 +79,7 @@ variable "backend_image" {
 variable "frontend_image" {
   description = "Imagen inmutable del frontend promovida a test."
   type        = string
-  default     = "acrobraspublica302ceba6.azurecr.io/obras-publicas-frontend:918ce5d9a3b35f8fec091fe1fbbd0ccfa9af5dc0"
+  default     = "acrobraspublica302ceba6.azurecr.io/obras-publicas-frontend:1f803dc6e5f8bcee6e2711a7e2b7cca57f760c90"
 }
 
 variable "application_auth_username" {
