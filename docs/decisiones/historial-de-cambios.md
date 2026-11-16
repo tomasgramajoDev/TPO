@@ -1,5 +1,13 @@
 # Historial de cambios
 
+## 2026-11-16 — Frontend alineado con las validaciones finales de Backend
+
+- Frontend PR `#24`, merge `1f803dc6e5f8bcee6e2711a7e2b7cca57f760c90`: el rechazo de proyectos ahora exige un motivo visible antes de llamar a la API y envía `{"observations":"..."}`, según el contrato desplegado de Backend.
+- Completar una orden conserva `outcome` como campo obligatorio en el formulario y también en el tipo del cliente HTTP. Los límites de nombre, ubicación, responsable, contratista, alcance y descripción se alinearon con los máximos aceptados por Backend.
+- La verificación local aprobó lint, build, 64 pruebas con cobertura global superior al 85% y 6 recorridos E2E de navegador, incluido el control de accesibilidad. El CI del PR `43861195286` aprobó audit sin vulnerabilidades altas o críticas, pruebas repetidas, cobertura, build, E2E y contenedor.
+- El workflow `43861490450` publicó en ACR la imagen inmutable `obras-publicas-frontend:1f803dc6e5f8bcee6e2711a7e2b7cca57f760c90`, digest `sha256:df171e6d760940a2aba204f38173125ea8869e4c567fedad686967e8113663f8`.
+- La promoción a Azure Test queda sujeta al plan y apply de Terraform de esta revisión; publicar la imagen no se registra por sí solo como despliegue exitoso.
+
 ## 2026-11-16 — Validaciones finales de Backend preparadas para Azure Test
 
 - Backend PR `#30`, merge `00e0be1167180cf95d678a720915f3057652016c`: completar una orden exige un `outcome` no vacío, sin convertir la evidencia fotográfica en obligatoria; rechazar un proyecto exige y persiste una observación.
