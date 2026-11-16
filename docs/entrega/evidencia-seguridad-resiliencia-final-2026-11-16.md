@@ -15,7 +15,7 @@ Este documento consolida controles comprobados y limita expresamente lo que toda
 - **Seguridad automatizada:** PASS. JWT, BFLA, rate limiting, validaciones, mass assignment, ETag, idempotencia y Problem Details tienen regresiones aprobadas.
 - **Seguridad de la candidata:** PASS con observaciones menores. Gitleaks no detectó secretos y ZAP informó `0` alertas High/Critical; permanecen una alerta Medium y una Low documentadas.
 - **Resiliencia de aplicación:** PASS. Timeout/fallback, rollback, Inbox/Outbox, deduplicación, orden por clave, confirmaciones AMQP y reintento con el mismo `eventId` tienen pruebas aprobadas.
-- **Resiliencia operativa:** PASS. TC-024 inyectó una indisponibilidad aislada antes de `RabbitTemplate.send` solo en Azure Test, sin intervenir el broker compartido. La operación funcional se conservó, la Outbox quedó pendiente, registró dos fallos y publicó el mismo `eventId` después del restablecimiento. M7 confirmó una única recepción y un único efecto funcional.
+- **Resiliencia operativa:** PASS. TC-024 inyectó una indisponibilidad aislada antes de `RabbitTemplate.send` solo en Azure Test, sin intervenir el broker compartido. La operación funcional se conservó, la Outbox quedó pendiente, registró dos fallos y publicó el mismo `eventId` después del restablecimiento. M7 confirmó una única recepción y un único efecto funcional; Core confirmó `ROUTED`/`DELIVERED` en un intento, sin retry ni DLQ.
 
 ## Ejecución reproducida el 16/11
 
@@ -59,7 +59,7 @@ El CI completo del Backend `43929457968` aprobó `145` pruebas, JaCoCo, SonarClo
 | --- | --- | --- | --- |
 | Proveedor IA lento o caído | PASS | Timeout por defecto de `5 s`, fallback y circuit breaker en `ResilientIncidentTriageGatewayTest`. | El fallback no ejecuta cambios de negocio. |
 | Publicación AMQP recibe nack/return | PASS | `RabbitEventTransportTests`: no se marca publicado y no se filtra el mensaje privado del broker. | Prueba con doble del cliente. |
-| Publicador sin transporte hacia el broker | PASS live controlado | TC-024: `streetClosureRequested` `3f774fc5-bbd0-409e-a2ef-5af19ef2edb2`; Outbox `0 → 1 → 0`, dos fallos registrados, luego `published` con el mismo `eventId`. M7 comprobó una recepción, un corte `REQUESTED` y cero duplicados. Workflow de restauración `43935681337` exitoso. | La prueba valida la recuperación del publicador de M3; no simula una caída real del RabbitMQ compartido. |
+| Publicador sin transporte hacia el broker | PASS live controlado | TC-024: `streetClosureRequested` `3f774fc5-bbd0-409e-a2ef-5af19ef2edb2`; Outbox `0 → 1 → 0`, dos fallos registrados, luego `published` con el mismo `eventId`. M7 comprobó una recepción, un corte `REQUESTED` y cero duplicados. Core confirmó `ROUTED`, `DELIVERED` en un intento y cero retry/DLQ. Workflow `43935681337` exitoso. | La prueba valida la recuperación del publicador de M3; no simula una caída real del RabbitMQ compartido. |
 | Transacción funcional falla | PASS | Rollback conjunto del efecto de negocio, reserva idempotente y Outbox. | Ninguno abierto. |
 | Consumidor interrumpido | PASS | El Inbox persistido retoma el evento pendiente. | Ninguno abierto. |
 | Mensaje duplicado/concurrente | PASS | Dos consumidores producen un único efecto; el segundo resultado es `duplicated`. | La deduplicación adicional de `containerDamaged` ocurrió en Core antes de llegar a M3. |
