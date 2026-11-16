@@ -2,7 +2,7 @@
 
 **Modulo:** M3 Obras Publicas
 **Version documental:** 1.0
-**Fecha de corte:** 2026-11-13
+**Fecha de corte:** 2026-11-16
 **Estado:** catalogo consolidado para QA y defensa. Las estimaciones son una propuesta de planificacion y requieren aceptacion del equipo.
 
 Este documento reemplaza, para la entrega, las numeraciones parciales usadas en borradores anteriores. No elimina esos antecedentes. Cada historia se vincula con criterios de aceptacion, pruebas y evidencia en la matriz de trazabilidad.
@@ -70,7 +70,7 @@ Este documento reemplaza, para la entrega, las numeraciones parciales usadas en 
 ## HU-06 - Coordinar cortes de calle con M7 Transito
 
 **Como** responsable de una orden que afecta la via publica, **quiero** solicitar y seguir un corte de calle, **para** ejecutar la obra con autorizacion de Transito.
-**Prioridad:** P0. **Estimacion propuesta:** 8 puntos. **Estado QA:** contrato y pruebas locales PASS; prueba bilateral real pendiente.
+**Prioridad:** P0. **Estimacion propuesta:** 8 puntos. **Estado QA:** PASS E2E M3-M7-Core para aprobación, rechazo, cierre manual/automático y expiración sin activación.
 
 ### Criterios de aceptacion
 
@@ -82,7 +82,7 @@ Este documento reemplaza, para la entrega, las numeraciones parciales usadas en 
 ## HU-07 - Atender tickets derivados por M2
 
 **Como** personal de Obras, **quiero** recibir tickets de Atencion Ciudadana e informar su avance, **para** mantener al ciudadano actualizado sin perder la autoridad de estado de M2.
-**Prioridad:** P0. **Estimacion propuesta:** 8 puntos. **Estado QA:** implementacion y pruebas locales PASS; bilateral M2 pendiente.
+**Prioridad:** P0. **Estimacion propuesta:** 8 puntos. **Estado QA:** PASS E2E M2-M3-Core para `ticketUpdated`, `STARTED`, `PROGRESS` y `RESOLVED`.
 
 ### Criterios de aceptacion
 
@@ -106,7 +106,7 @@ Este documento reemplaza, para la entrega, las numeraciones parciales usadas en 
 ## HU-09 - Vincular proyectos con expedientes de M1
 
 **Como** responsable de Obras, **quiero** vincular un proyecto con su expediente administrativo, **para** registrar la resolucion institucional antes de continuar el flujo correspondiente.
-**Prioridad:** P0. **Estimacion propuesta:** 8 puntos. **Estado QA:** escenario approved PASS E2E; variante rejected pendiente.
+**Prioridad:** P0. **Estimacion propuesta:** 8 puntos. **Estado QA:** PASS E2E para `approved`, `rejected` y `publicWorksProjectCompleted`.
 
 ### Criterios de aceptacion
 
