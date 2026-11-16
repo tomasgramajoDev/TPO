@@ -472,3 +472,10 @@ No se eliminó el antecedente de los eventos genéricos; permanece documentado c
 - Se volvió a ejecutar el Back con 105 pruebas aprobadas y un gate JaCoCo de 80% de líneas y 70% de ramas; el resultado observado fue 90,83% de líneas y 70,67% de ramas.
 - Se volvió a ejecutar el Front con 58 pruebas aprobadas; la cobertura observada fue 86,05% de sentencias, 77,81% de ramas, 84,09% de funciones y 85,84% de líneas. El audit local quedó sin vulnerabilidades altas o críticas y con tres moderadas del tooling de desarrollo.
 - Estos resultados locales no acreditan por sí mismos G2, G3, G4, G5 o G7: tag, CI remoto, carga en Teams/Jira y demo en vivo requieren evidencia posterior.
+# 2026-11-16 — Reconciliación del paquete QA con la candidata final
+
+- Se cruzó `QA_16-11-26.zip` con los criterios de Clase 15 y con el tag vigente `v2.0-entrega4`.
+- Se corrigieron los documentos de ejecución, trazabilidad e historias para usar Back `00e0be1`, Front `1f803dc6`, gate `43890063632` y los cierres confirmados de M1, M2, M6, M7 y Core.
+- Se registraron nueve retests manuales sobre la candidata final. D-01, D-10, D-14, D-08 y D-15 no se cierran por inferencia: requieren evidencia nueva o una decisión explícita de alcance.
+- Front PR #25 corrigió el overflow a 768 px y agregó E2E-07; el CI `43901973413` aprobó lint, 64 pruebas, cobertura, repetición, build, 7 E2E y contenedor. La imagen candidata usa el commit `4d1a885fe029c991a3f224a036622fae209baa41`.
+- El workflow `43902298985` publicó Backend digest `sha256:bae2abbf3e5fdacc7a60c8e5d8d2c39492c28415d7f18d1484e582ddb2e850b3` y Frontend digest `sha256:3e54ba11c35d30e761a9a1b436c4ed314241ff656e7d15533a4178f0ab3d418f` en ACR.
