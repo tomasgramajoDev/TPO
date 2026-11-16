@@ -58,6 +58,7 @@ Esta página contiene decisiones internas o acuerdos explícitos. Un evento incl
 
 ## Integraciones verificadas
 
+- M2 confirmó el 2026-11-15 la aplicación de `STARTED`, dos `PROGRESS` y `RESOLVED` para `TK-2026-000045`. El evento final `c889727e-db9e-4bd6-a064-7ff1ad5b32b6` quedó `PROCESSED/APPLIED`, sin error, y el ticket pasó de `IN_PROGRESS` a `RESOLVED`. El transporte queda `CORE_PENDING` hasta la auditoría de Core.
 - El escenario `approved` del circuito M3 → Core → M1 → Core → M3 quedó confirmado el 2026-11-08 mediante `publicWorksProjectApproved` y `caseFileResolved` v1.0, con correlación conservada, entrega en un intento, sin DLQ y procesamiento funcional confirmado por ambos módulos.
 - El escenario `rejected` del mismo circuito quedó confirmado el 2026-11-14. Core registró `caseFileResolved` con `eventId=44fd8a17-fc0b-4638-8fdf-046117b8a00e`, `correlationId=f38eeb5c-7430-49d3-ac05-a639d1b59487`, estado `ROUTED`, entrega `DELIVERED` a `q.obras` en un intento y sin registros en DLQ. M3 confirmó `PROCESSED` y la asociación de la resolución con `OBRA-16`.
 - El ingreso M3 → M7 de `streetClosureRequested` quedó confirmado para `eventId=2d6893aa-9482-4dfd-98c3-85607f36bdab`: Core lo entregó a `q.transito` en un intento, sin reintentos ni DLQ, y M7 confirmó recepción y persistencia funcional. La respuesta de M7 continúa pendiente y no se declara cerrado el circuito completo.

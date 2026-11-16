@@ -18,7 +18,7 @@ Al 15/11/2026 existen circuitos `CONFIRMED` con evidencia bilateral y de Core:
 - M1 ↔ M3: resoluciones `approved` y `rejected`, más `publicWorksProjectCompleted`.
 - M7 ↔ M3: `roadAccidentRegistered` y circuito de cortes documental v1.1 hasta `streetClosureEnded`.
 
-M2 ↔ M3 continúa parcialmente confirmado: M3 procesó `ticketUpdated` y M2 aplicó los dos `PROGRESS`; faltan la confirmación de `RESOLVED` por M2 y la evidencia de entrega/DLQ de Core.
+M2 ↔ M3 tiene confirmación funcional bilateral: M3 procesó `ticketUpdated` y M2 aplicó `STARTED`, dos `PROGRESS` y `RESOLVED`, dejando el ticket final `RESOLVED`. El transporte permanece `CORE_PENDING` hasta recibir la evidencia de entrega, intentos y DLQ de Core.
 
 ## Fuente transversal recibida
 

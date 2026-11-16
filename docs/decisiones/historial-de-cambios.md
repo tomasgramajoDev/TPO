@@ -1,5 +1,13 @@
 # Historial de cambios
 
+## 2026-11-15 — M2 confirmó la resolución del ticket
+
+- Fuente externa: M2, confirmación en el canal de integración del 2026-11-15. Estado: `CONFIRMED` para el procesamiento funcional M2 ↔ M3 y `CORE_PENDING` para la auditoría de transporte.
+- M2 confirmó `updateTicketStatus/RESOLVED` `c889727e-db9e-4bd6-a064-7ff1ad5b32b6` como Inbox `PROCESSED`, disposición `APPLIED` y error `NULL`.
+- El ticket `TK-2026-000045`, UUID `f2e7fb86-8ea6-490c-8aa8-c71213a91f36`, pasó de `IN_PROGRESS` a `RESOLVED` y conservó `responsibleAreaId=M3`.
+- M2 dio por validados `STARTED`, los dos `PROGRESS` y `RESOLVED`. `currentProgress=NULL` es esperado porque no se informó el campo opcional `data.progress`.
+- Queda únicamente que Core confirme enrutamiento, intentos y ausencia o presencia de registros asociados en DLQ/retry.
+
 ## 2026-11-15 — Alineación y evidencia DevOps de la candidata vigente
 
 - PR #77 alineó el arranque reproducible con las revisiones desplegadas: Back `a33873a56e25fb3406c1fcc11dfae5be71c8b0eb` y Front `918ce5d9a3b35f8fec091fe1fbbd0ccfa9af5dc0`. El gate `43779877210` aprobó clean start, health/login, Gitleaks, ZAP y k6 antes del merge.

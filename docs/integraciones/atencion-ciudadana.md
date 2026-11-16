@@ -1,55 +1,75 @@
 # Integración con Atención Ciudadana — Módulo 2
 
-## Objetivo
+## Estado vigente
 
-Recibir reclamos de infraestructura derivados o escalados y publicar los estados que Atención Ciudadana confirme necesitar para el seguimiento del ciudadano.
+M2 entregó el 2026-10-20 la guía Eventos v1.78 y el paquete de JSON Schema Draft 2020-12. v1.78 reemplaza las versiones anteriores. M3 consume `ticketUpdated`, filtra `responsibleAreaId=M3` y publica hechos mediante `updateTicketStatus`; M2 conserva la autoridad sobre estado, prioridad y categoría.
 
-## Contrato vigente y prueba parcial
+El 2026-11-15 M2 confirmó la recepción y aplicación de `STARTED`, los dos `PROGRESS` y `RESOLVED` del circuito real. El ticket `TK-2026-000045` quedó `RESOLVED`, con área responsable `M3`. La aplicación funcional bilateral queda `CONFIRMED`. El cierre técnico integral permanece `CORE_PENDING` hasta que Core confirme enrutamiento, intentos y ausencia de registros asociados en DLQ.
 
-El contrato vigente recibido de M2 es Eventos v1.78. M3 consume `ticketUpdated`, filtra `responsibleAreaId="M3"` e ignora los mensajes que no le corresponden; `ticketCreated` no forma parte del contrato operativo de Obras. M3 informa hechos mediante `updateTicketStatus` y M2 conserva la autoridad sobre estado, prioridad y categoría.
+El paquete `m2-eventos-v1.78-schemas.zip` tiene SHA-256 `f20347c6cea5e9197e11d73cb3aef77db6fffd4c342ab75232381775c671b27f`. La diferencia funcional frente a v1.77 es `updatedBy.id`, que ahora valida UUID o `null`.
 
-El 2026-11-14 Azure Test recibió `ticketUpdated` con `eventId=b99c2981-d7a5-476e-b748-23e31ed75647`, `correlationId=fd8aa7f3-c7e0-43c1-be5a-6d6c49511239` y `sourceModule=atencion-ciudadana`. Los logs y el endpoint operativo de M3 lo registran como `PROCESSED`.
+## Evento recibido por Obras
 
-La prueba acredita recepción, validación y persistencia de la proyección del lado M3. No se registró todavía una publicación `updateTicketStatus` asociada a ese hilo ni la aplicación funcional en M2. El circuito completo permanece `PENDING` hasta ejecutar una acción `STARTED`/`PROGRESS` o `RESOLVED`, compartir su `eventId` y obtener la confirmación de M2/Core.
+### `ticketUpdated`
 
-## Eventos recibidos comunicados por el PO
+- M3 se suscribe mediante Core y lo recibe en `q.obras`.
+- Core rutea por `eventType`, no por `responsibleAreaId`; cada consumidor debe filtrar sus eventos.
+- M3 procesa únicamente `data.responsibleAreaId=M3`; `ticketCreated` no se consume.
+- M3 actúa ante `ROUTED`, `INFORMATION_PROVIDED`, `REOPENED`, `CANCELLED`, `PRIORITY_CHANGED` y `ESCALATION_CHANGED` cuando corresponden a su gestión.
+- Los mensajes con `purpose=RECLASSIFICATION` se ignoran operacionalmente hasta un `ROUTED` posterior.
+- El consumidor compara `data.updatedAt`, estado y última versión aplicada; no depende del orden de RabbitMQ.
+- M3 deduplica por `eventId` y no crea un segundo ticket u orden ante reentregas.
 
-### `complaintRouted`
+## Evento publicado por Obras
 
-- **Estado:** `RECEIVED` (fuente: matriz enviada por el PO; pendiente de confirmación con M2).
-- **Nombre funcional original:** Reclamo derivado.
-- **Emisor:** Atención Ciudadana.
-- **Disparador:** un reclamo se clasifica como problema de infraestructura.
-- **Payload funcional comunicado por el PO:** `ticketId`, `category`, `subcategory`, `description`, `location`, `priority`, `createdAt`, `evidence`, `affectedPeople` cuando corresponda.
-- **Acción de Obras:** registrar para evaluación; aceptar, pedir información, vincular a una orden o crear una nueva.
-- **Evento derivado posible:** `workOrderCreated`.
-- **Correlación:** identificador de ticket pendiente de acuerdo.
+### `updateTicketStatus`
 
-### `complaintEscalated`
+- Variantes: `STARTED`, `PROGRESS`, `INFORMATION_REQUIRED`, `RETURNED`, `RESOLVED` y `REJECTED`.
+- Campos comunes obligatorios: `ticketId`, `updateType`, `updatedBy` y `updateOccurredAt`.
+- `STARTED` precede a `PROGRESS` cuando el ticket todavía está `ROUTED`.
+- `progress` es opcional y representa un porcentaje físico medido; no se inventa un valor cuando no existe medición.
+- `RESOLVED` requiere `publicMessage` y `details.resolution.type`.
+- `updatedBy.type=EXTERNAL_USER` usa el UUID de la persona en M3; `null` queda reservado para `SYSTEM` o ausencia de una persona identificable.
+- `RETURNED` y `REJECTED` requieren el `reasonCode` correspondiente y un mensaje público o interno.
+- Cuando deriva de un evento de M2, conserva `correlationId` y usa como `causationId` el `eventId` recibido.
 
-- **Estado:** `RECEIVED` (fuente: matriz enviada por el PO; pendiente de confirmación con M2).
-- **Nombre funcional original:** Reclamo escalado.
-- **Emisor:** Atención Ciudadana.
-- **Disparador:** aumenta la prioridad de un reclamo previamente derivado.
-- **Payload funcional comunicado por el PO:** `ticketId`, `previousPriority`, `newPriority`, `reason`, `escalatedAt`.
-- **Acción de Obras:** actualizar prioridad y alertar; si cambia la programación, publicar `workOrderRescheduled`.
+## Reglas técnicas
 
-La obligatoriedad de estos campos no está acordada.
+- Entrega `at-least-once`, sin orden garantizado.
+- Un reenvío del mismo hecho conserva el mismo `eventId`.
+- Ante fallo se usa `nack(requeue=false)`.
+- Los archivos `*.data.schema.json` validan únicamente `data`; el envelope se valida por separado en Core.
+- `data` debe estar siempre presente como objeto.
 
-## Eventos que la matriz del PO asigna a M2
+## Evidencia bilateral — 2026-11-15
 
-`workOrderCreated`, `workOrderScheduled`, `workOrderAssigned`, `workOrderStarted`, `workOrderPaused`, `workOrderDelayed`, `workOrderRescheduled`, `workOrderCompleted`, `workOrderValidated` y `workOrderReopened`.
+### Entrada M2 → M3
 
-Todos quedan `RECEIVED` como información del PO y pendientes de confirmación bilateral con M2. La matriz describe `workOrderValidated` como resolución definitiva del reclamo vecinal; esa definición no se eleva a `AGREED` hasta que M2 la confirme.
+- `ticketUpdated`: `b99c2981-d7a5-476e-b748-23e31ed75647`.
+- `ticketId`: `f2e7fb86-8ea6-490c-8aa8-c71213a91f36`.
+- `publicId`: `TK-2026-000045`.
+- `correlationId`: `fd8aa7f3-c7e0-43c1-be5a-6d6c49511239`.
+- Inbox M3: `PROCESSED`.
 
-## Pendientes externos
+### Salida M3 → M2
 
-- Nombres definitivos y casing.
-- Payloads y campos obligatorios/opcionales.
-- Uso de `ticketId` u otro identificador.
-- Estados que M2 desea consumir.
-- Cierre del reclamo con `workOrderCompleted` o `workOrderValidated`.
-- Confirmar si M2 consume también `workOrderPaused`, incorporado por la matriz del PO pero ausente en la lista anterior.
-- Manejo de duplicados, reaperturas y conformidad del ciudadano.
-- Convenciones de Core.
-- Completar la vuelta del evento ya recibido: M2 debe compartir o confirmar el `ticketId` del caso `b99c2981-d7a5-476e-b748-23e31ed75647`; M3 publica la actualización y M2/Core verifican aceptación, transición y DLQ.
+- `STARTED`: `e9d0e937-95c1-4999-83b3-ef1258c20b7b`.
+- `PROGRESS` de programación: `d1163f06-1951-4843-bad2-b5295e6afd2d`.
+- `PROGRESS` de inicio: `868c43db-9600-47f1-b306-ac3aa22155c3`.
+- `RESOLVED`: `c889727e-db9e-4bd6-a064-7ff1ad5b32b6`.
+
+M2 confirmó para `RESOLVED`:
+
+- Inbox `PROCESSED`.
+- Disposición `APPLIED`.
+- `producerModuleId=M3`.
+- `error=NULL`.
+- Transición `IN_PROGRESS → RESOLVED` aplicada correctamente.
+- Ticket final `RESOLVED`, responsable `M3`.
+- `currentProgress=NULL`, resultado esperado porque los dos `PROGRESS` no incluyeron el campo opcional `data.progress`.
+
+M2 también dio por validados `STARTED` y ambos `PROGRESS`. Esta evidencia confirma el procesamiento funcional de extremo a extremo entre M2 y M3.
+
+## Pendiente único del circuito probado
+
+Core debe confirmar para los cuatro eventos salientes `ROUTED/DELIVERED`, cola de destino, cantidad de intentos y ausencia o presencia de registros asociados en DLQ/retry. Hasta recibir esa evidencia, el transporte se conserva como `CORE_PENDING` y no se infiere solo a partir del Outbox de M3.
