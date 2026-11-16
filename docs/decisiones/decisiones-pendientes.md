@@ -74,7 +74,7 @@ La entrega exige integración con Core y con los demás módulos del mapa de Mir
 2. M1: `approved`, `rejected` y `publicWorksProjectCompleted` están confirmados.
 3. M2: recorrido válido confirmado por M2, M3 y Core; queda como cobertura adicional el rechazo fuera de orden.
 4. M7: circuito base, rechazo, cierre automático, expiración y `roadAccidentRegistered` confirmados; queda la limpieza del typo histórico.
-5. Core: TC-022 HTTP no aplica al camino AMQP directo de M3. TC-024 fue ejecutado con GO de Core y confirmación funcional de M7; continúan pendientes únicamente la reconciliación del catálogo y la limpieza del nombre histórico del evento de cierre.
+5. Core: TC-022 HTTP no aplica al camino AMQP directo de M3. TC-024 quedó validado satisfactoriamente por Core, M7 y M3; continúan pendientes únicamente la reconciliación del catálogo y la limpieza del nombre histórico del evento de cierre.
 6. Dependencias del tercer checkpoint: confirmar JWT firmado/validado con M1. El login propio de M3 no demuestra esta dependencia; ambiente de Test y catálogo de Core deben quedar evidenciados.
 
 ## Testing y documentación exigidos

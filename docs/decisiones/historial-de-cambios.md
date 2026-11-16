@@ -7,7 +7,7 @@
 - M1 quedó documentado como `CONFIRMED` para `approved`, `rejected` y `publicWorksProjectCompleted`; los eventos adicionales de la matriz histórica mantienen su estado previo hasta un acuerdo específico.
 - Se retiraron como pendientes vigentes la respuesta base de M7 y el fallo inicial de `roadAccidentRegistered`, porque la evidencia posterior confirmó el circuito v1.1, A/B/C y la recuperación con un único efecto funcional.
 - TC-022 se clasificó `NO_APLICA_AL_CAMINO_AMQP_DE_M3`: el `422` esperado corresponde al endpoint HTTP de Core, mientras Obras publica directamente por AMQP. La eventual demostración HTTP queda separada y no se presenta como ejecutada.
-- TC-024 se ejecutó con GO definitivo de Core y conformidad de M7. La simulación aislada mantuvo el evento `3f774fc5-bbd0-409e-a2ef-5af19ef2edb2` en Outbox, registró dos fallos y lo publicó tras restaurar el transporte por Terraform. M7 confirmó una única recepción y un único corte `REQUESTED`, sin duplicados y con los identificadores conservados. RabbitMQ compartido no fue intervenido.
+- TC-024 se ejecutó con GO definitivo de Core y conformidad de M7. La simulación aislada mantuvo el evento `3f774fc5-bbd0-409e-a2ef-5af19ef2edb2` en Outbox, registró dos fallos y lo publicó tras restaurar el transporte por Terraform. M7 confirmó una única recepción y un único corte `REQUESTED`; Core confirmó `ROUTED`, `DELIVERED` en un intento y cero retry/DLQ. Los tres equipos cerraron la validación sin intervenir RabbitMQ compartido.
 
 ## 2026-11-16 — Retest QA y despliegue de correcciones
 

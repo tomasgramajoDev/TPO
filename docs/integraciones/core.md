@@ -56,7 +56,9 @@ Core dio el GO definitivo para ejecutar la simulación sin intervenir RabbitMQ c
 
 La operación funcional persistió la solicitud, la Outbox pasó a un pendiente y la revisión registró dos fallos de publicación para el mismo `eventId`. Antes de cambiar la bandera se detuvo únicamente el Container App de M3; Terraform restauró `SIMULATE_MESSAGING_FAILURE=false` y el despliegue `43935681337` terminó exitosamente. Azure volvió a `Running`, `Single`, una revisión, una réplica `Healthy`; la Outbox pasó a cero y el contador de publicados de `22` a `23`. El log registró `result=published` para el mismo `eventId` a las 16:08:31 ART.
 
-M7 confirmó una única recepción, un único registro procesado y un único corte `REQUESTED`, sin duplicados, rechazos ni descartes, conservando `eventId`, `correlationId` y `closureRequestId`. Antes del restablecimiento había verificado cero registros con esos identificadores. La prueba acredita la recuperación del publicador de M3; no equivale a una caída del broker compartido.
+M7 confirmó una única recepción, un único registro procesado y un único corte `REQUESTED`, sin duplicados, rechazos ni descartes, conservando `eventId`, `correlationId` y `closureRequestId`. Antes del restablecimiento había verificado cero registros con esos identificadores.
+
+Core verificó en PostgreSQL y logs del worker un único ingreso AMQP desde `obras` a las 16:08:31 ART, estado `ROUTED`, destino `transito`/`q.transito` y entrega `DELIVERED` en un intento, sin error ni entrega diferida. Informó cero registros asociados en `retry_audit` y `dead_letters`, coincidencia de los identificadores y validación final satisfactoria de TC-024. La prueba acredita la recuperación del publicador de M3; no equivale a una caída del broker compartido.
 
 ## Pendientes que permanecen abiertos
 
