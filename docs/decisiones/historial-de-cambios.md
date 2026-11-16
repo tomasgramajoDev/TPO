@@ -1,5 +1,15 @@
 # Historial de cambios
 
+## 2026-11-15 — Validación de emisor JWT promovida a Azure Test
+
+- Backend PR `#29`, merge `3a163301e3cfaceb92f4d648899c35342426a10c`: los JWT emitidos incluyen `iss=obras-publicas`, el parser exige ese emisor y un envelope decodificado nulo se rechaza antes de desreferenciarlo.
+- El CI aprobó 137 pruebas, JaCoCo, SonarCloud Quality Gate, mutation testing, Gitleaks, Trivy y la construcción del contenedor. La imagen inmutable se publicó mediante el workflow `43783221884`.
+- Infraestructura PR `#80` y release `v2.0-entrega4.8-jwt-issuer`: Terraform promovió `obras-publicas-backend:3a163301e3cfaceb92f4d648899c35342426a10c` a Azure Test.
+- El primer apply `43784095987` validó salud y seis logins pero dejó la mensajería deshabilitada por no haber activado el input opcional del workflow. Se corrigió inmediatamente con un segundo apply de la misma release, `43784672512`, usando `enable_core_messaging=true`.
+- Estado final verificado: Container App `Running`, `MESSAGING_ENABLED=true`, `minReplicas=1`, salud HTTP `ok`, base `up` y conexión TCP establecida desde el contenedor al puerto AMQPS `5671` de Core.
+- Prueba live de autenticación: un token emitido por el backend accedió con HTTP `200` y el mismo token, refirmado con `iss=otro-modulo`, fue rechazado con HTTP `401`. No se imprimieron ni versionaron secretos o tokens.
+- La conexión de transporte está comprobada desde Azure. La confirmación externa de Core sobre el consumidor de `q.obras` debe mantenerse separada hasta que Core la informe.
+
 ## 2026-11-15 — M2 confirmó la resolución del ticket
 
 - Fuente externa: M2, confirmación en el canal de integración del 2026-11-15. Estado: `CONFIRMED` para el procesamiento funcional M2 ↔ M3 y `CORE_PENDING` para la auditoría de transporte.
