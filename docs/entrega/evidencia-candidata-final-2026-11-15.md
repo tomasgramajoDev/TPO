@@ -1,112 +1,49 @@
-# Evidencia de la candidata final — 2026-11-15
+# Evidencia de la candidata final — actualización 15/11/2026
 
-## Alcance y revisiones
+## Revisiones vigentes
 
-- Backend: `1f2606e216ca6d9c59507b110a8f0647eee6e8a2`.
-- Frontend: `d472da55fa5dca8f6c351a01805d35495f611486`.
-- Infraestructura base auditada: `49a5a0d79a5191a62dd93a5588eb912fa24cf57f`.
-- La candidata corrige `compose.yaml` para usar las mismas revisiones inmutables que Azure Test.
+- Backend desplegado: `a33873a56e25fb3406c1fcc11dfae5be71c8b0eb`.
+- Frontend desplegado: `918ce5d9a3b35f8fec091fe1fbbd0ccfa9af5dc0`.
+- Infraestructura desplegada: `00b3b316a60b11fa7256d44dd4ff4dd4473755c0`, release `v2.0-entrega4.7-m7-rfc3339`.
+- `compose.yaml` alineado a esas revisiones por PR #77, merge `25d56302320b56ebdf3aae6dc2b90e0bfe5de24b`.
 
-## Azure Test verificado el 2026-11-15
+La candidata histórica basada en Back `1f2606e…` y Front `d472da5…` fue reemplazada por correcciones posteriores de integración. Se conserva su evidencia en el historial, pero no se presenta como el estado actual de Azure.
 
-La consulta de solo lectura a Azure Container Apps y ACR confirmó:
+## Azure Test y ACR
 
-| Componente | Revisión activa | Imagen | Digest ACR | Estado |
-| --- | --- | --- | --- | --- |
-| Backend | `ca-obras-publicas-tst-backend--latest` | `obras-publicas-backend:1f2606e216ca6d9c59507b110a8f0647eee6e8a2` | `sha256:86462cd76e05bcd4b9479e235e90045b0bd336b1b2cf188bfa16ec0e05d7a5f2` | `Provisioned`, `Healthy`, 100% del tráfico |
-| Frontend | `ca-obras-publicas-tst-frontend--latest` | `obras-publicas-frontend:d472da55fa5dca8f6c351a01805d35495f611486` | `sha256:03d3d87ab84081a64a14ed45f1b655cfa890c7e988244b5f91342337d7e35247` | `Running`, 1 réplica al verificar, 100% del tráfico |
+| Componente | Revisión | Imagen | Digest ACR |
+| --- | --- | --- | --- |
+| Backend | `ca-obras-publicas-tst-backend--latest` | `obras-publicas-backend:a33873a56e25fb3406c1fcc11dfae5be71c8b0eb` | `sha256:b58d6fe7cfe3a678a280aef92e093b0bff32fe6bcfbbfc901f1ef9fb85a2a5dd` |
+| Frontend | `ca-obras-publicas-tst-frontend--latest` | `obras-publicas-frontend:918ce5d9a3b35f8fec091fe1fbbd0ccfa9af5dc0` | `sha256:3b84fbb1bc07f87562b77dc33659f14dd76cc0c727c2caab7a3d65d3e11adfb6` |
 
-El health público del Backend y la raíz pública del Frontend respondieron HTTP 200. Los tags de las imágenes coinciden exactamente con los commits finales; ACR aporta el vínculo inmutable mediante sus digests.
+Backend `/api/health` respondió HTTP 200 con base de datos `up`; el Front respondió HTTP 200. Los tags de ACR coinciden con los commits y los digests identifican el contenido inmutable.
 
-## CI de las revisiones desplegadas
+## CI vigente
 
-- Backend CI `43415380427`: `success` sobre `1f2606e216ca6d9c59507b110a8f0647eee6e8a2`. Incluyó Maven, SonarCloud, repetición anti-flakiness, PIT, Gitleaks, Trivy y construcción del contenedor.
-- Frontend CI `43130876805`: `success` sobre `d472da55fa5dca8f6c351a01805d35495f611486`. Incluyó auditoría, lint, cobertura, repetición, build, Playwright, accesibilidad y construcción del contenedor.
+- Backend `43768127963`: 133 pruebas repetidas tres veces, sin fallos; Quality Gate aprobado; JaCoCo, PIT, Gitleaks, Trivy y contenedor aprobados.
+- Frontend `43750629674`: 63 pruebas repetidas tres veces, coverage, build, 6 E2E, accesibilidad y contenedor aprobados.
+- TPO PR #77 `43779877210`: arranque limpio de la candidata alineada, health/login, Gitleaks, ZAP sin High/Critical y k6 aprobados.
 
-## Backend local
+## Métricas y seguridad
 
-Comando ejecutado desde un worktree limpio y desacoplado:
+- SonarCloud: Quality Gate `OK`, coverage 85,4%, líneas 90,7%, ramas 72,8%, 0 vulnerabilidades y 0 hotspots. Mantiene un bug Major abierto en `EventDispatcher.java:27` y reliability rating C.
+- PIT: 53 mutaciones, 32 eliminadas (60%); test strength 82%.
+- Trivy Backend: 0 vulnerabilidades en `pom.xml`.
+- Front `npm audit`: 0 Critical/High y 3 Moderate en dependencias de desarrollo de Vitest.
+- ZAP: 0 High/Critical y cuatro warnings no bloqueantes.
+- JWT en Azure: sin token, `alg=none` y firma alterada respondieron 401. El vencimiento está cubierto por prueba automatizada. No se declara prueba de issuer incorrecto porque el Backend no emite ni valida `iss`.
+- CORS: el origen real del Front fue aceptado; un origen ajeno fue rechazado con 403.
+- QA-14: ocho respuestas API por `/api` en el mismo origen, cero llamadas al Backend directo, cero localhost y cero 4xx/5xx.
 
-```powershell
-.\mvnw.cmd clean verify
-```
+## Integraciones incorporadas
 
-Resultado observado:
-
-- 132 pruebas ejecutadas.
-- 0 fallos, 0 errores y 0 omitidas.
-- Las pruebas con Testcontainers detectaron Docker Desktop y levantaron PostgreSQL 17 real; las 12 migraciones Flyway se aplicaron correctamente.
-- JAR generado correctamente.
-- JaCoCo: 90,56% de líneas y 72,24% de ramas.
-- Todos los controles de cobertura configurados en Maven fueron aprobados.
-
-Esta repetición local elimina la limitación que existía durante la construcción aislada de la imagen, donde el socket de Docker no estaba expuesto. El gate remoto de la candidata conserva la evidencia autoritativa de CI.
-
-## Frontend local
-
-Comandos ejecutados desde un worktree limpio y desacoplado:
-
-```powershell
-npm ci
-npm run test:coverage
-npm run build
-```
-
-Resultado observado:
-
-- 7 archivos de prueba aprobados.
-- 63 pruebas aprobadas.
-- 85,55% de líneas, 85,34% de sentencias y 75,84% de ramas.
-- Build Vite de producción aprobado.
-- Lint aprobado.
-- 6 pruebas E2E Playwright aprobadas, incluida accesibilidad sin hallazgos serios o críticos.
-- Lighthouse local sobre la imagen candidata: Performance 100, Accessibility 100, Best Practices 100 y SEO 82.
-- Capturas verificadas a 360, 768 y 1280 px sin desbordes ni cortes visibles en la pantalla de ingreso.
-- `npm audit` informó tres vulnerabilidades moderadas en dependencias de desarrollo y ninguna vulnerabilidad de producción con `npm audit --omit=dev`. Se conservan como riesgo conocido; no hay CVE crítica observada.
-
-## Arranque reproducible
-
-Se instaló Ubuntu 24.04 LTS sobre WSL 2, se reinició Docker Desktop y se verificó el daemon con `hello-world`. Después se ejecutó localmente, desde esta candidata:
-
-```powershell
-docker compose up --build -d --wait
-```
-
-Resultado observado:
-
-- Frontend, Backend, PostgreSQL y RabbitMQ quedaron `Healthy`.
-- Front respondió HTTP 200 en `/health`.
-- Back respondió HTTP 200 en `/api/health`, con `database=up`.
-- El build del Backend ejecutó 132 pruebas sin fallos; la repetición directa posterior ejecutó también las pruebas Testcontainers sin omisiones.
-- El login real de `personal.obras` respondió correctamente con rol `PERSONAL_OBRAS` y access token presente.
-- El `.env` utilizado es local, está ignorado por Git y no contiene credenciales de Azure/Core.
-
-El workflow `Testing release gates` ejecuta en Ubuntu:
-
-1. Gitleaks sobre todo el historial.
-2. Configuración efímera sin secretos persistidos.
-3. `docker compose up --build -d --wait` desde un checkout limpio.
-4. Health de Front, Back, PostgreSQL y login.
-5. ZAP y rechazo de hallazgos High/Critical.
-6. k6 con 50 usuarios durante cinco minutos en el tag de entrega.
-7. Artefactos de diagnóstico y resultados.
-
-El gate final del tag `v2.0-entrega4`, ejecución `43737147567`, quedó en `success`. La repetición local confirma además el arranque reproducible en Windows/WSL 2.
-
-## Integraciones incorporadas a la evidencia
-
-- M6 principal: confirmado E2E.
-- M6 `containerDamaged` y `treeRiskDetected`: entrega y procesamiento confirmados; el duplicado fue descartado por Core antes de llegar al Inbox de M3.
-- M1 `approved`: confirmado E2E.
-- M1 `rejected`: confirmado E2E, sin DLQ y procesado por M3.
-- M1 `publicWorksProjectCompleted`: confirmado E2E para `OBRA-3`.
-- M7 solicitud: entregada y procesada; respuesta y finalización pendientes.
-- M7 `roadAccidentRegistered`: publicado por M7; faltan confirmación de Core y procesamiento de M3.
-- M2: pendiente de identificadores y confirmación bilateral.
+- M6 principal, `containerDamaged` y `treeRiskDetected`.
+- M1 `approved`, `rejected` y `publicWorksProjectCompleted`.
+- M7 `roadAccidentRegistered` y circuito de cortes v1.1 hasta `ENDED`.
+- M2: entrada `ticketUpdated` y dos `PROGRESS` confirmados; falta confirmación de `RESOLVED` por M2 y transporte/DLQ por Core.
 
 ## Limitaciones honestas
 
-- La etapa interna del Dockerfile no expone el socket Docker, pero la repetición directa con Docker Desktop ejecutó las 132 pruebas, incluidos los smoke Testcontainers, sin omisiones.
-- La deduplicación probada para `containerDamaged` corresponde a Core, no al Inbox de M3, porque Core descartó el duplicado antes de una segunda entrega.
-- Las confirmaciones funcionales de M2, M7 respuesta/cierre y `roadAccidentRegistered` dependen de otros equipos.
-- BOLA/IDOR y la demostración presencial continúan siendo actividades humanas.
+- La deduplicación de `containerDamaged` quedó probada en Core, no en el Inbox de M3.
+- El bug Major abierto de Sonar debe asignarse a Backend y verificarse antes de congelar si el equipo decide corregirlo.
+- TC-030, TC-031, Jira y usabilidad permanecen en el alcance de QA y no se duplican en esta evidencia DevOps.

@@ -10,7 +10,7 @@
 4. Confirmar con la matriz de trazabilidad que todas las historias comprometidas el 03/11 están implementadas o registrar explícitamente la brecha y el plan de corrección.
 5. Actualizar Jira con el cierre real de Gemini, las integraciones confirmadas y los bloqueos externos restantes.
 6. Subir PDF, presentación y documentos QA a Teams antes del inicio de la clase; luego ensayar la demo y defensa individual.
-7. El tag remoto `v2.0-entrega4` tiene gate verde, pero al auditarlo el 15/11 se comprobó que su `compose.yaml` todavía fijaba revisiones anteriores de Front y Back. Debe reemplazarse por una candidata que fije Back `1f2606e216ca6d9c59507b110a8f0647eee6e8a2` y Front `d472da55fa5dca8f6c351a01805d35495f611486`, y conservar el nuevo resultado verde.
+7. Resuelto el 15/11 mediante PR #77: `compose.yaml` fija Back `a33873a56e25fb3406c1fcc11dfae5be71c8b0eb` y Front `918ce5d9a3b35f8fec091fe1fbbd0ccfa9af5dc0`, las revisiones desplegadas en Azure Test. El gate del PR `43779877210` quedó verde.
 8. Los tags históricos `v1.0-testing` no se reescribieron. Los commits finales están identificados adicionalmente con `v1.0-testing-final` en Frontend, Backend e Infraestructura.
 
 ## DevOps y cloud
