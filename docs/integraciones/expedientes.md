@@ -23,14 +23,23 @@
 - Core verificó estado `ROUTED`, entrega `DELIVERED` a `q.obras` en un intento, sin error y sin registro asociado en `dead_letters`.
 - M3 confirmó procesamiento `PROCESSED` y asociación de la resolución administrativa con `OBRA-16`.
 
-Con esta evidencia quedan confirmadas ambas variantes de resolución. Continúa pendiente únicamente la prueba adicional de `publicWorksProjectCompleted` si forma parte del alcance comprometido.
+Con esta evidencia quedan confirmadas ambas variantes de resolución.
+
+## Evidencia de finalización del proyecto — 2026-11-14
+
+**Estado de `publicWorksProjectCompleted` v1.0:** `CONFIRMED`.
+
+- M3 publicó `publicWorksProjectCompleted` para `OBRA-3` con `eventId=0da5fc0d-b656-4b70-b46d-e76ebb91517a` y `correlationId=223653b4-4d57-a292-d4fb7daff878`.
+- Core lo registró `ROUTED` y lo entregó a `q.ciudadanos` en un intento, sin error, retry ni dead letter.
+- M1 confirmó el procesamiento funcional: la obra quedó `COMPLETED`, mientras el expediente asociado permaneció `RESUELTO` con resultado `approved`.
+- M1 no emitió otro `caseFileResolved`, porque la finalización operativa de la obra no constituye una nueva resolución administrativa.
 
 ## Evento recibido comunicado por el PO
 
 ### `caseFileResolved`
 
 - **Nombre funcional:** expediente resuelto.
-- **Estado histórico de esta sección:** `RECEIVED`. El contrato v1.0 y el escenario `approved` quedaron confirmados posteriormente por la evidencia E2E precedente.
+- **Estado histórico de esta sección:** `RECEIVED`. El contrato v1.0 y los escenarios `approved` y `rejected` quedaron confirmados posteriormente por la evidencia E2E precedente.
 - **Emisor:** M1.
 - **Disparador:** se emite una resolución administrativa relacionada con una obra.
 - **Payload comunicado por el PO:** `caseFileId`, `publicWorksProjectId`, `resolutionType`, `result`, `resolvedAt`, `notes`, `documentation`.
@@ -41,14 +50,12 @@ Con esta evidencia quedan confirmadas ambas variantes de resolución. Continúa 
 
 `publicWorksProjectCreated`, `publicWorksProjectSubmittedForApproval`, `publicWorksProjectApproved`, `publicWorksProjectRejected`, `publicWorksProjectStarted`, `publicWorksProgressRegistered`, `publicWorksExtensionRequested`, `publicWorksExtensionApproved`, `publicWorksExtensionRejected`, `publicWorksProjectSuspended`, `publicWorksProjectResumed` y `publicWorksProjectCompleted`.
 
-La matriz recibida los deja en estado `RECEIVED`, no `AGREED`. M1 todavía debe confirmar cuáles consume. La inclusión de los tres eventos de ampliación es nueva respecto de la lista anterior y queda expresamente pendiente.
+La matriz recibida conserva estado `RECEIVED` para los eventos no probados. M1 confirmó y procesó `publicWorksProjectApproved` y `publicWorksProjectCompleted`; no se extrapola ese acuerdo al resto de la lista. Los tres eventos de ampliación continúan fuera del contrato activo M1–M3 hasta que exista un acuerdo nuevo.
 
 ## Pendientes externos
 
-- Qué eventos necesita realmente M1.
-- Si M1 consume los eventos `publicWorksExtension*` incluidos por el PO.
+- Confirmar cualquier evento adicional de la matriz que no haya sido parte de los recorridos probados.
+- Los eventos `publicWorksExtension*` permanecen fuera del contrato activo; solo se reabren mediante acuerdo expreso de M1.
 - Si `publicWorksProgressRegistered` utiliza `stageId`, `milestoneId` o exactamente uno de ambos.
-- Nombres, payloads y obligatoriedad.
-- Qué tipos/resultados de resolución habilitan o bloquean el ciclo de la obra.
-- Correlación entre `caseFileId` y `publicWorksProjectId`.
-- Documentación adjunta, versionado y convenciones de Core.
+- Nombres, payloads y obligatoriedad de los eventos todavía no acordados.
+- Documentación adjunta y versionado de los eventos todavía no acordados; las convenciones comunes de Core ya están confirmadas para los recorridos probados.

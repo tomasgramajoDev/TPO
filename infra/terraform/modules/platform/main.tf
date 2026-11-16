@@ -289,6 +289,11 @@ resource "azurerm_container_app" "backend" {
       }
 
       env {
+        name  = "SIMULATE_MESSAGING_FAILURE"
+        value = tostring(var.application_messaging_failure_simulation_enabled)
+      }
+
+      env {
         name  = "AI_TRIAGE_ENABLED"
         value = tostring(var.application_ai_triage_enabled)
       }
