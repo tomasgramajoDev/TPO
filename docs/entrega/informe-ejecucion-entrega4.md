@@ -1,6 +1,6 @@
 # Informe de ejecución — candidato Entrega 4
 
-**Corte:** 15 de noviembre de 2026.  
+**Corte:** 15 de noviembre de 2026.
 **Regla:** solo se marca PASS con evidencia observada; pendiente no significa aprobado.
 
 ## Resultados comprobados
