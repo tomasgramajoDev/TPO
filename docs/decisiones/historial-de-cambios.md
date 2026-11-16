@@ -6,7 +6,9 @@
 - Completar una orden conserva `outcome` como campo obligatorio en el formulario y también en el tipo del cliente HTTP. Los límites de nombre, ubicación, responsable, contratista, alcance y descripción se alinearon con los máximos aceptados por Backend.
 - La verificación local aprobó lint, build, 64 pruebas con cobertura global superior al 85% y 6 recorridos E2E de navegador, incluido el control de accesibilidad. El CI del PR `43861195286` aprobó audit sin vulnerabilidades altas o críticas, pruebas repetidas, cobertura, build, E2E y contenedor.
 - El workflow `43861490450` publicó en ACR la imagen inmutable `obras-publicas-frontend:1f803dc6e5f8bcee6e2711a7e2b7cca57f760c90`, digest `sha256:df171e6d760940a2aba204f38173125ea8869e4c567fedad686967e8113663f8`.
-- La promoción a Azure Test queda sujeta al plan y apply de Terraform de esta revisión; publicar la imagen no se registra por sí solo como despliegue exitoso.
+- Infraestructura PR `#85`, merge `133e29d2c252baa2a9fc4530a7587a9d4bb163e7`, y tag `v2.0-entrega4.11-front-contract` promovieron la imagen mediante el workflow `43863421261` con `enable_core_messaging=true`.
+- El plan revisado fue de 0 altas, 2 cambios en sitio y 0 bajas. El apply y los seis logins demo por el proxy finalizaron correctamente.
+- Estado final verificado en Azure Test: revisión `ca-obras-publicas-tst-frontend--latest` activa, saludable y aprovisionada; imagen esperada, una réplica activa, 100% del tráfico y `/api/health` con servicio `ok` y base `up`. El Backend conservó la imagen `00e0be1167180cf95d678a720915f3057652016c`, una réplica mínima y la mensajería habilitada.
 
 ## 2026-11-16 — Validaciones finales de Backend preparadas para Azure Test
 
