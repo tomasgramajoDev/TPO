@@ -35,6 +35,8 @@ El asistente de clasificación usa `mock` por defecto. Test puede activar Gemini
 
 El mismo adaptador puede habilitarse temporalmente en `test` para las pruebas bilaterales. DevOps debe cargar `RABBITMQ_PASSWORD` en el environment `test` y ejecutar `deploy-test.yml` con una referencia de release y `enable_core_messaging=true`. Finalizada la ventana, se vuelve a ejecutar con `false` para desconectar el consumidor y limitar la exposicion operativa.
 
+Para TC-024, `deploy-test.yml` expone `simulate_messaging_failure`, desactivado por defecto. Solo puede combinarse con `enable_core_messaging=true` en `test`: mantiene API, PostgreSQL, Inbox y conexión AMQPS disponibles, pero el publicador M3 falla antes de enviar al broker. Su activación requiere el GO de Core; se recupera ejecutando nuevamente el mismo release con `simulate_messaging_failure=false`. Terraform impide habilitarlo fuera de Test.
+
 URLs vigentes de desarrollo:
 
 - frontend: <https://ca-obras-publicas-dev-frontend.victoriousground-b333790d.chilecentral.azurecontainerapps.io>;

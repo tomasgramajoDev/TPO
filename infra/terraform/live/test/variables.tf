@@ -116,6 +116,12 @@ variable "application_messaging_enabled" {
   default     = false
 }
 
+variable "application_messaging_failure_simulation_enabled" {
+  description = "Falla controlada del publicador M3 para TC-024. Debe permanecer false salvo ventana aprobada."
+  type        = bool
+  default     = false
+}
+
 variable "application_ai_triage_enabled" {
   description = "Habilita el asistente de triaje de incidentes en Test."
   type        = bool

@@ -189,6 +189,19 @@ variable "application_messaging_enabled" {
   default     = false
 }
 
+variable "application_messaging_failure_simulation_enabled" {
+  description = "Simula una falla de publicacion saliente exclusivamente en Test, sin intervenir RabbitMQ."
+  type        = bool
+  default     = false
+
+  validation {
+    condition = !var.application_messaging_failure_simulation_enabled || (
+      var.environment == "test" && var.application_messaging_enabled
+    )
+    error_message = "La simulacion de mensajeria solo puede habilitarse en test con mensajeria activa."
+  }
+}
+
 variable "application_ai_triage_enabled" {
   description = "Habilita el asistente de triaje de incidentes del modulo de Obras Publicas."
   type        = bool
