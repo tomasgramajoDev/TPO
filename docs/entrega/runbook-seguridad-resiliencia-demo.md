@@ -1,6 +1,6 @@
 # Runbook de seguridad y resiliencia para la demo
 
-**Corte:** 15 de noviembre de 2026
+**Corte:** 16 de noviembre de 2026
 
 Este runbook separa lo automatizado de las acciones que requieren una persona, dos identidades o coordinación con Core. No contiene usuarios, contraseñas, tokens ni datos reales.
 
@@ -78,4 +78,4 @@ No se debe apagar, modificar ni saturar infraestructura compartida sin la coordi
 
 ## Cierre
 
-Los controles automatizados ya cuentan con evidencia de CI, pero la cátedra puede seleccionar cualquier caso en vivo. BOLA/IDOR, la interrupción coordinada del broker y la exposición presencial siguen siendo acciones humanas hasta que exista evidencia observada.
+Los controles automatizados cuentan con evidencia de CI y una repetición local de 37 regresiones críticas, documentada en `evidencia-seguridad-resiliencia-final-2026-11-16.md`. BOLA/IDOR por propietario se clasifica `NO APLICA` porque el dominio municipal autoriza por rol y no implementa ownership individual. La interrupción deliberada del broker compartido y la exposición presencial siguen siendo acciones humanas; no deben ejecutarse sin Core.

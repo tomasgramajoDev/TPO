@@ -1,5 +1,13 @@
 # Historial de cambios
 
+## 2026-11-16 — Cierre de evidencia de seguridad y resiliencia
+
+- Se repitieron en limpio seis suites críticas del Backend: `37` pruebas aprobadas, sin fallos, errores ni omitidas. Cubren JWT inválidos, BFLA, rate limiting, ETag, idempotencia, timeout/fallback, Inbox/Outbox, rollback, deduplicación y confirmaciones AMQP.
+- Se consolidó `docs/entrega/evidencia-seguridad-resiliencia-final-2026-11-16.md` con una matriz de controles, riesgos, acciones y límites explícitos. BOLA/IDOR por propietario se mantiene `NO APLICA` porque el dominio autoriza recursos municipales compartidos por rol.
+- Se verificó el gate exacto del tag `v2.0-entrega4`, workflow `43865987503`: arranque limpio en `138 s`, Gitleaks aprobado, ZAP sin High/Critical y k6 con 50 VUs durante 301,3 s, 44.695 requests, p95 8,03 ms, 0 fallos y 100% de checks.
+- La recuperación real de `roadAccidentRegistered` mediante un único reintento administrativo de Core se conserva como evidencia operativa de recuperación y único efecto funcional. No se reinterpreta como una caída controlada del broker compartido.
+- No se modificó código de aplicación, infraestructura, contratos externos ni secretos. Una interrupción deliberada de Core continúa requiriendo coordinación con M9.
+
 ## 2026-11-16 — Frontend alineado con las validaciones finales de Backend
 
 - Frontend PR `#24`, merge `1f803dc6e5f8bcee6e2711a7e2b7cca57f760c90`: el rechazo de proyectos ahora exige un motivo visible antes de llamar a la API y envía `{"observations":"..."}`, según el contrato desplegado de Backend.
