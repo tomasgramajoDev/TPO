@@ -1,5 +1,10 @@
 # Historial de cambios
 
+## 2026-11-16 — Correcciones de retest QA del frontend
+
+- El Frontend `develop` incorporó el PR `#28` (`d4d83c53af2043d1a0f65a8e777998be45c54d94`) para mostrar primero los proyectos recién creados, limpiar avisos al cancelar o navegar, rechazar fechas de corte pasadas con un mensaje de campo y evitar que un `401` tardío invalide una sesión nueva.
+- La referencia inmutable del frontend de Azure Test se actualizó mediante Terraform a `obras-publicas-frontend:d4d83c53af2043d1a0f65a8e777998be45c54d94`. La publicación, el despliegue y el retest en vivo deben conservarse como evidencias separadas.
+
 ## 2026-11-16 — Reconciliación documental de integraciones y TC-022
 
 - Se reconciliaron los documentos vigentes con la evidencia de M1, M2, M6, M7 y Core, sin ampliar los contratos más allá de los eventos efectivamente acordados y probados.
