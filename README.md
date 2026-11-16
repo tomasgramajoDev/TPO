@@ -14,7 +14,7 @@ Requisitos: Git y Docker Desktop con Docker Compose. Desde un clon limpio:
 docker compose up --build
 ```
 
-El comando construye Front y Back desde los commits inmutables registrados en `compose.yaml`, inicia PostgreSQL y RabbitMQ y espera sus health checks. La candidata de la cuarta entrega fija Back `1f2606e216ca6d9c59507b110a8f0647eee6e8a2` y Front `d472da55fa5dca8f6c351a01805d35495f611486`. Si falta una variable obligatoria, Compose corta antes de crear recursos con un mensaje que identifica la variable. Las credenciales no se imprimen ni se almacenan en Git.
+El comando construye Front y Back desde los commits inmutables registrados en `compose.yaml`, inicia PostgreSQL y RabbitMQ y espera sus health checks. La candidata vigente de la cuarta entrega fija Back `a33873a56e25fb3406c1fcc11dfae5be71c8b0eb` y Front `918ce5d9a3b35f8fec091fe1fbbd0ccfa9af5dc0`, las mismas revisiones desplegadas en Azure Test al 15/11/2026. Si falta una variable obligatoria, Compose corta antes de crear recursos con un mensaje que identifica la variable. Las credenciales no se imprimen ni se almacenan en Git.
 
 Accesos de verificación:
 
