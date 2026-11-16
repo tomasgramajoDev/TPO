@@ -1,5 +1,12 @@
 # Historial de cambios
 
+## 2026-11-16 — Validaciones finales de Backend preparadas para Azure Test
+
+- Backend PR `#30`, merge `00e0be1167180cf95d678a720915f3057652016c`: completar una orden exige un `outcome` no vacío, sin convertir la evidencia fotográfica en obligatoria; rechazar un proyecto exige y persiste una observación.
+- Los límites de texto del request de proyectos quedaron alineados con las columnas persistidas para responder `400` con Problem Details en lugar de delegar el exceso a la base de datos.
+- Se agregaron regresiones para TC-030/TC-031, D-10, D-14 y JWT sin firma con `alg=none`. La verificación local aprobó 140 pruebas, sin fallos ni errores, con dos pruebas de infraestructura omitidas y los umbrales JaCoCo satisfechos.
+- Terraform apunta a la imagen inmutable `obras-publicas-backend:00e0be1167180cf95d678a720915f3057652016c`. Su promoción a Azure Test debe ejecutarse por el pipeline aprobado, conservando `application_messaging_enabled=true` y las réplicas mínimas del ambiente.
+
 ## 2026-11-16 — Azure Test siempre activo durante integraciones
 
 - Se verificó que el Backend de Azure Test ya estaba `Running` con `minReplicas=1`, `maxReplicas=1` y mensajería habilitada, por lo que el consumidor AMQPS no depende de una computadora personal.
