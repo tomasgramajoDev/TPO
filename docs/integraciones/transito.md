@@ -13,7 +13,17 @@ Solicitar cortes de calle y recibir su autorización o rechazo; evaluar incident
 - La consulta funcional confirmó `closureRequestId=44555606-a4b7-4a0b-984b-94255b49faa8`, `streetClosureId=c5941b88-1caa-4e6f-bc3d-439879f31408` y estado final `ENDED`.
 - La evidencia del consumidor M3 prueba el recorrido funcional M7 → Core → M3. Falta la verificación de Core sobre `ROUTED`/`DELIVERED`, intentos y DLQ de las dos respuestas para elevar el circuito completo a `CONFIRMED` según el criterio documental del equipo.
 
-**Estado:** solicitud M3 → Core → M7 `CONFIRMED`; aprobación y cierre M7 → M3 comprobados funcionalmente y pendientes únicamente de la constancia operativa de Core.
+**Estado:** circuito base y variantes adicionales del contrato documental v1.1 `CONFIRMED` por M3, M7 y Core.
+
+## Variantes adicionales A/B/C — 2026-11-16
+
+Core auditó siete eventos y once entregas. Todas quedaron `ROUTED`/`DELIVERED`, en un intento, sin error, retry ni dead letter. M3 confirmó las cuatro respuestas como `PROCESSED` y M7 confirmó los estados finales:
+
+- A, rechazo: solicitud `d5f328ec-5b71-4bdb-8edb-653a6de2fd22`, respuesta `04edb9b6-9a45-4a68-b81f-4bd1c20979aa`, estado `REJECTED`.
+- B, cierre automático: solicitud `458a93ea-19b9-49a8-bd09-c1a01f87c781`, aprobación `43597886-72a5-4028-9c75-822847197a3d`, cierre `a6fe83e5-5339-4686-b399-6c1239571e34`, estado `ENDED`.
+- C, aprobado sin activar: solicitud `1d6ae7a0-eae8-485c-9469-fbd964beb965`, aprobación `1d426b5a-ac1b-428b-81dc-7f3890a6a35f`, estado interno `EXPIRED`; correctamente no se publicó `streetClosureEnded`.
+
+Todas las respuestas conservaron correlación y usaron como `causationId` el `eventId` de su solicitud. El envelope continúa con `eventVersion="1.0"`; v1.1 es la versión documental.
 
 ## Incidente vial de prueba — 2026-11-15
 
@@ -66,12 +76,11 @@ La descripción de la matriz indica que la solicitud informa tramos, desvíos y 
 - **Payload comunicado:** `workOrderId`, `publicWorksProjectId`, `sourceRequestId`, `interventionType`, `description`, `location`, `priority`, `status`, `createdAt`.
 - **Pendiente:** confirmar si `publicWorksProjectId` es obligatorio para este origen y si `sourceRequestId` corresponde a `incidentId`.
 
-## Pendientes externos
+## Pendientes externos fuera de los recorridos probados
 
 - Nombres y payloads definitivos.
 - Modelo de calles, tramos y ubicación.
 - Identificadores y correlación.
 - Períodos autorizados, condiciones, desvíos y extensiones.
 - Representación de los desvíos en el payload de `streetClosureRequested`.
-- Semántica de bloqueo de una orden durante rechazo o vencimiento.
 - Convenciones de Core.
