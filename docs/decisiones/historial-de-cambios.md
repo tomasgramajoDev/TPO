@@ -1,5 +1,11 @@
 # Historial de cambios
 
+## 2026-11-16 — Retest QA y despliegue de correcciones
+
+- Fuente externa: reporte del responsable de QA del 16/11/2026. Se registraron D-01, D-10, D-14, TC-030, responsive 768×1024 y la observación de Integraciones.
+- Se corrigieron el contrato de `location` para solicitudes de corte, la validación explícita del máximo de 1000 caracteres y la exposición de correlación y fechas de Integraciones.
+- Frontend PR #26, Backend PR #31 e infraestructura PR #91 quedaron integrados con sus controles en verde; Azure Test fue promovido por Terraform y retesteado sin exponer secretos.
+
 ## 2026-11-16 — Core cerró M2 y las variantes A/B/C de M7
 
 - Fuente externa: Equipo Core/M9, dos auditorías de solo lectura recibidas el 2026-11-16; M7 confirmó además el cierre de A/B/C. Estado contractual: `CONFIRMED` para los recorridos auditados.
