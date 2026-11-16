@@ -2,11 +2,11 @@
 
 **Corte:** 16 de noviembre de 2026
 
-**Candidata:** tag `v2.0-entrega4`
+**Candidata operativa TC-024:** tag `v2.0-entrega4.10-tc024-ready`
 
-**Backend:** `00e0be1167180cf95d678a720915f3057652016c`
+**Backend:** `b07d38079c2feb7c1b1ca18b1974e28bc335a9af`
 
-**Frontend:** `1f803dc6e5f8bcee6e2711a7e2b7cca57f760c90`
+**Frontend:** `ab2970fec6fd1001468049e152262d42d3109f33`
 
 Este documento consolida controles comprobados y limita expresamente lo que todavía requiere una demostración humana. No contiene usuarios, contraseñas, tokens ni claves.
 
@@ -15,7 +15,7 @@ Este documento consolida controles comprobados y limita expresamente lo que toda
 - **Seguridad automatizada:** PASS. JWT, BFLA, rate limiting, validaciones, mass assignment, ETag, idempotencia y Problem Details tienen regresiones aprobadas.
 - **Seguridad de la candidata:** PASS con observaciones menores. Gitleaks no detectó secretos y ZAP informó `0` alertas High/Critical; permanecen una alerta Medium y una Low documentadas.
 - **Resiliencia de aplicación:** PASS. Timeout/fallback, rollback, Inbox/Outbox, deduplicación, orden por clave, confirmaciones AMQP y reintento con el mismo `eventId` tienen pruebas aprobadas.
-- **Resiliencia operativa:** PASS para conectividad y recuperación observada. Azure mantiene una réplica del Backend y Core confirmó la recuperación de una dead letter real. No se ejecutó una caída deliberada del broker compartido de Core.
+- **Resiliencia operativa:** PASS. TC-024 inyectó una indisponibilidad aislada antes de `RabbitTemplate.send` solo en Azure Test, sin intervenir el broker compartido. La operación funcional se conservó, la Outbox quedó pendiente, registró dos fallos y publicó el mismo `eventId` después del restablecimiento. M7 confirmó una única recepción y un único efecto funcional.
 
 ## Ejecución reproducida el 16/11
 
@@ -32,7 +32,7 @@ TOTAL                                           37 PASS
 Fallos / errores / omitidas                     0 / 0 / 0
 ```
 
-El CI completo del Backend `43857225056` ya había aprobado las `140` pruebas de la candidata, JaCoCo, SonarCloud Quality Gate, mutation testing, Gitleaks, Trivy y la construcción del contenedor.
+El CI completo del Backend `43929457968` aprobó `145` pruebas, JaCoCo, SonarCloud Quality Gate, mutation testing, Gitleaks, Trivy y la construcción del contenedor. El Frontend `43928900864` aprobó `65` pruebas, lint, cobertura, E2E, accesibilidad, build y contenedor.
 
 ## Matriz de seguridad
 
@@ -59,7 +59,7 @@ El CI completo del Backend `43857225056` ya había aprobado las `140` pruebas de
 | --- | --- | --- | --- |
 | Proveedor IA lento o caído | PASS | Timeout por defecto de `5 s`, fallback y circuit breaker en `ResilientIncidentTriageGatewayTest`. | El fallback no ejecuta cambios de negocio. |
 | Publicación AMQP recibe nack/return | PASS | `RabbitEventTransportTests`: no se marca publicado y no se filtra el mensaje privado del broker. | Prueba con doble del cliente. |
-| Broker no disponible | PASS automatizado | `EventIntegrationFoundationTests`: el primer evento permanece pendiente, conserva `eventId`, bloquea al posterior de la misma clave y se publica al recuperar el transporte. | No se apagó deliberadamente el Core compartido. |
+| Publicador sin transporte hacia el broker | PASS live controlado | TC-024: `streetClosureRequested` `3f774fc5-bbd0-409e-a2ef-5af19ef2edb2`; Outbox `0 → 1 → 0`, dos fallos registrados, luego `published` con el mismo `eventId`. M7 comprobó una recepción, un corte `REQUESTED` y cero duplicados. Workflow de restauración `43935681337` exitoso. | La prueba valida la recuperación del publicador de M3; no simula una caída real del RabbitMQ compartido. |
 | Transacción funcional falla | PASS | Rollback conjunto del efecto de negocio, reserva idempotente y Outbox. | Ninguno abierto. |
 | Consumidor interrumpido | PASS | El Inbox persistido retoma el evento pendiente. | Ninguno abierto. |
 | Mensaje duplicado/concurrente | PASS | Dos consumidores producen un único efecto; el segundo resultado es `duplicated`. | La deduplicación adicional de `containerDamaged` ocurrió en Core antes de llegar a M3. |
@@ -84,7 +84,7 @@ La ejecución concreta se consulta en GitHub Actions filtrando por la rama/tag `
 
 | ID | Clasificación | Estado | Tratamiento |
 | --- | --- | --- | --- |
-| SR-01 | Operativo | ACEPTADO | Core es compartido; no se provoca una caída sin M9. Defender con la prueba automatizada y la recuperación real registrada. |
+| SR-01 | Operativo | MITIGADO | Core es compartido y no se detuvo. TC-024 demostró de forma aislada la conservación y recuperación de la Outbox de M3, con coordinación de Core y confirmación funcional de M7. |
 | SR-02 | ZAP Medium | ACEPTADO | `style-src 'unsafe-inline'`; no habilita scripts inline. Migrar estilos a nonce/hash fuera de esta entrega. |
 | SR-03 | ZAP Low | ACEPTADO | Header de servidor expone versión. Ocultarlo en una mejora posterior de proxy. |
 | SR-04 | Dependencia externa | MITIGADO | La IP de salida AMQPS puede cambiar; `minReplicas=1`, monitoreo y procedimiento de allowlist reducen el riesgo. |
@@ -95,9 +95,9 @@ No son faltantes de código:
 
 1. Ejecutar un caso BFLA y un JWT inválido elegido por el profesor.
 2. Explicar por qué BOLA/IDOR por propietario es `NO APLICA` en este dominio.
-3. Mostrar la recuperación de Outbox con evidencia automatizada; si la cátedra exige broker real, coordinar la ventana con Core y no interrumpirlo unilateralmente.
+3. Mostrar la recuperación de Outbox con la evidencia de TC-024 y aclarar que se simuló la falla del publicador de M3, no una caída del broker compartido.
 4. Mantener credenciales, tokens y headers `Authorization` fuera de pantalla y de las capturas.
 
 ## Veredicto
 
-**SEGURIDAD Y RESILIENCIA: LISTAS PARA ENTREGA, CON OBSERVACIONES DOCUMENTADAS.** No hay un bloqueo técnico conocido en estos dos ejes. Permanecen la ejecución en vivo y, solo si el profesor la exige sobre infraestructura real, la coordinación de una caída controlada con Core.
+**SEGURIDAD Y RESILIENCIA: LISTAS PARA ENTREGA, CON OBSERVACIONES DOCUMENTADAS.** No hay un bloqueo técnico conocido en estos dos ejes. Permanece únicamente la ejecución presencial elegida por la cátedra; no se debe interrumpir RabbitMQ compartido.
