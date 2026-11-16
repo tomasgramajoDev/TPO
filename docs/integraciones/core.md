@@ -46,10 +46,21 @@ M3 publica sus eventos directamente por AMQP, no mediante `POST /api/v1/events`.
 
 Azure Test mantiene una réplica mínima cuando la mensajería está habilitada. La evidencia de despliegue confirmó `MESSAGING_ENABLED=true`, health HTTP correcto, PostgreSQL disponible y conexión autenticada de `module_obras` al vhost `core`. Esta disponibilidad no sustituye la confirmación funcional del consumidor en cada prueba, que se documenta por circuito.
 
+## TC-024 — recuperación aislada del publicador — 2026-11-16
+
+Core dio el GO definitivo para ejecutar la simulación sin intervenir RabbitMQ compartido. M3 verificó Azure Test en modo `Single`, una revisión activa, una réplica y Outbox inicial sin pendientes. Con `SIMULATE_MESSAGING_FAILURE=true` creó un `streetClosureRequested` ficticio:
+
+- `eventId`: `3f774fc5-bbd0-409e-a2ef-5af19ef2edb2`.
+- `correlationId`: `7f6dd240-2fab-4052-884f-42f36e190c6f`.
+- `closureRequestId`: `6e668b66-f886-4c80-b3a0-82622e19cb89`.
+
+La operación funcional persistió la solicitud, la Outbox pasó a un pendiente y la revisión registró dos fallos de publicación para el mismo `eventId`. Antes de cambiar la bandera se detuvo únicamente el Container App de M3; Terraform restauró `SIMULATE_MESSAGING_FAILURE=false` y el despliegue `43935681337` terminó exitosamente. Azure volvió a `Running`, `Single`, una revisión, una réplica `Healthy`; la Outbox pasó a cero y el contador de publicados de `22` a `23`. El log registró `result=published` para el mismo `eventId` a las 16:08:31 ART.
+
+M7 confirmó una única recepción, un único registro procesado y un único corte `REQUESTED`, sin duplicados, rechazos ni descartes, conservando `eventId`, `correlationId` y `closureRequestId`. Antes del restablecimiento había verificado cero registros con esos identificadores. La prueba acredita la recuperación del publicador de M3; no equivale a una caída del broker compartido.
+
 ## Pendientes que permanecen abiertos
 
 - Completar la migración coordinada del registro histórico `streetClousureEnded` al nombre vigente `streetClosureEnded` sin cortar consumidores.
 - Reconciliar el catálogo final de publicaciones y suscripciones contra el mapa comprometido.
 - Obtener el contrato completo de respuesta y errores de `POST /api/v1/auth/module-token` si M3 debe consumir APIs HTTP de Core.
 - Mantener como fuente de verdad operativa `GET /api/v1/topology` para TTL y topología efectiva, sin copiar números históricos como configuración vigente.
-- Ejecutar TC-024 con la simulación aislada aprobada por Core: la bandera queda restringida a Azure Test, la falla ocurre antes de `RabbitTemplate.send`, no se interviene RabbitMQ y el restablecimiento debe publicar el mismo sobre y `eventId`. Antes de ejecutar se debe verificar una sola instancia publicadora y coordinar datos ficticios con M7. La prueba acredita la recuperación del publicador de M3, no una caída real del broker compartido.

@@ -24,10 +24,9 @@
 
 TC-022 no integra los pendientes de M3: queda clasificado `NO_APLICA_AL_CAMINO_AMQP_DE_M3`. El HTTP `422` por envelope sin `data` corresponde a `POST /api/v1/events` de Core, mientras M3 publica directamente por AMQP. Si la cátedra exige esa evidencia contractual HTTP, debe ejecutarla Core o un módulo autorizado.
 
-1. Ejecutar TC-024 mediante la simulación aislada aprobada por Core: inyectar la falla antes de `RabbitTemplate.send` únicamente en Azure Test, verificar persistencia en Outbox, reintentos con el mismo sobre y `eventId`, y publicación posterior a la recuperación. No se interviene ni detiene el broker compartido.
-2. Mantener `maxAttempts=4` mientras no exista un acuerdo global diferente. La topología efectiva consultable en Core prevalece sobre documentos históricos.
-3. Completar la migración del nombre histórico `streetClousureEnded` al nombre acordado `streetClosureEnded` sin cortar consumidores existentes.
-4. Confirmar el catálogo final de publicaciones/suscripciones de M3 contra el mapa de Miro y adjuntar evidencia del ambiente compartido.
+1. Mantener `maxAttempts=4` mientras no exista un acuerdo global diferente. La topología efectiva consultable en Core prevalece sobre documentos históricos.
+2. Completar la migración del nombre histórico `streetClousureEnded` al nombre acordado `streetClosureEnded` sin cortar consumidores existentes.
+3. Confirmar el catálogo final de publicaciones/suscripciones de M3 contra el mapa de Miro y adjuntar evidencia del ambiente compartido.
 
 ## Atención Ciudadana - M2
 
@@ -75,7 +74,7 @@ La entrega exige integración con Core y con los demás módulos del mapa de Mir
 2. M1: `approved`, `rejected` y `publicWorksProjectCompleted` están confirmados.
 3. M2: recorrido válido confirmado por M2, M3 y Core; queda como cobertura adicional el rechazo fuera de orden.
 4. M7: circuito base, rechazo, cierre automático, expiración y `roadAccidentRegistered` confirmados; queda la limpieza del typo histórico.
-5. Core: TC-022 HTTP no aplica al camino AMQP directo de M3. TC-024 cuenta con conformidad para implementar la simulación aislada, pero su ejecución requiere confirmar la bandera, una sola instancia publicadora y una ventana coordinada con M7. También continúan pendientes la reconciliación del catálogo y la limpieza del nombre histórico del evento de cierre.
+5. Core: TC-022 HTTP no aplica al camino AMQP directo de M3. TC-024 fue ejecutado con GO de Core y confirmación funcional de M7; continúan pendientes únicamente la reconciliación del catálogo y la limpieza del nombre histórico del evento de cierre.
 6. Dependencias del tercer checkpoint: confirmar JWT firmado/validado con M1. El login propio de M3 no demuestra esta dependencia; ambiente de Test y catálogo de Core deben quedar evidenciados.
 
 ## Testing y documentación exigidos
