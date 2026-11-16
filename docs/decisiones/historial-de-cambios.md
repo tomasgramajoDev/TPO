@@ -4,7 +4,7 @@
 
 - Se repitieron en limpio seis suites críticas del Backend: `37` pruebas aprobadas, sin fallos, errores ni omitidas. Cubren JWT inválidos, BFLA, rate limiting, ETag, idempotencia, timeout/fallback, Inbox/Outbox, rollback, deduplicación y confirmaciones AMQP.
 - Se consolidó `docs/entrega/evidencia-seguridad-resiliencia-final-2026-11-16.md` con una matriz de controles, riesgos, acciones y límites explícitos. BOLA/IDOR por propietario se mantiene `NO APLICA` porque el dominio autoriza recursos municipales compartidos por rol.
-- Se verificó el gate exacto del tag `v2.0-entrega4`, workflow `43865987503`: arranque limpio en `138 s`, Gitleaks aprobado, ZAP sin High/Critical y k6 con 50 VUs durante 301,3 s, 44.695 requests, p95 8,03 ms, 0 fallos y 100% de checks.
+- Como línea base previa a incorporar este documento, el workflow `43865987503` aprobó arranque limpio en `138 s`, Gitleaks, ZAP sin High/Critical y k6 con 50 VUs durante 301,3 s, 44.695 requests, p95 8,03 ms, 0 fallos y 100% de checks. Cada movimiento posterior del tag exige un nuevo gate y su run queda en GitHub Actions, sin hardcodearlo como autorreferencia dentro del propio tag.
 - La recuperación real de `roadAccidentRegistered` mediante un único reintento administrativo de Core se conserva como evidencia operativa de recuperación y único efecto funcional. No se reinterpreta como una caída controlada del broker compartido.
 - No se modificó código de aplicación, infraestructura, contratos externos ni secretos. Una interrupción deliberada de Core continúa requiriendo coordinación con M9.
 
