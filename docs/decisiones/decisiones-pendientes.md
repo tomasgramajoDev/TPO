@@ -30,8 +30,8 @@
 
 ## Atención Ciudadana - M2
 
-1. La entrada de TC-019 ya ocurrió: M3 procesó `ticketUpdated` con `eventId=b99c2981-d7a5-476e-b748-23e31ed75647` y `correlationId=fd8aa7f3-c7e0-43c1-be5a-6d6c49511239`. Falta identificar/confirmar el `ticketId`, publicar `updateTicketStatus/STARTED` y luego `PROGRESS`, y obtener la confirmación de M2/Core.
-2. Ejecutar TC-020: enviar `PROGRESS` mientras el ticket continúa `ROUTED`; M2/Core deben confirmar rechazo, reintentos y resultado final.
+1. Core debe confirmar `ROUTED/DELIVERED`, cola, intentos y DLQ/retry para `STARTED` `e9d0e937-95c1-4999-83b3-ef1258c20b7b`, los dos `PROGRESS` y `RESOLVED` `c889727e-db9e-4bd6-a064-7ff1ad5b32b6`.
+2. La prueba negativa de transición fuera de orden continúa como cobertura adicional, no como requisito para desconocer el circuito funcional ya confirmado por M2.
 3. Conservar la autoridad de M2 sobre estado, prioridad y categoría. M3 solo informa hechos mediante `updateTicketStatus`.
 
 ## Ambiente - M6
@@ -73,7 +73,7 @@ La entrega exige integración con Core y con los demás módulos del mapa de Mir
 
 1. M6: el flujo principal está confirmado, pero deben quedar trazados también los eventos secundarios comprometidos (`containerDamaged` y `treeRiskDetected`) mediante contrato y pruebas de consumidor.
 2. M1: `approved` y `rejected` están confirmados; falta `publicWorksProjectCompleted` si figura en la matriz comprometida del 03/11.
-3. M2: faltan pruebas bilaterales de `ticketUpdated` y `updateTicketStatus`, incluida transición válida y rechazo fuera de orden.
+3. M2: la transición válida está confirmada funcionalmente; falta únicamente la evidencia de transporte de Core y queda como cobertura adicional el rechazo fuera de orden.
 4. M7: falta el circuito bilateral completo de cortes, rechazo, vencimiento y `streetClosureEnded`; también debe quedar verificado `roadAccidentRegistered` si continúa en el mapa.
 5. Core: faltan las pruebas de envelope inválido y caída/recuperación del broker, además de reconciliar catálogo y nombre histórico del evento de cierre.
 6. Dependencias del tercer checkpoint: confirmar JWT firmado/validado con M1. El login propio de M3 no demuestra esta dependencia; ambiente de Test y catálogo de Core deben quedar evidenciados.
