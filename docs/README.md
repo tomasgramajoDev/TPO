@@ -30,6 +30,7 @@ Este repositorio conserva el alcance funcional, las reglas, los ciclos de vida, 
 - [Runbook de pruebas de integración pendientes](entrega/runbook-pruebas-integracion-pendientes.md): pasos simples, criterios y mensajes listos para ejecutar M1 `rejected`, M2 y M7 sin inventar contratos.
 - [Runbook de seguridad y resiliencia](entrega/runbook-seguridad-resiliencia-demo.md): controles automatizables, BOLA/IDOR, mass assignment, JWT y prueba coordinada de broker caído, sin secretos.
 - [Evidencia final de seguridad y resiliencia](entrega/evidencia-seguridad-resiliencia-final-2026-11-16.md): matriz consolidada, 37 regresiones críticas, gate del tag, riesgos aceptados y límites de la prueba operativa.
+- [Cierre Core de M2 y M7](entrega/evidencia-core-m2-m7-2026-11-16.md): auditoría del `RESOLVED` de M2 y de las variantes A/B/C de cortes v1.1, con entregas, intentos, causalidad y DLQ.
 - [`demo-security-live.ps1`](../scripts/demo-security-live.ps1): smoke seguro para health, OpenAPI, autenticación, BFLA, fuerza bruta e inyección sin guardar credenciales.
 - [Plan de testing de la release v0.2.0](entrega/plan-testing-release-v0.2.0.md): casos por rol, resultados esperados, brechas conocidas y formato de evidencia para el equipo de Testing.
 - [BRD de Entrega 4](entrega/brd-entrega4.md): objetivo, actores, capacidades y aceptación del candidato.

@@ -1,5 +1,12 @@
 # Historial de cambios
 
+## 2026-11-16 — Core cerró M2 y las variantes A/B/C de M7
+
+- Fuente externa: Equipo Core/M9, dos auditorías de solo lectura recibidas el 2026-11-16; M7 confirmó además el cierre de A/B/C. Estado contractual: `CONFIRMED` para los recorridos auditados.
+- Para M2, Core registró `updateTicketStatus/RESOLVED` `c889727e-db9e-4bd6-a064-7ff1ad5b32b6` como `ROUTED`, con entrega a `q.atencion-ciudadana` en un intento y sin error, retry ni dead letter. Sumado al `PROCESSED/APPLIED` informado por M2, el recorrido probado queda cerrado E2E.
+- Para M7, Core auditó siete eventos y once entregas de las variantes A/B/C: todas `ROUTED`/`DELIVERED`, en un intento, con correlación y causalidad correctas y cero dead letters. M3/M7 confirmaron los estados finales `REJECTED`, `ENDED` automático y `EXPIRED` sin emisión de `streetClosureEnded`.
+- Las verificaciones de Core fueron de solo lectura. No se modificó infraestructura, configuración, mensajes ni código de aplicación.
+
 ## 2026-11-16 — Cierre de evidencia de seguridad y resiliencia
 
 - Se repitieron en limpio seis suites críticas del Backend: `37` pruebas aprobadas, sin fallos, errores ni omitidas. Cubren JWT inválidos, BFLA, rate limiting, ETag, idempotencia, timeout/fallback, Inbox/Outbox, rollback, deduplicación y confirmaciones AMQP.

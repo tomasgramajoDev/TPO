@@ -4,7 +4,7 @@
 
 M2 entregó el 2026-10-20 la guía Eventos v1.78 y el paquete de JSON Schema Draft 2020-12. v1.78 reemplaza las versiones anteriores. M3 consume `ticketUpdated`, filtra `responsibleAreaId=M3` y publica hechos mediante `updateTicketStatus`; M2 conserva la autoridad sobre estado, prioridad y categoría.
 
-El 2026-11-15 M2 confirmó la recepción y aplicación de `STARTED`, los dos `PROGRESS` y `RESOLVED` del circuito real. El ticket `TK-2026-000045` quedó `RESOLVED`, con área responsable `M3`. La aplicación funcional bilateral queda `CONFIRMED`. El cierre técnico integral permanece `CORE_PENDING` hasta que Core confirme enrutamiento, intentos y ausencia de registros asociados en DLQ.
+El 2026-11-15 M2 confirmó la recepción y aplicación de `STARTED`, los dos `PROGRESS` y `RESOLVED` del circuito real. El ticket `TK-2026-000045` quedó `RESOLVED`, con área responsable `M3`. El 2026-11-16 Core auditó el evento final como `ROUTED`, con entrega `DELIVERED` a M2 en un intento y sin retry ni dead letter. El recorrido probado queda `CONFIRMED` funcional y técnicamente.
 
 El paquete `m2-eventos-v1.78-schemas.zip` tiene SHA-256 `f20347c6cea5e9197e11d73cb3aef77db6fffd4c342ab75232381775c671b27f`. La diferencia funcional frente a v1.77 es `updatedBy.id`, que ahora valida UUID o `null`.
 
@@ -70,6 +70,14 @@ M2 confirmó para `RESOLVED`:
 
 M2 también dio por validados `STARTED` y ambos `PROGRESS`. Esta evidencia confirma el procesamiento funcional de extremo a extremo entre M2 y M3.
 
-## Pendiente único del circuito probado
+## Auditoría de Core — 2026-11-16
 
-Core debe confirmar para los cuatro eventos salientes `ROUTED/DELIVERED`, cola de destino, cantidad de intentos y ausencia o presencia de registros asociados en DLQ/retry. Hasta recibir esa evidencia, el transporte se conserva como `CORE_PENDING` y no se infiere solo a partir del Outbox de M3.
+Core confirmó para `RESOLVED` `c889727e-db9e-4bd6-a064-7ff1ad5b32b6`:
+
+- estado `ROUTED`;
+- entrega a `q.atencion-ciudadana` como `DELIVERED`, un intento y sin error;
+- entrega adicional a `q.ciudadanos` como `DELIVERED`, un intento y sin error;
+- cero coincidencias en `retry_audit` y `dead_letters`;
+- colas de destino y DLQ sin mensajes pendientes al momento de la consulta.
+
+Core observó los otros tres `updateTicketStatus` bajo la misma correlación, pero no realizó la misma auditoría individual sobre ellos. M2 sí confirmó su aplicación funcional. Esta precisión no reabre el recorrido E2E ya cerrado.

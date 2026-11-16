@@ -30,8 +30,8 @@
 
 ## Atención Ciudadana - M2
 
-1. Core debe confirmar `ROUTED/DELIVERED`, cola, intentos y DLQ/retry para `STARTED` `e9d0e937-95c1-4999-83b3-ef1258c20b7b`, los dos `PROGRESS` y `RESOLVED` `c889727e-db9e-4bd6-a064-7ff1ad5b32b6`.
-2. La prueba negativa de transición fuera de orden continúa como cobertura adicional, no como requisito para desconocer el circuito funcional ya confirmado por M2.
+1. El recorrido válido está `CONFIRMED`: M2 aplicó `STARTED`, dos `PROGRESS` y `RESOLVED`; Core auditó el cierre `RESOLVED` como `ROUTED`/`DELIVERED`, un intento y sin retry/DLQ.
+2. La prueba negativa de transición fuera de orden continúa como cobertura adicional, no como requisito de cierre.
 3. Conservar la autoridad de M2 sobre estado, prioridad y categoría. M3 solo informa hechos mediante `updateTicketStatus`.
 
 ## Ambiente - M6
@@ -42,10 +42,9 @@ Queda obtener la confirmación de M3/Core para `containerDamaged` (`eventId=748c
 
 ## Tránsito - M7
 
-1. El circuito funcional de corte ya llegó a M3: la solicitud `2d6893aa-9482-4dfd-98c3-85607f36bdab`, la aprobación `6f521edf-177f-43c4-b3ec-0a3eb1245fd5` y el cierre `c8479b39-4741-49f3-a3ea-f255d16416c2` conservaron `correlationId=afca371d-ddfd-497c-a437-f9152bef52bf`; Azure Test registró las dos respuestas como `PROCESSED`.
-2. Core debe aportar la verificación de `ROUTED`/`DELIVERED`, intentos y DLQ para la aprobación y el cierre antes de elevar el circuito completo a `CONFIRMED`.
-3. Ejecutar TC-017 de forma específica: un corte `ACTIVE` debe finalizar al vencer y emitir `streetClosureEnded`; uno `APPROVED` que nunca se activó debe pasar a `EXPIRED`. La prueba recibida no demuestra por sí sola cuál de esos disparadores produjo el cierre.
-4. `roadAccidentRegistered` llegó con `eventId=9d7b06ec-dfa3-4ca6-9d28-acc17ed82523` y `correlationId=dca92b7c-b533-438e-99de-cebc6446d4ef`, pero M3 lo rechazó antes de Inbox en las cuatro entregas (5 s, 30 s y 2 min entre intentos). M7 y M3 deben cruzar el payload exacto con el contrato, corregir la incompatibilidad y repetir la prueba; Core debe confirmar el estado final y la DLQ.
+1. El circuito base, el rechazo A, el cierre automático B y la expiración sin activación C están `CONFIRMED` por M3, M7 y Core.
+2. `roadAccidentRegistered` fue recuperado mediante un único reintento administrativo de Core; M3 confirmó un único efecto funcional y ausencia de datos personales persistidos.
+3. Permanece pendiente únicamente la limpieza coordinada del nombre histórico `streetClousureEnded`, sin impacto en los recorridos probados.
 
 ## Ciudadanos y Expedientes - M1
 
@@ -73,8 +72,8 @@ La entrega exige integración con Core y con los demás módulos del mapa de Mir
 
 1. M6: el flujo principal está confirmado, pero deben quedar trazados también los eventos secundarios comprometidos (`containerDamaged` y `treeRiskDetected`) mediante contrato y pruebas de consumidor.
 2. M1: `approved` y `rejected` están confirmados; falta `publicWorksProjectCompleted` si figura en la matriz comprometida del 03/11.
-3. M2: la transición válida está confirmada funcionalmente; falta únicamente la evidencia de transporte de Core y queda como cobertura adicional el rechazo fuera de orden.
-4. M7: falta el circuito bilateral completo de cortes, rechazo, vencimiento y `streetClosureEnded`; también debe quedar verificado `roadAccidentRegistered` si continúa en el mapa.
+3. M2: recorrido válido confirmado por M2, M3 y Core; queda como cobertura adicional el rechazo fuera de orden.
+4. M7: circuito base, rechazo, cierre automático, expiración y `roadAccidentRegistered` confirmados; queda la limpieza del typo histórico.
 5. Core: faltan las pruebas de envelope inválido y caída/recuperación del broker, además de reconciliar catálogo y nombre histórico del evento de cierre.
 6. Dependencias del tercer checkpoint: confirmar JWT firmado/validado con M1. El login propio de M3 no demuestra esta dependencia; ambiente de Test y catálogo de Core deben quedar evidenciados.
 

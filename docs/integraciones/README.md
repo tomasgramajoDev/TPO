@@ -17,8 +17,9 @@ Al 15/11/2026 existen circuitos `CONFIRMED` con evidencia bilateral y de Core:
 - M6 ↔ M3: `infrastructureRepairRequested` → `workOrderScheduled` → `workOrderCompleted`, más `containerDamaged` y `treeRiskDetected`.
 - M1 ↔ M3: resoluciones `approved` y `rejected`, más `publicWorksProjectCompleted`.
 - M7 ↔ M3: `roadAccidentRegistered` y circuito de cortes documental v1.1 hasta `streetClosureEnded`.
+- M2 ↔ M3: `ticketUpdated` → `STARTED`/`PROGRESS`/`RESOLVED`; M2 confirmó aplicación y Core auditó el cierre `RESOLVED` como `ROUTED`/`DELIVERED`, sin reintentos ni dead letters.
 
-M2 ↔ M3 tiene confirmación funcional bilateral: M3 procesó `ticketUpdated` y M2 aplicó `STARTED`, dos `PROGRESS` y `RESOLVED`, dejando el ticket final `RESOLVED`. El transporte permanece `CORE_PENDING` hasta recibir la evidencia de entrega, intentos y DLQ de Core.
+Core confirmó además las variantes A, B y C de M7: rechazo, cierre automático de un corte activo y expiración sin emisión de `streetClosureEnded` cuando nunca se activó.
 
 ## Fuente transversal recibida
 
