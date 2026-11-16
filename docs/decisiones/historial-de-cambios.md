@@ -1,5 +1,14 @@
 # Historial de cambios
 
+## 2026-11-16 — Reconciliación documental de integraciones y TC-022
+
+- Se reconciliaron los documentos vigentes con la evidencia de M1, M2, M6, M7 y Core, sin ampliar los contratos más allá de los eventos efectivamente acordados y probados.
+- M6 quedó documentado como `CONFIRMED` para el circuito principal, `containerDamaged` y `treeRiskDetected`. La republicación exacta de `containerDamaged` demuestra deduplicación de Core, no una prueba independiente del Inbox de M3.
+- M1 quedó documentado como `CONFIRMED` para `approved`, `rejected` y `publicWorksProjectCompleted`; los eventos adicionales de la matriz histórica mantienen su estado previo hasta un acuerdo específico.
+- Se retiraron como pendientes vigentes la respuesta base de M7 y el fallo inicial de `roadAccidentRegistered`, porque la evidencia posterior confirmó el circuito v1.1, A/B/C y la recuperación con un único efecto funcional.
+- TC-022 se clasificó `NO_APLICA_AL_CAMINO_AMQP_DE_M3`: el `422` esperado corresponde al endpoint HTTP de Core, mientras Obras publica directamente por AMQP. La eventual demostración HTTP queda separada y no se presenta como ejecutada.
+- Core dio conformidad al mecanismo aislado de TC-024: falla previa a `RabbitTemplate.send` en Azure Test, sin modificar el broker compartido, con verificación de Outbox, reintentos y conservación del `eventId`. La ejecución permanece pendiente de coordinar una ventana con M7 y comprobar una sola instancia publicadora.
+
 ## 2026-11-16 — Retest QA y despliegue de correcciones
 
 - Fuente externa: reporte del responsable de QA del 16/11/2026. Se registraron D-01, D-10, D-14, TC-030, responsive 768×1024 y la observación de Integraciones.

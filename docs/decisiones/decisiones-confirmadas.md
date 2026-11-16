@@ -62,9 +62,12 @@ Esta página contiene decisiones internas o acuerdos explícitos. Un evento incl
 - Las variantes A/B/C de cortes v1.1 están `CONFIRMED`: Core auditó siete eventos `ROUTED`, once entregas `DELIVERED` en un intento y cero dead letters; M3/M7 confirmaron `REJECTED`, `ENDED` automático y `EXPIRED` sin `streetClosureEnded`, respectivamente.
 - El escenario `approved` del circuito M3 → Core → M1 → Core → M3 quedó confirmado el 2026-11-08 mediante `publicWorksProjectApproved` y `caseFileResolved` v1.0, con correlación conservada, entrega en un intento, sin DLQ y procesamiento funcional confirmado por ambos módulos.
 - El escenario `rejected` del mismo circuito quedó confirmado el 2026-11-14. Core registró `caseFileResolved` con `eventId=44fd8a17-fc0b-4638-8fdf-046117b8a00e`, `correlationId=f38eeb5c-7430-49d3-ac05-a639d1b59487`, estado `ROUTED`, entrega `DELIVERED` a `q.obras` en un intento y sin registros en DLQ. M3 confirmó `PROCESSED` y la asociación de la resolución con `OBRA-16`.
-- El ingreso M3 → M7 de `streetClosureRequested` quedó confirmado para `eventId=2d6893aa-9482-4dfd-98c3-85607f36bdab`: Core lo entregó a `q.transito` en un intento, sin reintentos ni DLQ, y M7 confirmó recepción y persistencia funcional. La respuesta de M7 continúa pendiente y no se declara cerrado el circuito completo.
+- El circuito base M3 ↔ M7 v1.1 quedó confirmado: Core verificó solicitud y respuestas `ROUTED`/`DELIVERED`, M7 confirmó el procesamiento de la solicitud y M3 procesó `streetClosureApproved` y `streetClosureEnded` hasta el estado final `ENDED`.
+- `roadAccidentRegistered` quedó confirmado después de un único reintento manual de la dead letter original: M3 registró un solo efecto funcional y no persistió DNI, patente, vehículos, personas ni `inspectorId`.
+- M6, M3 y Core confirmaron el circuito `infrastructureRepairRequested` → `workOrderScheduled` → `workOrderCompleted`, además de las entregas y el procesamiento de `containerDamaged` y `treeRiskDetected`.
+- M1, M3 y Core confirmaron también `publicWorksProjectCompleted` para `OBRA-3`: entrega en un intento, sin retry/DLQ y procesamiento funcional por M1 sin emitir una nueva resolución administrativa.
 
-## Decisiones internas sobre M6
+## Decisiones vigentes sobre M6
 
 - Obras acepta consumir `infrastructureRepairRequested`.
 - `infrastructureRepairRequested.requestId` se conserva y se devuelve en `workOrderCompleted.sourceRequestId` cuando la orden tiene ese origen.
@@ -73,4 +76,4 @@ Esta página contiene decisiones internas o acuerdos explícitos. Un evento incl
 - `HIGH` y `CRITICAL` se tratan como riesgos prioritarios.
 - `requiresStreetClosure = true` puede originar posteriormente una solicitud a Tránsito.
 
-Los payloads y nombres enviados por M6 siguen `RECEIVED` porque el material los presenta como tentativos y faltan confirmaciones técnicas.
+Los recorridos y payloads efectivamente probados están `CONFIRMED`. Las variantes históricas de la matriz del PO y cualquier campo no ejercitado conservan estado `RECEIVED`; no se extrapola la evidencia a contratos distintos.

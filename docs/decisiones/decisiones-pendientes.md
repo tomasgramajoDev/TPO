@@ -1,6 +1,6 @@
 # Decisiones pendientes
 
-**Corte de estado:** 15/11/2026. Este archivo enumera solo decisiones o pruebas realmente abiertas. Los acuerdos y pruebas cerrados se conservan en `decisiones-confirmadas.md` y en el historial de Git.
+**Corte de estado:** 16/11/2026. Este archivo enumera solo decisiones o pruebas realmente abiertas. Los acuerdos y pruebas cerrados se conservan en `decisiones-confirmadas.md` y en el historial de Git.
 
 ## Entrega académica y QA
 
@@ -22,11 +22,12 @@
 
 ## Core Municipal
 
-1. Ejecutar TC-022: publicar por HTTP un envelope sin `data`; el resultado esperado es HTTP 422 sin ingreso al hub ni a la DLQ.
-2. Ejecutar TC-024: coordinar una caída real de RabbitMQ y verificar persistencia en Outbox, recuperación sin pérdida y deduplicación por `eventId`.
-3. Mantener `maxAttempts=4` mientras no exista un acuerdo global diferente. La topología efectiva consultable en Core prevalece sobre documentos históricos.
-4. Completar la migración del nombre histórico `streetClousureEnded` al nombre acordado `streetClosureEnded` sin cortar consumidores existentes.
-5. Confirmar el catálogo final de publicaciones/suscripciones de M3 contra el mapa de Miro y adjuntar evidencia del ambiente compartido.
+TC-022 no integra los pendientes de M3: queda clasificado `NO_APLICA_AL_CAMINO_AMQP_DE_M3`. El HTTP `422` por envelope sin `data` corresponde a `POST /api/v1/events` de Core, mientras M3 publica directamente por AMQP. Si la cátedra exige esa evidencia contractual HTTP, debe ejecutarla Core o un módulo autorizado.
+
+1. Ejecutar TC-024 mediante la simulación aislada aprobada por Core: inyectar la falla antes de `RabbitTemplate.send` únicamente en Azure Test, verificar persistencia en Outbox, reintentos con el mismo sobre y `eventId`, y publicación posterior a la recuperación. No se interviene ni detiene el broker compartido.
+2. Mantener `maxAttempts=4` mientras no exista un acuerdo global diferente. La topología efectiva consultable en Core prevalece sobre documentos históricos.
+3. Completar la migración del nombre histórico `streetClousureEnded` al nombre acordado `streetClosureEnded` sin cortar consumidores existentes.
+4. Confirmar el catálogo final de publicaciones/suscripciones de M3 contra el mapa de Miro y adjuntar evidencia del ambiente compartido.
 
 ## Atención Ciudadana - M2
 
@@ -36,9 +37,9 @@
 
 ## Ambiente - M6
 
-No quedan pendientes contractuales para el circuito principal probado. La integración `infrastructureRepairRequested` -> `workOrderScheduled` -> `workOrderCompleted` está `CONFIRMED` por M3, M6 y Core, con correlación preservada, colas vacías y DLQ vacía.
+No quedan pendientes contractuales para los recorridos probados. `infrastructureRepairRequested` → `workOrderScheduled` → `workOrderCompleted`, `containerDamaged` y `treeRiskDetected` están `CONFIRMED` por M3, M6 y Core.
 
-Queda obtener la confirmación de M3/Core para `containerDamaged` (`eventId=748caf0e-6b47-4f35-998c-d1b77b8a1556`) y `treeRiskDetected` (`eventId=1ca257a6-9cc6-4686-82d6-ee23c194dcde`). M6 reenvió `containerDamaged` con el mismo `eventId`; falta evidencia de que Inbox lo deduplicó sin producir un segundo efecto.
+La republicación de `containerDamaged` probó deduplicación en Core porque el duplicado no volvió a entregarse a `q.obras`. Una prueba que alcance efectivamente el Inbox de M3 queda como cobertura adicional, no como condición de cierre de M6.
 
 ## Tránsito - M7
 
@@ -49,7 +50,7 @@ Queda obtener la confirmación de M3/Core para `containerDamaged` (`eventId=748c
 ## Ciudadanos y Expedientes - M1
 
 1. Las variantes `approved` y `rejected` están `CONFIRMED`: Core verificó `ROUTED`/`DELIVERED`, M1 creó y resolvió los expedientes, y M3 registró ambas resoluciones.
-2. Falta la prueba adicional de `publicWorksProjectCompleted` sobre el expediente existente de `OBRA-3` si ese evento continúa comprometido en el mapa del 03/11.
+2. `publicWorksProjectCompleted` sobre `OBRA-3` quedó `CONFIRMED`: Core verificó entrega en un intento sin retry/DLQ y M1 confirmó la obra `COMPLETED` sin emitir otro `caseFileResolved`.
 3. La migración futura al login central de M1, el mapeo de roles y la estrategia de firma/verificación de tokens quedan fuera del cierre funcional actual y requieren un acuerdo de arquitectura posterior.
 
 ## IA aplicada
@@ -70,11 +71,11 @@ Queda obtener la confirmación de M3/Core para `containerDamaged` (`eventId=748c
 
 La entrega exige integración con Core y con los demás módulos del mapa de Miro, no solo que existan handlers locales.
 
-1. M6: el flujo principal está confirmado, pero deben quedar trazados también los eventos secundarios comprometidos (`containerDamaged` y `treeRiskDetected`) mediante contrato y pruebas de consumidor.
-2. M1: `approved` y `rejected` están confirmados; falta `publicWorksProjectCompleted` si figura en la matriz comprometida del 03/11.
+1. M6: el flujo principal, `containerDamaged` y `treeRiskDetected` están confirmados; solo queda como cobertura adicional una deduplicación que alcance el Inbox de M3.
+2. M1: `approved`, `rejected` y `publicWorksProjectCompleted` están confirmados.
 3. M2: recorrido válido confirmado por M2, M3 y Core; queda como cobertura adicional el rechazo fuera de orden.
 4. M7: circuito base, rechazo, cierre automático, expiración y `roadAccidentRegistered` confirmados; queda la limpieza del typo histórico.
-5. Core: faltan las pruebas de envelope inválido y caída/recuperación del broker, además de reconciliar catálogo y nombre histórico del evento de cierre.
+5. Core: TC-022 HTTP no aplica al camino AMQP directo de M3. TC-024 cuenta con conformidad para implementar la simulación aislada, pero su ejecución requiere confirmar la bandera, una sola instancia publicadora y una ventana coordinada con M7. También continúan pendientes la reconciliación del catálogo y la limpieza del nombre histórico del evento de cierre.
 6. Dependencias del tercer checkpoint: confirmar JWT firmado/validado con M1. El login propio de M3 no demuestra esta dependencia; ambiente de Test y catálogo de Core deben quedar evidenciados.
 
 ## Testing y documentación exigidos

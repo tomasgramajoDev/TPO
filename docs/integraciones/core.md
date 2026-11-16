@@ -1,78 +1,55 @@
 # Integración con Core Municipal — Módulo 9
 
-## Responsabilidad acordada
+## Responsabilidad y contrato común
 
-Core es responsable de las convenciones comunes de integración: formato de eventos, nombres técnicos, envelope, versionado, correlación y convenciones compartidas.
+Core mantiene el hub técnico, el catálogo de eventos, las publicaciones, las suscripciones, el enrutamiento, los reintentos y la DLQ. No se presume consumidor funcional de todos los hechos: cada módulo conserva sus datos y reglas de negocio.
 
-Obras debe informar a Core cada incorporación, eliminación o modificación de eventos. Core no se considera consumidor funcional de todos los eventos de negocio, salvo que una integración específica lo requiera.
+**Estado del contrato común usado por M3:** `CONFIRMED`.
 
-## Contrato común
+El envelope vigente contiene `eventId`, `eventType`, `eventVersion`, `occurredAt`, `sourceModule`, `correlationId`, `causationId` cuando corresponde y `data`. Los identificadores técnicos son UUID, los nombres usan inglés y `camelCase`, y las fechas incluyen zona horaria. `data` siempre debe existir y ser un objeto.
 
-**Estado:** `CORE_PENDING`.
+M3 se conecta por AMQPS al vhost `core`, publica en `muni.inbox` y consume `q.obras`. El token de módulo HTTP no se utiliza para autenticar la conexión RabbitMQ. M3 no crea ni modifica topología desde la aplicación.
 
-El contrato común debe permitir, como mínimo:
+## Validación del envelope y alcance de TC-022
 
-- identificar de forma única el evento y su tipo;
-- registrar fecha/hora y módulo de origen;
-- transportar los datos funcionales;
-- correlacionar hechos del mismo proceso;
-- identificar la versión del contrato.
+Core informó que `POST /api/v1/events` rechaza con HTTP `422` un envelope inválido antes de ingresarlo al hub. La comprobación concreta de omitir `data` por ese endpoint es una prueba contractual de la superficie HTTP de Core.
 
-Los siguientes nombres son solo candidatos y no deben fijarse: `eventId`, `eventType`, `occurredAt`, `source`, `version`, `correlationId` y `data`.
+M3 publica sus eventos directamente por AMQP, no mediante `POST /api/v1/events`. Por eso TC-022 se clasifica `NO_APLICA_AL_CAMINO_AMQP_DE_M3`: no es una prueba pendiente de la integración desplegada de Obras ni corresponde inferir un `422` en un protocolo que no usa HTTP. Si la cátedra requiere demostrar el contrato HTTP de Core, debe ejecutarlo Core o un módulo autorizado para esa superficie y conservar su respuesta; eso no sustituye las validaciones locales del envelope ni las pruebas E2E AMQP de M3.
 
-## Definiciones técnicas recibidas del PO
+## Evidencia confirmada por circuito
 
-**Estado:** `RECEIVED`, pendiente de confirmación con M9.
+### M6 → M3 → M6 — 2026-11-05/14
 
-La matriz enviada por el PO menciona UUID para identificadores, `camelCase`, fechas ISO 8601, versión del contrato y esquemas compartidos mediante JSON Schema. También indica que Obras informa al catálogo de Core todos los eventos incorporados, modificados o retirados.
+- `infrastructureRepairRequested` (`a53fc8ee-5200-4949-b333-480f21be7e5d`), `workOrderScheduled` (`8d109cc9-1802-4b30-89ea-0dd9df8b1843`) y `workOrderCompleted` (`916449bf-9cfb-4449-ae74-65b9825f7693`) quedaron `ROUTED`, conservaron la correlación y completaron el recorrido funcional. M6 informó el pedido cerrado; Core comprobó colas sin pendientes y DLQ vacía.
+- `containerDamaged` (`748caf0e-6b47-4f35-998c-d1b77b8a1556`) y `treeRiskDetected` (`1ca257a6-9cc6-4686-82d6-ee23c194dcde`) fueron entregados a `q.obras` en un intento, sin retry ni dead letter, y M3 confirmó su procesamiento.
+- La republicación exacta de `containerDamaged` fue reconocida como duplicada por Core y no generó una segunda entrega. Esto prueba la deduplicación de Core, no constituye por sí solo una prueba independiente del Inbox de M3.
 
-Estas definiciones son compatibles con el rol técnico de Core, pero no se consideran aún convenciones `CONFIRMED`: falta validar nombres exactos, zona horaria, estructura del envelope y versión con M9. La notificación al catálogo no convierte a Core en consumidor funcional del evento.
+### M3 → M1 → M3 — 2026-11-08/14
 
-## Acuerdos vigentes
+- Los escenarios `approved` y `rejected` de `publicWorksProjectApproved` → `caseFileResolved` v1.0 quedaron `ROUTED`/`DELIVERED` en un intento, sin DLQ, con correlación conservada y procesamiento funcional confirmado por M1 y M3.
+- `publicWorksProjectCompleted` (`0da5fc0d-b656-4b70-b46d-e76ebb91517a`) quedó `ROUTED` y `DELIVERED` a `q.ciudadanos` en un intento, sin retry ni DLQ. M1 confirmó `OBRA-3` como `COMPLETED`, mantuvo el expediente `RESUELTO/approved` y no emitió otro `caseFileResolved`.
 
-- Identificadores técnicos en inglés.
-- Atributos, funciones y eventos en `camelCase`.
-- La UI permanece en español.
-- Core mantiene las convenciones y el catálogo común.
-- Obras conserva la propiedad de sus datos y reglas de negocio.
+### M2 ↔ M3 — 2026-11-15/16
 
-## Pendientes
+- M3 procesó `ticketUpdated` (`b99c2981-d7a5-476e-b748-23e31ed75647`) y publicó `STARTED`, dos `PROGRESS` y `RESOLVED` con la correlación original.
+- M2 confirmó la aplicación funcional de los cuatro hechos y el ticket `TK-2026-000045` en estado `RESOLVED`.
+- Core auditó `RESOLVED` (`c889727e-db9e-4bd6-a064-7ff1ad5b32b6`) como `ROUTED`, entregado a `q.atencion-ciudadana` en un intento, sin error, retry ni dead letter. Core observó los otros tres eventos bajo la misma correlación, pero no realizó la misma auditoría individual sobre cada uno; no se presenta esa observación como evidencia equivalente.
 
-- Nombres definitivos, tipos y obligatoriedad del envelope.
-- Formato y zona horaria de fechas.
-- Convención de versiones compatibles e incompatibles.
-- Semántica de correlación y causalidad.
-- Registro de productores, consumidores y canales.
-- Alcance técnico de Core como hub frente a su no participación como consumidor funcional.
-- Estrategia común de reintentos, idempotencia, auditoría y DLQ.
+### M7 ↔ M3 — 2026-11-13/16
 
-## Evidencia operativa M6 → M3 → M6 — 2026-11-05
+- El circuito base v1.1, `roadAccidentRegistered` y las variantes A/B/C de cortes quedaron confirmados por M3, M7 y Core.
+- Para A/B/C, Core auditó siete eventos `ROUTED` y once entregas `DELIVERED` en el primer intento, sin errores, retry ni dead letters. Las respuestas conservaron la correlación y usaron como `causationId` el `eventId` de la solicitud.
+- A terminó `REJECTED`; B terminó `ENDED` mediante cierre automático; C terminó `EXPIRED` sin `streetClosureEnded`, conforme al contrato.
+- `roadAccidentRegistered` (`9d7b06ec-dfa3-4ca6-9d28-acc17ed82523`) fue recuperado mediante un único reintento manual de Core. M3 confirmó un único efecto funcional y la ausencia de DNI, patente, vehículos, personas e `inspectorId` en la persistencia minimizada.
 
-**Estado de transporte y prueba funcional M6–M3–Core:** `CONFIRMED`.
+## Infraestructura operativa
 
-Esta evidencia sustituye únicamente las pendientes de disponibilidad de infraestructura. No resuelve por sí sola las definiciones contractuales históricas listadas arriba.
+Azure Test mantiene una réplica mínima cuando la mensajería está habilitada. La evidencia de despliegue confirmó `MESSAGING_ENABLED=true`, health HTTP correcto, PostgreSQL disponible y conexión autenticada de `module_obras` al vhost `core`. Esta disponibilidad no sustituye la confirmación funcional del consumidor en cada prueba, que se documenta por circuito.
 
-- Core informó `infrastructureRepairRequested` con `eventId=a53fc8ee-5200-4949-b333-480f21be7e5d`, un mensaje pendiente en `q.obras` y ausencia de consumidores y de la conexión `module_obras`.
-- Se comprobó que Azure Test había escalado el backend a cero porque Terraform declaraba `min_replicas=0`. Al despertar la aplicación, M3 abrió la conexión AMQPS y procesó el evento con `correlationId=84cd1a26-c21b-4d57-a292-d4fb7daff878`.
-- El PR `#54` cambió la regla a `min_replicas = application_messaging_enabled ? 1 : 0`, pasó todos los controles, se fusionó y se desplegó con el tag `v1.0-testing.2` mediante el workflow `42087566180`.
-- La verificación posterior confirmó `minReplicas=1`, `maxReplicas=1`, una réplica activa, mensajería habilitada, health `ok`, PostgreSQL `up` y `module_obras` conectado al vhost `core`.
-- M3 creó, programó, inició y completó la orden interna `id=5` con `sourceRequestId=6fdddb92-78fe-4220-a9c2-0c5395623f6a`.
-- M3 publicó `workOrderScheduled` con `eventId=8d109cc9-1802-4b30-89ea-0dd9df8b1843` y `workOrderCompleted` con `eventId=916449bf-9cfb-4449-ae74-65b9825f7693`; ambos conservaron la correlación original y registraron `result=published`.
-- Las cuentas técnicas usadas para respetar la separación de roles quedaron únicamente en secretos protegidos de Azure Test y GitHub Environment `test`; no se almacenaron contraseñas en Git.
-- A las 16:10 de Argentina, M6 confirmó que el pedido `6fdddb92-78fe-4220-a9c2-0c5395623f6a` quedó `Cerrado` y que las métricas de Core mostraban recibidos `workOrderScheduled` y `workOrderCompleted`.
-- A las 16:14 de Argentina, Core confirmó en sus registros de AWS que `infrastructureRepairRequested`, `workOrderScheduled` y `workOrderCompleted` quedaron `ROUTED` y compartieron el mismo `correlationId`.
-- Core verificó además `q.obras` y `q.ambiente` sin mensajes pendientes y la DLQ vacía. Con la confirmación funcional de M6, la prueba M6 → M3 → M6 queda cerrada satisfactoriamente.
+## Pendientes que permanecen abiertos
 
-## Evidencia operativa M3 → M1 → M3 — 2026-11-08
-
-**Estado del escenario `approved`:** `CONFIRMED`.
-
-Core (M9) informó en Discord que `publicWorksProjectApproved` (`eventId=ce10dbfb-fa87-45a8-921f-adf8689ac1dc`) y `caseFileResolved` (`eventId=ad03a26a-12d8-414f-808a-63527e6417b6`) fueron validados, registrados como `ROUTED` y entregados en un intento a `q.ciudadanos` y `q.obras`, respectivamente. No hubo rechazos registrados ni mensajes asociados en DLQ.
-
-Los dos eventos conservaron `correlationId=223653b4-4d6b-4d59-9e75-a8ecc66d27ef`. M1 confirmó la creación del expediente y la publicación de la resolución; M3 confirmó el procesamiento y la asociación de `caseFileId=2567331e-d718-4e24-9870-2366f1c43059` con `publicWorksProjectId=42807c4d-ff24-438f-aaa2-d025e8c27980` en su base de datos.
-
-Esta evidencia confirma únicamente la variante `approved`. La variante `rejected` continúa pendiente de ejecución.
-
-## Contexto
-
-La consigna original describe a Core como hub técnico de eventos. La instrucción vigente aclara que esa función no autoriza a tratarlo como consumidor funcional de todos los hechos. La separación exacta entre enrutamiento técnico y consumo de negocio queda pendiente de confirmación con M9.
+- Completar la migración coordinada del registro histórico `streetClousureEnded` al nombre vigente `streetClosureEnded` sin cortar consumidores.
+- Reconciliar el catálogo final de publicaciones y suscripciones contra el mapa comprometido.
+- Obtener el contrato completo de respuesta y errores de `POST /api/v1/auth/module-token` si M3 debe consumir APIs HTTP de Core.
+- Mantener como fuente de verdad operativa `GET /api/v1/topology` para TTL y topología efectiva, sin copiar números históricos como configuración vigente.
+- Ejecutar TC-024 con la simulación aislada aprobada por Core: la bandera queda restringida a Azure Test, la falla ocurre antes de `RabbitTemplate.send`, no se interviene RabbitMQ y el restablecimiento debe publicar el mismo sobre y `eventId`. Antes de ejecutar se debe verificar una sola instancia publicadora y coordinar datos ficticios con M7. La prueba acredita la recuperación del publicador de M3, no una caída real del broker compartido.

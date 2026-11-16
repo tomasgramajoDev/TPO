@@ -12,14 +12,16 @@ Cada integración se documenta por separado y no debe darse por confirmada sin e
 | `CORE_PENDING` | Lógica funcional acordada; falta adaptar el contrato a las convenciones definitivas de Core. |
 | `CONFIRMED` | Contrato funcional y técnico confirmado con evidencia. |
 
-Al 15/11/2026 existen circuitos `CONFIRMED` con evidencia bilateral y de Core:
+Al 16/11/2026 existen circuitos `CONFIRMED` con evidencia bilateral y de Core:
 
-- M6 ↔ M3: `infrastructureRepairRequested` → `workOrderScheduled` → `workOrderCompleted`, más `containerDamaged` y `treeRiskDetected`.
-- M1 ↔ M3: resoluciones `approved` y `rejected`, más `publicWorksProjectCompleted`.
+- M6 ↔ M3: `infrastructureRepairRequested` → `workOrderScheduled` → `workOrderCompleted`, más `containerDamaged` y `treeRiskDetected`. La prueba de duplicado adicional acredita deduplicación en Core, no en el Inbox de M3.
+- M1 ↔ M3: resoluciones `approved` y `rejected`, más `publicWorksProjectCompleted` sobre el expediente existente.
 - M7 ↔ M3: `roadAccidentRegistered` y circuito de cortes documental v1.1 hasta `streetClosureEnded`.
-- M2 ↔ M3: `ticketUpdated` → `STARTED`/`PROGRESS`/`RESOLVED`; M2 confirmó aplicación y Core auditó el cierre `RESOLVED` como `ROUTED`/`DELIVERED`, sin reintentos ni dead letters.
+- M2 ↔ M3: `ticketUpdated` → `STARTED`/`PROGRESS`/`RESOLVED`; M2 confirmó la aplicación funcional de los cuatro hechos y Core auditó individualmente el cierre `RESOLVED` como `ROUTED`/`DELIVERED`, sin reintentos ni dead letters.
 
 Core confirmó además las variantes A, B y C de M7: rechazo, cierre automático de un corte activo y expiración sin emisión de `streetClosureEnded` cuando nunca se activó.
+
+TC-022, que espera HTTP `422` al omitir `data` en `POST /api/v1/events`, prueba la superficie HTTP de Core. No aplica al camino de publicación directa AMQP usado por M3 y no se cuenta como brecha de estos recorridos confirmados.
 
 ## Fuente transversal recibida
 

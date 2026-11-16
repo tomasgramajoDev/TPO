@@ -4,14 +4,13 @@
 
 Solicitar cortes de calle y recibir su autorización o rechazo; evaluar incidentes viales que puedan requerir Obras.
 
-## Evidencia E2E de cortes — 2026-11-13/15
+## Evidencia E2E de cortes v1.1 — 2026-11-15
 
-- M3 publicó `streetClosureRequested` con `eventId=2d6893aa-9482-4dfd-98c3-85607f36bdab` y `correlationId=afca371d-ddfd-497c-a437-f9152bef52bf`.
-- Core confirmó aceptación, estado `ROUTED`, entrega `DELIVERED` a `q.transito` en el primer intento, sin reintentos ni DLQ. M7 confirmó recepción, persistencia del corte y sus tramos, y procesamiento funcional.
-- El 2026-11-15 M3 recibió y procesó `streetClosureApproved` con `eventId=6f521edf-177f-43c4-b3ec-0a3eb1245fd5` y el mismo `correlationId`.
-- M3 recibió y procesó luego `streetClosureEnded` con `eventId=c8479b39-4741-49f3-a3ea-f255d16416c2` y el mismo `correlationId`.
-- La consulta funcional confirmó `closureRequestId=44555606-a4b7-4a0b-984b-94255b49faa8`, `streetClosureId=c5941b88-1caa-4e6f-bc3d-439879f31408` y estado final `ENDED`.
-- La evidencia del consumidor M3 prueba el recorrido funcional M7 → Core → M3. Falta la verificación de Core sobre `ROUTED`/`DELIVERED`, intentos y DLQ de las dos respuestas para elevar el circuito completo a `CONFIRMED` según el criterio documental del equipo.
+- M3 publicó `streetClosureRequested` con `eventId=7f371af0-f38a-412f-adc3-09981a10de90`, `correlationId=3f2e4d0b-a6fa-4b08-ba40-8fb5101b240a` y `closureRequestId=01f1246b-8ac1-49de-8103-025e85d4ebcc`.
+- Core confirmó aceptación, estado `ROUTED` y entrega `DELIVERED` a `q.transito` en el primer intento, sin reintentos ni DLQ. M7 confirmó recepción y procesamiento funcional.
+- M7 publicó `streetClosureApproved` con `eventId=614222ce-715d-44e7-8e63-89250488ea7b` y `streetClosureEnded` con `eventId=7f098173-82c6-4831-849f-47a3b5ec0cb4`.
+- Las dos respuestas conservaron el `correlationId` original y usaron el `eventId` de la solicitud como `causationId`, conforme al contrato documental v1.1; el envelope mantuvo `eventVersion="1.0"`.
+- Core las registró `ROUTED` y `DELIVERED` a `q.obras` en un intento, sin errores ni dead letters. M3 confirmó ambas como `PROCESSED`, `streetClosureId=baf2c468-c354-4478-8588-cdb9486ba98e` y estado final `ENDED`.
 
 **Estado:** circuito base y variantes adicionales del contrato documental v1.1 `CONFIRMED` por M3, M7 y Core.
 
@@ -28,9 +27,11 @@ Todas las respuestas conservaron correlación y usaron como `causationId` el `ev
 ## Incidente vial de prueba — 2026-11-15
 
 - M7 publicó `roadAccidentRegistered`; Core lo entregó a M3 con `eventId=9d7b06ec-dfa3-4ca6-9d28-acc17ed82523` y `correlationId=dca92b7c-b533-438e-99de-cebc6446d4ef`.
-- Azure Test registró cuatro pares `received`/`error` a las 17:10:45, 17:10:50, 17:11:21 y 17:13:21 UTC, coherentes con la entrega original y los tres reintentos configurados para `maxAttempts=4`.
-- El evento falló durante la validación anterior a `event_inbox`; por eso no figura como procesado y no produjo una proyección funcional.
-- El sobre exacto debe cruzarse con el contrato M3–M7 antes de atribuir la falla a un campo concreto. M7 y Core deben confirmar el payload y el estado final/DLQ; después se repite la prueba con un nuevo hecho o el mismo `eventId` si se trata de reentregar exactamente el mismo hecho corregido según las reglas de Core.
+- La primera entrega agotó cuatro intentos y quedó como dead letter `DELIVERY_FAILED`. Tras corregir el consumidor, Core realizó un único reintento manual conservando el `eventId` y registró auditoría `MANUAL/SUCCESS`.
+- M3 confirmó Inbox `PROCESSED`, un intento local y una única proyección funcional para `accidentId=c4c66355-093c-46f4-a175-96bf6c0d5252`.
+- M3 verificó que no persistió DNI, patente, vehículos, personas ni `inspectorId` en el Inbox minimizado ni en la proyección funcional.
+
+**Estado:** `CONFIRMED`. La falla inicial y su recuperación se conservan como evidencia de resiliencia; no quedan como un pendiente del circuito.
 
 ## Eventos recibidos comunicados por el PO
 
@@ -78,9 +79,6 @@ La descripción de la matriz indica que la solicitud informa tramos, desvíos y 
 
 ## Pendientes externos fuera de los recorridos probados
 
-- Nombres y payloads definitivos.
-- Modelo de calles, tramos y ubicación.
-- Identificadores y correlación.
-- Períodos autorizados, condiciones, desvíos y extensiones.
-- Representación de los desvíos en el payload de `streetClosureRequested`.
-- Convenciones de Core.
+- Completar la limpieza coordinada del registro histórico `streetClousureEnded`; el contrato y el código vigente usan `streetClosureEnded`.
+- Probar prórrogas solo si continúan dentro del alcance comprometido; no son necesarias para reabrir los recorridos ya confirmados.
+- Cualquier extensión futura de desvíos o tramos requiere versionar el contrato; no se infiere de la matriz histórica del PO.
