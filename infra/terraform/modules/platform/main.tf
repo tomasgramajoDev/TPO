@@ -469,7 +469,9 @@ resource "azurerm_container_app" "frontend" {
   }
 
   template {
-    min_replicas = 0
+    # La mensajeria habilitada mantiene tambien el proxy web listo y evita
+    # depender de una peticion inicial para despertar la aplicacion.
+    min_replicas = var.application_messaging_enabled ? 1 : 0
     max_replicas = 1
 
     container {

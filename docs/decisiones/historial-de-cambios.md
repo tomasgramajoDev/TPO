@@ -1,5 +1,11 @@
 # Historial de cambios
 
+## 2026-11-16 — Azure Test siempre activo durante integraciones
+
+- Se verificó que el Backend de Azure Test ya estaba `Running` con `minReplicas=1`, `maxReplicas=1` y mensajería habilitada, por lo que el consumidor AMQPS no depende de una computadora personal.
+- El Frontend seguía configurado para escalar a cero. Terraform se ajustó para mantener también una réplica del Frontend cuando `application_messaging_enabled=true`; en ambientes sin mensajería se conserva el ahorro mediante escala a cero.
+- El cambio evita el arranque en frío del proxy web durante las pruebas y mantiene la configuración declarativa; no introduce credenciales ni cambios de aplicación.
+
 ## 2026-11-15 — Validación de emisor JWT promovida a Azure Test
 
 - Backend PR `#29`, merge `3a163301e3cfaceb92f4d648899c35342426a10c`: los JWT emitidos incluyen `iss=obras-publicas`, el parser exige ese emisor y un envelope decodificado nulo se rechaza antes de desreferenciarlo.

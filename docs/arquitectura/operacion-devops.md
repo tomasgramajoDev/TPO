@@ -90,7 +90,7 @@ Esos seis logins fueron solicitudes `curl` a través del proxy del Front, **no**
 - No guardar `.tfstate`, `.tfvars` reales, tokens ni contraseñas en Git.
 - Los cambios manuales de emergencia deben documentarse y reconciliarse de inmediato en Terraform.
 - Destruir recursos es una acción excepcional y requiere revisar el plan y el ambiente objetivo.
-- Al terminar una sesión de pruebas, detener PostgreSQL en `development` y `test`; Container Apps mantiene mínimo de cero réplicas. Volver a iniciar las bases antes del próximo uso. Azure inicia automáticamente cada Flexible Server después de siete días detenido, por lo que DevOps debe volver a apagarlo si aún no se usa.
+- Cuando la integración con Core está habilitada, Terraform mantiene una réplica mínima tanto del Backend como del Frontend. El Backend conserva el consumidor AMQPS y el Frontend evita un arranque en frío del proxy; no dependen de una computadora personal encendida. En ambientes sin mensajería ambos pueden escalar a cero. PostgreSQL debe permanecer iniciado mientras se necesite el servicio y puede detenerse solamente cuando no haya pruebas ni integraciones activas. Azure inicia automáticamente cada Flexible Server después de siete días detenido, por lo que DevOps debe revisar nuevamente su estado si el ambiente deja de utilizarse.
 
 ## Definition of Done DevOps propuesta
 
