@@ -5,7 +5,9 @@
 - Backend PR `#30`, merge `00e0be1167180cf95d678a720915f3057652016c`: completar una orden exige un `outcome` no vacío, sin convertir la evidencia fotográfica en obligatoria; rechazar un proyecto exige y persiste una observación.
 - Los límites de texto del request de proyectos quedaron alineados con las columnas persistidas para responder `400` con Problem Details en lugar de delegar el exceso a la base de datos.
 - Se agregaron regresiones para TC-030/TC-031, D-10, D-14 y JWT sin firma con `alg=none`. La verificación local aprobó 140 pruebas, sin fallos ni errores, con dos pruebas de infraestructura omitidas y los umbrales JaCoCo satisfechos.
-- Terraform apunta a la imagen inmutable `obras-publicas-backend:00e0be1167180cf95d678a720915f3057652016c`. Su promoción a Azure Test debe ejecutarse por el pipeline aprobado, conservando `application_messaging_enabled=true` y las réplicas mínimas del ambiente.
+- El CI final de `develop` `43857225056` aprobó pruebas, SonarCloud, repetición para flakiness, mutation testing, Gitleaks, Trivy y construcción Docker. El workflow `43858311439` publicó en ACR la imagen inmutable `obras-publicas-backend:00e0be1167180cf95d678a720915f3057652016c`, digest `sha256:70829c732b75cf85fe4ea19c73ecf8a66b542c4fa902594a23207676d4f0cd64`.
+- Infraestructura PR `#83`, merge `95e61f4d97554ee19a89392b6794718c48a645fb`, y tag `v2.0-entrega4.10-backend-validation` promovieron la imagen mediante el workflow `43858826731` con `enable_core_messaging=true`.
+- Estado final verificado en Azure Test: revisión `ca-obras-publicas-tst-backend--latest` activa, saludable y aprovisionada; imagen y digest esperados, una réplica de una máxima, salud HTTP `ok`, base `up`, seis logins demo correctos y conexión AMQPS creada como `module_obras` contra Core. No se imprimieron ni versionaron credenciales.
 
 ## 2026-11-16 — Azure Test siempre activo durante integraciones
 
